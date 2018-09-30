@@ -1,0 +1,30 @@
+﻿@page
+@model Web.Pages.Person.EditModel
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Edit</title>
+</head>
+<body>
+    <form method="post">
+        <div>
+            id:<input type="text" value="@Model.Person.Id" />
+        </div>
+        <div>
+            name:<input type="text" value="@Model.Person.Name" />
+        </div>
+        <div>
+            age:<input type="text" value="@Model.Person.Age" />
+        </div>
+        <div>
+            <input type="submit" value="ok" />
+        </div>
+    </form>
+</body>
+</html>
