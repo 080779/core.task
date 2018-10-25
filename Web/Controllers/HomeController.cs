@@ -23,7 +23,7 @@ namespace Web.Controllers
         {
             //long userId = Convert.ToInt64(Session["Platform_AdminUserId"]);
             HomeIndexViewModel model = new HomeIndexViewModel();
-            model.Mobile = (await adminService.GetModelAsync(2)).Mobile;
+            model.Name = await adminService.GetNameByIdAsync(2);
             model.PermissionTypes = await permissionTypeService.GetModelList();
             return View(model);
         }
@@ -32,7 +32,7 @@ namespace Web.Controllers
         {
             //long id = await adminService.AddAsync("admin","15615615616","系统管理员","1");
             var admin = await adminService.GetModelAsync(2);
-            string desc1 = admin.Description;
+            string desc = admin.Description;
             return View(admin.Id);
         }
     }

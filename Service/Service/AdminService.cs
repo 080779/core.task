@@ -148,6 +148,14 @@ namespace Service.Service
             }
         }
 
+        public async Task<string> GetNameByIdAsync(long id)
+        {
+            using (MyDbContext dbc = new MyDbContext())
+            {
+                return await dbc.GetParameterAsync<AdminEntity>(a => a.Id == id, a => a.Name);
+            }
+        }
+
         public async Task<AdminDTO> GetModelAsync(long id)
         {
             using (MyDbContext dbc = new MyDbContext())
