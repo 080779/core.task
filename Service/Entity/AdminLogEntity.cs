@@ -18,7 +18,7 @@ namespace Service.Entity
         public string Tip { get; set; }
         public long PermissionTypeId { get; set; }
         public long AdminId { get; set; }
-        public virtual PermissionTypeEntity PermissionType { get; set; }
-        public virtual AdminEntity Admin { get; set; }
+        public PermissionTypeEntity PermissionType { get; set; }
+        public AdminEntity Admin { get; set; }
     }
 }

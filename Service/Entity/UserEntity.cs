@@ -21,7 +21,7 @@ namespace Service.Entity
         public decimal BonusAmount { get; set; } = 0;//佣金总额
         public decimal TakeCashAmount { get; set; } = 0;//提现总额
         public long? LevelId { get; set; } = 0;
-        //public virtual IdNameEntity Level { get; set; }
+        //public IdNameEntity Level { get; set; }
         public string Description { get; set; }
         public string Salt { get; set; } = string.Empty;
         public string Password { get; set; }

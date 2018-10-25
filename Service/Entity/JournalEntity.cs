@@ -16,9 +16,9 @@ namespace Service.Entity
         public long ForwardId { get; set; } = 0;
         public long UserId { get; set; }
         public long TaskId { get; set; } = 0;
-        public virtual UserEntity User { get; set; }
+        public UserEntity User { get; set; }
         public long JournalTypeId { get; set; }
-        public virtual IdNameEntity JournalType { get; set; }
+        public IdNameEntity JournalType { get; set; }
         public long Journal01 { get; set; } = 0;
         public bool IsEnabled { get; set; } = true;
     }

@@ -15,7 +15,7 @@ namespace Service.Entity
         public string Name { get; set; }
         public string Description { get; set; }
         public long PermissionTypeId { get; set; }
-        public virtual PermissionTypeEntity PermissionType { get; set; }
+        public PermissionTypeEntity PermissionType { get; set; }
         //public virtual ICollection<AdminEntity> Admins { get; set; } = new List<AdminEntity>();
         //public ICollection<AdminPermissionEntity> AdminPermissions { get; set; } = new List<AdminPermissionEntity>();
     }

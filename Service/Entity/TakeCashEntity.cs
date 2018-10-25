@@ -12,13 +12,13 @@ namespace Service.Entity
     public class TakeCashEntity:BaseEntity
     {
         public long UserId { get; set; }
-        public virtual UserEntity User { get; set; }
+        public UserEntity User { get; set; }
         public long StateId { get; set; }
         public decimal Amount { get; set; }
         public string Description { get; set; }
-        public virtual IdNameEntity State { get; set; }
+        public IdNameEntity State { get; set; }
         public long TypeId { get; set; }
-        public virtual IdNameEntity Type { get; set; }
+        public IdNameEntity Type { get; set; }
         public string AdminMobile { get; set; }
     }
 }

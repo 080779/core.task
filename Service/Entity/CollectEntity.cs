@@ -14,6 +14,6 @@ namespace Service.Entity
         public long TaskId { get; set; }
         public virtual TaskEntity Task { get; set; }
         public long UserId { get; set; }
-        public virtual UserEntity User { get; set; }
+        public UserEntity User { get; set; }
     }
 }

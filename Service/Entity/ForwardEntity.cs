@@ -14,10 +14,10 @@ namespace Service.Entity
         public long TaskId { get; set; }
         public virtual TaskEntity Task { get; set; }
         public long UserId { get; set; }
-        public virtual UserEntity User { get; set; }
+        public UserEntity User { get; set; }
         public long StateId { get; set; }
-        public virtual ForwardStateEntity State { get; set; }
+        public ForwardStateEntity State { get; set; }
         public long Count { get; set; } = 0;
-        public string ImgUrl { get; set; }
+        public ImgUrl { get; set; }
     }
 }
