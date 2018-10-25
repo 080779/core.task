@@ -11,7 +11,6 @@ namespace Web.Pages.Person
     {
         public void OnGet()
         {
-
         }
     }
 }

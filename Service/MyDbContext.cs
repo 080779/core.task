@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -15,75 +16,64 @@ namespace Service
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             base.OnConfiguring(optionsBuilder);
-            optionsBuilder.UseMySQL("Server=132.232.140.242;database=db_task;uid=root;pwd=root");
+            optionsBuilder.UseMySQL("Server=18.191.6.120;database=db_task;uid=root;pwd=root;characterset=utf8");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.ApplyConfiguration(new AdminConfig());
-            modelBuilder.ApplyConfiguration(new AdminLogConfig());
-            modelBuilder.ApplyConfiguration(new CollectConfig());
-            modelBuilder.ApplyConfiguration(new ForwardConfig());
-            modelBuilder.ApplyConfiguration(new ForwardStateConfig());
-            modelBuilder.ApplyConfiguration(new IdNameConfig());
-            modelBuilder.ApplyConfiguration(new JournalConfig());
-            modelBuilder.ApplyConfiguration(new PermissionConfig());
-            modelBuilder.ApplyConfiguration(new PermissionTypeConfig());
-            modelBuilder.ApplyConfiguration(new SettingConfig());
-            modelBuilder.ApplyConfiguration(new TakeCashConfig());
-            modelBuilder.ApplyConfiguration(new TaskConfig());
-            modelBuilder.ApplyConfiguration(new UserConfig());
+            
+            modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         }
 
         public IQueryable<T> GetAll<T>() where T : BaseEntity
         {
-            return this.Set<T>().Where(e => e.IsDeleted == false);
+            return this.Set<T>().Where(e => e.IsDeleted == 0);
         }
 
         public long GetId<T>(Expression<Func<T, bool>> expression) where T : BaseEntity
         {
-            return this.Set<T>().AsNoTracking().Where(e => e.IsDeleted == false).Where(expression).Select(e => e.Id).SingleOrDefault();
+            return this.Set<T>().AsNoTracking().Where(e => e.IsDeleted == 0).Where(expression).Select(e => e.Id).SingleOrDefault();
         }
 
         public async Task<long> GetIdAsync<T>(Expression<Func<T, bool>> expression) where T : BaseEntity
         {
-            return await this.Set<T>().AsNoTracking().Where(e => e.IsDeleted == false).Where(expression).Select(e => e.Id).SingleOrDefaultAsync();
+            return await this.Set<T>().AsNoTracking().Where(e => e.IsDeleted == 0).Where(expression).Select(e => e.Id).SingleOrDefaultAsync();
         }
 
         public IQueryable<long> GetIds<T>(Expression<Func<T, bool>> expression) where T : BaseEntity
         {
-            return this.Set<T>().AsNoTracking().Where(e => e.IsDeleted == false).Where(expression).Select(e => e.Id);
+            return this.Set<T>().AsNoTracking().Where(e => e.IsDeleted == 0).Where(expression).Select(e => e.Id);
         }
 
         public string GetParameter<T>(Expression<Func<T, bool>> expression, Expression<Func<T, string>> parameterName) where T : BaseEntity
         {
-            return this.Set<T>().AsNoTracking().Where(e => e.IsDeleted == false).Where(expression).Select(parameterName).SingleOrDefault();
+            return this.Set<T>().AsNoTracking().Where(e => e.IsDeleted == 0).Where(expression).Select(parameterName).SingleOrDefault();
         }
 
         public async Task<string> GetParameterAsync<T>(Expression<Func<T, bool>> expression, Expression<Func<T, string>> parameterName) where T : BaseEntity
         {
-            return await this.Set<T>().AsNoTracking().Where(e => e.IsDeleted == false).Where(expression).Select(parameterName).SingleOrDefaultAsync();
+            return await this.Set<T>().AsNoTracking().Where(e => e.IsDeleted == 0).Where(expression).Select(parameterName).SingleOrDefaultAsync();
         }
 
         public long GetlongParameter<T>(Expression<Func<T, bool>> expression, Expression<Func<T, long>> parameterName) where T : BaseEntity
         {
-            return this.Set<T>().AsNoTracking().Where(e => e.IsDeleted == false).Where(expression).Select(parameterName).SingleOrDefault();
+            return this.Set<T>().AsNoTracking().Where(e => e.IsDeleted == 0).Where(expression).Select(parameterName).SingleOrDefault();
         }
 
         public async Task<long> GetlongParameterAsync<T>(Expression<Func<T, bool>> expression, Expression<Func<T, long>> parameterName) where T : BaseEntity
         {
-            return await this.Set<T>().AsNoTracking().Where(e => e.IsDeleted == false).Where(expression).Select(parameterName).SingleOrDefaultAsync();
+            return await this.Set<T>().AsNoTracking().Where(e => e.IsDeleted == 0).Where(expression).Select(parameterName).SingleOrDefaultAsync();
         }
 
         public decimal GetDecimalParameter<T>(Expression<Func<T, bool>> expression, Expression<Func<T, decimal>> parameterName) where T : BaseEntity
         {
-            return this.Set<T>().AsNoTracking().Where(e => e.IsDeleted == false).Where(expression).Select(parameterName).SingleOrDefault();
+            return this.Set<T>().AsNoTracking().Where(e => e.IsDeleted == 0).Where(expression).Select(parameterName).SingleOrDefault();
         }
 
         public async Task<decimal> GetDecimalParameterAsync<T>(Expression<Func<T, bool>> expression, Expression<Func<T, decimal>> parameterName) where T : BaseEntity
         {
-            return await this.Set<T>().AsNoTracking().Where(e => e.IsDeleted == false).Where(expression).Select(parameterName).SingleOrDefaultAsync();
+            return await this.Set<T>().AsNoTracking().Where(e => e.IsDeleted == 0).Where(expression).Select(parameterName).SingleOrDefaultAsync();
         }
 
         public DbSet<UserEntity> Users { get; set; }
@@ -99,5 +89,7 @@ namespace Service
         public DbSet<ForwardEntity> Forwards { get; set; }
         public DbSet<ForwardStateEntity> ForwardStates { get; set; }
         public DbSet<CollectEntity> Collects { get; set; }
+        public DbSet<AdminPermissionEntity> AdminPermissions { get; set; }
+        public DbSet<PersonEntity> Persons { get; set; }
     }
 }

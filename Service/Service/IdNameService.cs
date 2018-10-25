@@ -32,7 +32,7 @@ namespace Service.Service
                 {
                     return false;
                 }
-                idName.IsDeleted = true;
+                idName.IsDeleted = 1;
                 await dbc.SaveChangesAsync();
                 return true;
             }            

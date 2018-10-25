@@ -87,7 +87,7 @@ namespace Service.Service
                 {
                     return -1;
                 }
-                entity.IsDeleted = true;
+                entity.IsDeleted = 1;
                 await dbc.SaveChangesAsync();
                 return 1;
             }

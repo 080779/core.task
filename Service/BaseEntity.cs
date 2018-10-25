@@ -8,6 +8,6 @@ namespace Service
     {
         public long Id { get; set; }
         public DateTime CreateTime { get; set; } = DateTime.Now;
-        public bool IsDeleted { get; set; } = false;
+        public int IsDeleted { get; set; } = 0;
     }
 }

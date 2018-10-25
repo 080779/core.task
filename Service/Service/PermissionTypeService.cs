@@ -32,7 +32,7 @@ namespace Service.Service
                 {
                     return false;
                 }
-                permissionType.IsDeleted = true;
+                permissionType.IsDeleted = 1;
                 await dbc.SaveChangesAsync();
                 return true;
             }
@@ -42,7 +42,7 @@ namespace Service.Service
         {
             using (MyDbContext dbc = new MyDbContext())
             {
-                var entities = dbc.GetAll<PermissionTypeEntity>().AsNoTracking().Where(p=>p.IsNull == false);
+                var entities = dbc.GetAll<PermissionTypeEntity>().AsNoTracking().Where(p=>p.IsEnabled == 1);
                 var permissionTypes = await entities.ToListAsync();
                 return permissionTypes.Select(p => ToDTO(p)).ToArray();
             }

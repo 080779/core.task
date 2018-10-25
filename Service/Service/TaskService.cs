@@ -126,7 +126,7 @@ namespace Service.Service
                 {
                     return false;
                 }
-                task.IsDeleted = true;
+                task.IsDeleted = 1;
                 await dbc.SaveChangesAsync();
                 return true;
             }
@@ -160,7 +160,7 @@ namespace Service.Service
             using (MyDbContext dbc = new MyDbContext())
             {
                 TaskSearchResult result = new TaskSearchResult();
-                IQueryable<TaskEntity> tasks = dbc.GetAll<CollectEntity>().Where(c => c.UserId == userId).Select(c => c.Task).Where(t => t.IsDeleted == false);
+                IQueryable<TaskEntity> tasks = dbc.GetAll<CollectEntity>().Where(c => c.UserId == userId).Select(c => c.Task).Where(t => t.IsDeleted == 0);
                 result.PageCount = (int)Math.Ceiling((await tasks.LongCountAsync()) * 1.0f / pageSize);
                 var taskResult = await tasks.OrderByDescending(a => a.CreateTime).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
                 DateTime now = DateTime.Now;
@@ -192,7 +192,7 @@ namespace Service.Service
                 {
                     forwards = forwards.Where(f=>f.StateId==forwardStateId);
                 }
-                IQueryable<TaskEntity> tasks = forwards.Select(c => c.Task).Where(t => t.IsDeleted == false);
+                IQueryable<TaskEntity> tasks = forwards.Select(c => c.Task).Where(t => t.IsDeleted == 0);
                 result.PageCount = (int)Math.Ceiling((await tasks.LongCountAsync()) * 1.0f / pageSize);
                 var taskResult = await tasks.OrderByDescending(a => a.CreateTime).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
                 DateTime now = DateTime.Now;
@@ -212,7 +212,7 @@ namespace Service.Service
             {
                 TaskSearchResult result = new TaskSearchResult();
                 IQueryable<ForwardEntity> forwards = dbc.GetAll<ForwardEntity>().Where(c => c.UserId == userId).Where(c=>c.State.Name== "已接受" || c.State.Name== "审核中");
-                IQueryable<TaskEntity> tasks = forwards.Select(c => c.Task).Where(t => t.IsDeleted == false);
+                IQueryable<TaskEntity> tasks = forwards.Select(c => c.Task).Where(t => t.IsDeleted == 0);
                 result.PageCount = (int)Math.Ceiling((await tasks.LongCountAsync()) * 1.0f / pageSize);
                 var taskResult = await tasks.OrderByDescending(a => a.CreateTime).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
                 DateTime now = DateTime.Now;

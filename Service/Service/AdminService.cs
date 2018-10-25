@@ -13,28 +13,36 @@ namespace Service.Service
 {
     public class AdminService : IAdminService
     {
-        public AdminDTO ToDTO(AdminEntity entity)
+        public AdminDTO ToDTO(AdminEntity entity, long[] permissionIds)
         {
             AdminDTO dto = new AdminDTO();
             dto.CreateTime = entity.CreateTime;
             dto.Description = entity.Description;
             dto.Id = entity.Id;
+            dto.Name = entity.Name;
             dto.Mobile = entity.Mobile;
             dto.IsEnabled = entity.IsEnabled;
-            dto.PermissionIds = entity.Permissions.Select(p => p.Id).ToArray();
+            //dto.PermissionIds = entity.AdminPermissions.Select(a => a.PermissionId).ToArray();
+            dto.PermissionIds = permissionIds;
             return dto;
         }
-        public async Task<long> AddAsync(string adminMobile,string mobile, string description, string password)
+        public async Task<long> AddAsync(string name, string mobile, string description, string password)
         {
             using (MyDbContext dbc = new MyDbContext())
             {
-                var user = dbc.GetAll<AdminEntity>().SingleOrDefault(a => a.Mobile == mobile);
-                if (user!=null)
+                long userId = await dbc.GetIdAsync<AdminEntity>(a => a.Name == name);
+                if (userId > 0)
+                {
+                    return -1;
+                }
+                userId = await dbc.GetIdAsync<AdminEntity>(a => a.Mobile == mobile);
+                if(userId>0)
                 {
                     return -2;
                 }
 
                 AdminEntity entity = new AdminEntity();
+                entity.Name = name;
                 entity.Mobile = mobile;
                 entity.Description = description;
                 entity.Salt = CommonHelper.GetCaptcha(4);
@@ -49,7 +57,7 @@ namespace Service.Service
             using (MyDbContext dbc = new MyDbContext())
             {
                 var entity = await dbc.GetAll<AdminEntity>().SingleOrDefaultAsync(a => a.Id == id);
-                if(entity==null)
+                if (entity == null)
                 {
                     return false;
                 }
@@ -57,9 +65,11 @@ namespace Service.Service
                 entity.Mobile = mobile;
                 entity.Description = description;
                 entity.Password = CommonHelper.GetMD5(password + entity.Salt);
-                entity.Permissions.Clear();
-                var perms = dbc.GetAll<PermissionEntity>().Where(p => permissionIds.Contains(p.Id));
-                await perms.ForEachAsync(p => entity.Permissions.Add(p));
+                dbc.AdminPermissions.RemoveRange(dbc.AdminPermissions.Where(a => a.AdminId == id));
+                foreach (long perimssionId in permissionIds)
+                {
+                    dbc.AdminPermissions.Add(new AdminPermissionEntity { AdminId = id, PermissionId = perimssionId });
+                }
                 await dbc.SaveChangesAsync();
                 return true;
             }
@@ -74,9 +84,11 @@ namespace Service.Service
                 {
                     return false;
                 }
-                entity.Permissions.Clear();
-                var perms = dbc.GetAll<PermissionEntity>().Where(p => permissionIds.Contains(p.Id));
-                await perms.ForEachAsync(p => entity.Permissions.Add(p));
+                dbc.AdminPermissions.RemoveRange(dbc.AdminPermissions.Where(a => a.AdminId == id));
+                foreach (long perimssionId in permissionIds)
+                {
+                    dbc.AdminPermissions.Add(new AdminPermissionEntity { AdminId = id, PermissionId = perimssionId });
+                }
                 await dbc.SaveChangesAsync();
                 return true;
             }
@@ -106,7 +118,7 @@ namespace Service.Service
                     return false;
                 }
 
-                entity.IsDeleted = true;
+                entity.IsDeleted = 1;
                 await dbc.SaveChangesAsync();
                 return true;
             }
@@ -122,7 +134,7 @@ namespace Service.Service
                     return false;
                 }
 
-                entity.IsEnabled = !entity.IsEnabled;
+                entity.IsEnabled = entity.IsEnabled == 1 ? 0 : 1;
                 await dbc.SaveChangesAsync();
                 return true;
             }
@@ -132,7 +144,7 @@ namespace Service.Service
         {
             using (MyDbContext dbc = new MyDbContext())
             {
-                return await dbc.GetParameterAsync<AdminEntity>(a=>a.Id==id,a=>a.Mobile);
+                return await dbc.GetParameterAsync<AdminEntity>(a => a.Id == id, a => a.Mobile);
             }
         }
 
@@ -140,24 +152,24 @@ namespace Service.Service
         {
             using (MyDbContext dbc = new MyDbContext())
             {
-                var entity = await dbc.GetAll<AdminEntity>().AsNoTracking().SingleOrDefaultAsync(a => a.Id == id);
+                var entity = await dbc.GetAll<AdminEntity>().SingleOrDefaultAsync(a => a.Id == id);
                 if (entity == null)
                 {
                     return null;
                 }
-                return ToDTO(entity);
+                return ToDTO(entity, dbc.AdminPermissions.Where(a => a.AdminId == id).Select(a => a.PermissionId).ToArray());
             }
         }
 
-        public async Task<AdminSearchResult> GetModelListAsync(string isAdmin,string keyword, DateTime? startTime, DateTime? endTime, int pageIndex, int pageSize)
+        public async Task<AdminSearchResult> GetModelListAsync(string isAdmin, string keyword, DateTime? startTime, DateTime? endTime, int pageIndex, int pageSize)
         {
             using (MyDbContext dbc = new MyDbContext())
             {
                 AdminSearchResult result = new AdminSearchResult();
                 var admins = dbc.GetAll<AdminEntity>().AsNoTracking();
-                if(isAdmin!="admin")
+                if (isAdmin != "admin")
                 {
-                    admins = admins.Where(a => a.Mobile== isAdmin);
+                    admins = admins.Where(a => a.Mobile == isAdmin);
                 }
                 else
                 {
@@ -167,7 +179,7 @@ namespace Service.Service
                     }
                     if (startTime != null)
                     {
-                        admins = admins.Where(a => a.CreateTime>=startTime);
+                        admins = admins.Where(a => a.CreateTime >= startTime);
                     }
                     if (endTime != null)
                     {
@@ -175,8 +187,8 @@ namespace Service.Service
                     }
                 }
                 result.PageCount = (int)Math.Ceiling((await admins.LongCountAsync()) * 1.0f / pageSize);
-                var adminsResult= await admins.OrderByDescending(a => a.CreateTime).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
-                result.Admins = adminsResult.Select(a => ToDTO(a)).ToArray();                
+                var adminsResult = await admins.OrderByDescending(a => a.CreateTime).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
+                result.Admins = adminsResult.Select(a => ToDTO(a, dbc.AdminPermissions.Where(ap => ap.AdminId == a.Id).Select(ap => ap.PermissionId).ToArray())).ToArray();
                 return result;
             }
         }
@@ -205,7 +217,7 @@ namespace Service.Service
                 }
                 result.PageCount = (int)Math.Ceiling((await admins.LongCountAsync()) * 1.0f / pageSize);
                 var adminsResult = await admins.OrderByDescending(a => a.CreateTime).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
-                result.Admins = adminsResult.Select(a => ToDTO(a)).ToArray();
+                result.Admins = adminsResult.Select(a => ToDTO(a, dbc.AdminPermissions.Where(ap => ap.AdminId == a.Id).Select(ap => ap.PermissionId).ToArray())).ToArray();
                 return result;
             }
         }
@@ -214,12 +226,7 @@ namespace Service.Service
         {
             using (MyDbContext dbc = new MyDbContext())
             {
-                var admin = dbc.GetAll<AdminEntity>().Include(a=>a.Permissions).AsNoTracking().SingleOrDefault(a => a.Id == id);
-                if(admin==null)
-                {
-                    return false;
-                }
-                return admin.Permissions.Any(p => p.Description.Contains(description));
+                return dbc.AdminPermissions.Include(a => a.Permission).Any(a => a.AdminId == id && a.Permission.Description == description);
             }
         }
 
@@ -232,12 +239,12 @@ namespace Service.Service
                 {
                     return -1;
                 }
-                if(!admin.IsEnabled)
+                if (admin.IsEnabled==0)
                 {
                     return -2;
                 }
                 string pwd = CommonHelper.GetMD5(password + admin.Salt);
-                if (admin.Password!=pwd)
+                if (admin.Password != pwd)
                 {
                     return -3;
                 }
