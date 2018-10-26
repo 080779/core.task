@@ -1,5 +1,6 @@
 ﻿using DTO;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace IService
@@ -8,14 +9,14 @@ namespace IService
     {
         Task<long> AddAsync(string name, string mobile, string description, string password);
         Task<bool> UpdateAsync(long id, string mobile, string description, string password, long[] permissionIds);
-        Task<bool> UpdateAsync(long id, long[] permissionIds);
+        Task<bool> UpdateAsync(long id, List<long> permissionIds);
         Task<bool> UpdateAsync(long id, string password);
         Task<bool> DeleteAsync(long id);
         Task<bool> FrozenAsync(long id);
         Task<string> GetMobileByIdAsync(long id);
         Task<string> GetNameByIdAsync(long id);
         Task<AdminDTO> GetModelAsync(long id);
-        Task<AdminSearchResult> GetModelListAsync(string isAdmin, string mobile, DateTime? startTime, DateTime? endTime, int pageIndex, int pageSize);
+        Task<AdminSearchResult> GetModelListAsync(string isAdmin, string keyword, DateTime? startTime, DateTime? endTime, int pageIndex, int pageSize);
         Task<AdminSearchResult> GetModelListHasPerAsync(string isAdmin, string mobile, DateTime? startTime, DateTime? endTime, int pageIndex, int pageSize);
         bool HasPermission(long id, string description);
         Task<long> CheckLogin(string mobile, string password);

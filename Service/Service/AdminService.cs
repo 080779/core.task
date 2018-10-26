@@ -75,7 +75,7 @@ namespace Service.Service
             }
         }
 
-        public async Task<bool> UpdateAsync(long id, long[] permissionIds)
+        public async Task<bool> UpdateAsync(long id, List<long> permissionIds)
         {
             using (MyDbContext dbc = new MyDbContext())
             {
@@ -177,7 +177,7 @@ namespace Service.Service
                 var admins = dbc.GetAll<AdminEntity>().AsNoTracking();
                 if (isAdmin != "admin")
                 {
-                    admins = admins.Where(a => a.Mobile == isAdmin);
+                    admins = admins.Where(a => a.Name == isAdmin);
                 }
                 else
                 {
@@ -191,7 +191,7 @@ namespace Service.Service
                     }
                     if (endTime != null)
                     {
-                        admins = admins.Where(a => a.CreateTime <= endTime);
+                        admins = admins.Where(a => a.CreateTime.Year <= endTime.Value.Year && a.CreateTime.Month <= endTime.Value.Month && a.CreateTime.Day <= endTime.Value.Day);
                     }
                 }
                 result.PageCount = (int)Math.Ceiling((await admins.LongCountAsync()) * 1.0f / pageSize);
