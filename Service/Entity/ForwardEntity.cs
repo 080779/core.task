@@ -18,6 +18,6 @@ namespace Service.Entity
         public long StateId { get; set; }
         public ForwardStateEntity State { get; set; }
         public long Count { get; set; } = 0;
-        public ImgUrl { get; set; }
+        public string ImgUrl { get; set; }
     }
 }
