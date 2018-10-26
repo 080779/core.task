@@ -39,7 +39,7 @@ namespace Web.Controllers
             AdminSearchResult res = await adminService.GetModelListAsync("admin", keyword, startTime, endTime, pageIndex, pageSize);
             ListViewModel model = new ListViewModel();
             model.Admins = res.Admins;
-            PermissionTypeDTO[] types = await permissionTypeService.GetModelList();
+            PermissionTypeDTO[] types = await permissionTypeService.GetModelListIsEnableAsync();
             List<PermissionType> permissionTypes = new List<PermissionType>();
             foreach (var type in types)
             {
@@ -127,7 +127,7 @@ namespace Web.Controllers
             {
                 permissionIds = new List<long>();
             }
-            PermissionTypeDTO[] types = await permissionTypeService.GetModelList();
+            PermissionTypeDTO[] types = await permissionTypeService.GetModelListIsEnableAsync();
             List<PermissionType> permissionTypes = new List<PermissionType>();
             foreach (var type in types)
             {

@@ -183,7 +183,7 @@ namespace Service.Service
                 {
                     if (!string.IsNullOrEmpty(keyword))
                     {
-                        admins = admins.Where(a => a.Mobile.Contains(keyword));
+                        admins = admins.Where(a => a.Name.Contains(keyword));
                     }
                     if (startTime != null)
                     {

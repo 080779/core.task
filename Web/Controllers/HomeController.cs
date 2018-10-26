@@ -24,7 +24,7 @@ namespace Web.Controllers
             //long userId = Convert.ToInt64(Session["Platform_AdminUserId"]);
             HomeIndexViewModel model = new HomeIndexViewModel();
             model.Name = await adminService.GetNameByIdAsync(2);
-            model.PermissionTypes = await permissionTypeService.GetModelList();
+            model.PermissionTypes = await permissionTypeService.GetModelListIsEnableAsync();
             return View(model);
         }
 

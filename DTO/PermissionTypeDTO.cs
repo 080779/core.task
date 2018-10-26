@@ -10,5 +10,7 @@ namespace DTO
     {
         public string Name { get; set; }
         public string Description { get; set; }
+        public int Sort { get; set; }
+        public int IsEnabled { get; set; }
     }
 }

@@ -7,9 +7,15 @@ using System.Threading.Tasks;
 
 namespace IService
 {
-    public interface IPermissionService:IServiceSupport
+    public interface IPermissionService : IServiceSupport
     {
-        Task<PermissionDTO[]> GetByTypeIdAsync(long id);
+        Task<long> AddAsync(string name, int sort, long permissionTypeId);
+        Task<long> EditAsync(long id, string name, int sort);
+        Task<bool> FrozenAsync(long id);
+        Task<bool> DelAsync(long id);
+        Task<PermissionDTO> GetModelByIdAsync(long id);
         PermissionDTO GetByDesc(string description);
+        Task<PermissionDTO[]> GetByTypeIdIsEnableAsync(long id);
+        Task<PermissionDTO[]> GetByTypeIdAsync(long id);
     }
 }

@@ -13,5 +13,7 @@ namespace DTO
         public long PermissionTypeId { get; set; }
         public string PermissionTypeName { get; set; }
         public bool IsChecked { get; set; } = false;
+        public int Sort { get; set; }
+        public int IsEnabled { get; set; }
     }
 }

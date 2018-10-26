@@ -13,7 +13,7 @@ namespace Service.Entity
     {
         public string Name { get; set; }
         public string Description { get; set; }
-        public int Sort { get; set; }
+        public int Sort { get; set; } = 1;
         public int IsEnabled { get; set; } = 1;
     }
 }

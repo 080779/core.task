@@ -79,8 +79,8 @@
                                     <td class="td-manage">
                                         <a v-on:click="resetpwd(admin.id,admin.name)" href="javascript:;" title="修改密码" class="btn btn-xs btn-success">修改密码</a>
                                         <a title="权限管理" v-on:click="permedit(admin.id,admin.permissionIds)" href="javascript:;" class="btn btn-xs btn-info">权限管理</a>
-                                        <a title="冻结" href="javascript:;" v-if="admin.mobile!='admin'" v-on:click="frozen(admin.id,admin.isEnabled)" class="btn btn-xs btn-warning" v-html="admin.isEnabled?'冻结账户':'解冻账户'"></a>
-                                        <a title="删除" href="javascript:;" v-if="admin.mobile!='admin'" v-on:click="del(admin.id)" class="btn btn-xs btn-warning">删除账户</a>
+                                        <a title="冻结" href="javascript:;" v-if="admin.name!='admin'" v-on:click="frozen(admin.id,admin.isEnabled)" class="btn btn-xs btn-warning" v-html="admin.isEnabled?'冻结账户':'解冻账户'"></a>
+                                        <a title="删除" href="javascript:;" v-if="admin.name!='admin'" v-on:click="del(admin.id)" class="btn btn-xs btn-warning">删除账户</a>
                                     </td>
                                 </tr>
                             </tbody>

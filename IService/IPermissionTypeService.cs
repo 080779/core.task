@@ -9,7 +9,12 @@ namespace IService
 {
     public interface IPermissionTypeService:IServiceSupport
     {
-        Task<bool> DelByNameAsync(string name);
-        Task<PermissionTypeDTO[]> GetModelList();
+        Task<long> AddAsync(string name,string description,int sort);
+        Task<long> EditAsync(long id,string name, string description, int sort);
+        Task<bool> FrozenAsync(long id);
+        Task<bool> DelAsync(long id);
+        Task<PermissionTypeDTO> GetModelAsync(long id);
+        Task<PermissionTypeDTO[]> GetModelListIsEnableAsync();
+        Task<PermissionTypeDTO[]> GetModelListAsync();
     }
 }
