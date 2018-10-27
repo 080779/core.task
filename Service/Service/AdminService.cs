@@ -165,7 +165,7 @@ namespace Service.Service
                 {
                     return null;
                 }
-                return ToDTO(entity, dbc.AdminPermissions.Where(a => a.AdminId == id).Select(a => a.PermissionId).ToArray());
+                return ToDTO(entity, dbc.GetAll<AdminPermissionEntity>().Where(a => a.AdminId == id).Select(a => a.PermissionId).ToArray());
             }
         }
 
@@ -196,7 +196,7 @@ namespace Service.Service
                 }
                 result.PageCount = (int)Math.Ceiling((await admins.LongCountAsync()) * 1.0f / pageSize);
                 var adminsResult = await admins.OrderByDescending(a => a.CreateTime).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
-                result.Admins = adminsResult.Select(a => ToDTO(a, dbc.AdminPermissions.Where(ap => ap.AdminId == a.Id).Select(ap => ap.PermissionId).ToArray())).ToArray();
+                result.Admins = adminsResult.Select(a => ToDTO(a, dbc.GetAll<AdminPermissionEntity>().Where(ap => ap.AdminId == a.Id).Select(ap => ap.PermissionId).ToArray())).ToArray();
                 return result;
             }
         }
@@ -225,7 +225,7 @@ namespace Service.Service
                 }
                 result.PageCount = (int)Math.Ceiling((await admins.LongCountAsync()) * 1.0f / pageSize);
                 var adminsResult = await admins.OrderByDescending(a => a.CreateTime).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
-                result.Admins = adminsResult.Select(a => ToDTO(a, dbc.AdminPermissions.Where(ap => ap.AdminId == a.Id).Select(ap => ap.PermissionId).ToArray())).ToArray();
+                result.Admins = adminsResult.Select(a => ToDTO(a, dbc.GetAll<AdminPermissionEntity>().Where(ap => ap.AdminId == a.Id).Select(ap => ap.PermissionId).ToArray())).ToArray();
                 return result;
             }
         }
@@ -234,7 +234,7 @@ namespace Service.Service
         {
             using (MyDbContext dbc = new MyDbContext())
             {
-                return dbc.AdminPermissions.Include(a => a.Permission).Any(a => a.AdminId == id && a.Permission.Description == description);
+                return dbc.GetAll<AdminPermissionEntity>().Include(a => a.Permission).Any(a => a.AdminId == id && a.Permission.Description == description);
             }
         }
 

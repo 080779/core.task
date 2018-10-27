@@ -257,16 +257,12 @@ namespace Service.Service
             }
         }
 
-        public async Task<TaskSearchResult> GetModelListAsync(bool isAdmin, long? userId, string keyword, DateTime? startTime, DateTime? endTime, int pageIndex, int pageSize)
+        public async Task<TaskSearchResult> GetModelListAsync(long? userId, string keyword, DateTime? startTime, DateTime? endTime, int pageIndex, int pageSize)
         {
             using (MyDbContext dbc = new MyDbContext())
             {
                 TaskSearchResult result = new TaskSearchResult();
                 var entities = dbc.GetAll<TaskEntity>();
-                if(!isAdmin)
-                {
-                    entities = entities.Where(t=>t.IsEnabled==true);
-                }
                 if (!string.IsNullOrEmpty(keyword))
                 {
                     entities = entities.Where(g => g.Title.Contains(keyword) || g.Condition.Contains(keyword) || g.Explain.Contains(keyword) || g.Content.Contains(keyword));
@@ -277,7 +273,7 @@ namespace Service.Service
                 }
                 if (endTime != null)
                 {
-                    entities = entities.Where(a => a.CreateTime <= endTime);
+                    entities = entities.Where(a => a.CreateTime.Year >= startTime.Value.Year && a.CreateTime.Month >= startTime.Value.Month && a.CreateTime.Day >= startTime.Value.Day);
                 }
                 result.PageCount = (int)Math.Ceiling((await entities.LongCountAsync()) * 1.0f / pageSize);
                 var taskResult = await entities.OrderByDescending(a => a.CreateTime).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();

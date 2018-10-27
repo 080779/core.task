@@ -89,6 +89,7 @@ namespace Service.Service
                     return false;
                 }
                 entity.IsDeleted = 1;
+                await dbc.SaveChangesAsync();
                 return true;
             }
         }
@@ -106,16 +107,11 @@ namespace Service.Service
             }
         }
 
-        public PermissionDTO GetByDesc(string description)
+        public string GetNameByDesc(string description)
         {
             using (MyDbContext dbc = new MyDbContext())
             {
-                var entity = dbc.GetAll<PermissionEntity>().Include(p => p.PermissionType).AsNoTracking().SingleOrDefault(p => p.Description == description);
-                if (entity == null)
-                {
-                    return null;
-                }
-                return ToDTO(entity);
+                return dbc.GetParameter<PermissionEntity>(p => p.Description == description, p => p.Name);
             }
         }
 
@@ -124,7 +120,7 @@ namespace Service.Service
             using (MyDbContext dbc = new MyDbContext())
             {
                 var entities = dbc.GetAll<PermissionEntity>().Include(p => p.PermissionType).AsNoTracking().Where(p => p.PermissionTypeId == id && p.IsEnabled==1);
-                var permissions = await entities.ToListAsync();
+                var permissions = await entities.OrderBy(p => p.Sort).ToListAsync();
                 return permissions.Select(p => ToDTO(p)).ToArray();
             }
         }
@@ -134,7 +130,7 @@ namespace Service.Service
             using (MyDbContext dbc = new MyDbContext())
             {
                 var entities = dbc.GetAll<PermissionEntity>().Include(p => p.PermissionType).AsNoTracking().Where(p => p.PermissionTypeId == id);
-                var permissions = await entities.ToListAsync();
+                var permissions = await entities.OrderBy(p=>p.Sort).ToListAsync();
                 return permissions.Select(p => ToDTO(p)).ToArray();
             }
         }

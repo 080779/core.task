@@ -14,7 +14,7 @@ namespace IService
         Task<bool> FrozenAsync(long id);
         Task<bool> DelAsync(long id);
         Task<PermissionDTO> GetModelByIdAsync(long id);
-        PermissionDTO GetByDesc(string description);
+        string GetNameByDesc(string description);
         Task<PermissionDTO[]> GetByTypeIdIsEnableAsync(long id);
         Task<PermissionDTO[]> GetByTypeIdAsync(long id);
     }

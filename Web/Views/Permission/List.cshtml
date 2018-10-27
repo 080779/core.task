@@ -45,7 +45,7 @@
                             <a v-on:click="add" class="btn btn-warning"><i class="icon-plus"></i>添加权限</a>
                         </span>
                         <span class="l_f">
-                            <a href="javascript:history.back(-1);" class="btn btn-xs"><i class="icon-plus"></i>返回权限类别列表</a>
+                            <a href="javascript:history.back(-1);" class="btn btn-success"><i class="icon-plus"></i>返回权限类别列表</a>
                         </span>
                     </div>
                     <div class="table_menu_list">
@@ -55,6 +55,7 @@
                                     <th width="30">编号</th>
                                     <th width="60">权限名</th>
                                     <th width="80">权限描述</th>
+                                    <th width="80">权限类别名</th>
                                     <th width="50">状态</th>
                                     <th width="30">排序</th>
                                     <th width="100">添加时间</th>
@@ -66,6 +67,7 @@
                                     <td v-html="permission.id"></td>
                                     <td v-html="permission.name"></td>
                                     <td v-html="permission.description"></td>
+                                    <td v-html="permission.permissionTypeName"></td>
                                     <td class="td-status"><span class="label label-success radius" v-html="permission.isEnabled?'正常':'已冻结'"></span></td>
                                     <td v-html="permission.sort"></td>
                                     <td v-html="permission.createTime"></td>
@@ -105,8 +107,8 @@
         <!--添加权限类别图层-->
         <div class="add_menber" id="edit" style="display:none">
             <ul class="page-content">
-                <li><label class="label_name">权限名：</label><span class="add_name"><input value="" placeholder="权限名" v-model="edit.name" name="权限名" type="text" class="text_add" /></span><div class="prompt r_f"></div></li>
-                <li><label class="label_name">排序：</label><span class="add_name"><input placeholder="排序" name="排序" type="text" v-model="edit.sort" class="text_add" /></span><div class="prompt r_f"></div></li>
+                <li><label class="label_name">权限名：</label><span class="add_name"><input value="" placeholder="权限名" v-model="edits.name" name="权限名" type="text" class="text_add" /></span><div class="prompt r_f"></div></li>
+                <li><label class="label_name">排序：</label><span class="add_name"><input placeholder="排序" name="排序" type="text" v-model="edits.sort" class="text_add" /></span><div class="prompt r_f"></div></li>
             </ul>
         </div>
     </div>
@@ -123,7 +125,7 @@
             pages: {
                 all: 1, cur: 1, txtpage: ""
             },
-            edit: {
+            edits: {
                 name: "", sort: ""
             },
             add_name: "", add_sort: "",
@@ -153,9 +155,7 @@
             add: function () {
                 var that = this;
                 add_name = "";
-                add_description = "";
                 add_sort = "";
-                var permissionTypeId = $("#typeId").val();
                 layer.open({
                     type: 1,
                     title: '添加权限',
@@ -169,7 +169,7 @@
                             layer.alert('权限名不能为空', { icon: 0, title: '提示框' });
                             return;
                         }
-                        that.$http.post('/admin/permission/add', { name: that.add_name, description: that.add_description, sort: that.add_sort, permissionTypeId: permissionTypeId }, { emulateJSON: true }).then(function (result) {
+                        that.$http.post('/admin/permission/add', { name: that.add_name, sort: that.add_sort, permissionTypeId: that.typeId }, { emulateJSON: true }).then(function (result) {
                             if (result.data.status == 1) {
                                 layer.alert(result.data.msg, { icon: 6, title: '提示框' });
                                 layer.close(index);
@@ -192,7 +192,7 @@
                 var that = this;
                 that.$http.post('/admin/permission/getPermission', { id: id }, { emulateJSON: true }).then(function (result) {
                     if (result.data.status == 1) {
-                        that.edit = result.data.data;
+                        that.edits = result.data.data;
                     }
                     else if (result.data.status == 0) {
                         layer.alert(result.data.msg, { icon: 0, title: '提示框' });
@@ -217,7 +217,7 @@
                             layer.alert('权限名不能为空', { icon: 0, title: '提示框' });
                             return;
                         }
-                        that.$http.post('/admin/permission/edit', { id: id, name: that.edit.name, description: that.edit.description, sort: that.edit.sort }, { emulateJSON: true }).then(function (result) {
+                        that.$http.post('/admin/permission/edit', { id: id, name: that.edits.name, sort: that.edits.sort }, { emulateJSON: true }).then(function (result) {
                             if (result.data.status == 1) {
                                 layer.alert(result.data.msg, { icon: 6, title: '提示框' });
                                 layer.close(index);

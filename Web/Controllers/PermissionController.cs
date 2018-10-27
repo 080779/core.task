@@ -106,5 +106,63 @@ namespace Web.Controllers
             return Json(new AjaxResult { Status = 1, Data = model });
         }
         #endregion
+
+        #region 添加权限
+        [HttpPost]
+        public async Task<IActionResult> Add(string name,int sort,long permissionTypeId)
+        {
+            var res = await permissionService.AddAsync(name,sort,permissionTypeId);
+            if(res<=0)
+            {
+                return Json(new AjaxResult { Status = 0, Msg = "添加权限失败" });
+            }
+            return Json(new AjaxResult { Status = 1, Msg = "添加权限失败" });
+        }
+        #endregion
+
+        #region 修改权限
+        [HttpPost]
+        public async Task<IActionResult> Edit(long id, string name, int sort)
+        {
+            var res = await permissionService.EditAsync(id, name, sort);
+            if (res <= 0)
+            {
+                return Json(new AjaxResult { Status = 0, Msg = "修改权限失败" });
+            }
+            return Json(new AjaxResult { Status = 1, Msg = "修改权限成功" });
+        }
+        [HttpPost]
+        public async Task<IActionResult> GetPermission(long id)
+        {
+            var model = await permissionService.GetModelByIdAsync(id);
+            return Json(new AjaxResult { Status = 1, Data = model });
+        }
+        #endregion
+
+        #region 冻结、解冻权限类别
+        [HttpPost]
+        public async Task<IActionResult> Frozen(long id)
+        {
+            bool res = await permissionService.FrozenAsync(id);
+            if (!res)
+            {
+                return Json(new AjaxResult { Status = 0, Msg = "冻结、解冻权限失败" });
+            }
+            return Json(new AjaxResult { Status = 1, Msg = "冻结、解冻权限成功" });
+        }
+        #endregion
+
+        #region 删除权限类别
+        [HttpPost]
+        public async Task<IActionResult> Del(long id)
+        {
+            bool res = await permissionService.DelAsync(id);
+            if (!res)
+            {
+                return Json(new AjaxResult { Status = 0, Msg = "删除权限失败" });
+            }
+            return Json(new AjaxResult { Status = 1, Msg = "删除权限成功" });
+        }
+        #endregion
     }
 }
