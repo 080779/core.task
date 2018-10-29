@@ -19,6 +19,6 @@ namespace DTO
         public DateTime EndTime { get; set; }//任务结束时间
         public string Publisher { get; set; }//发布人
         public bool? IsCollect { get; set; } = false;
-        public bool IsEnabled { get; set; }
+        public int IsEnabled { get; set; }
     }
 }

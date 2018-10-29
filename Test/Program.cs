@@ -30,12 +30,8 @@ namespace Test
                 //admin.Description = "系统管理员";
                 //admin.Salt = CommonHelper.GetCaptcha(4);
                 //admin.Password = "1" + admin.Salt;
-                PersonEntity person = new PersonEntity();
-                person.Name = "周2";
-                dbc.Persons.Add(person);
-                dbc.SaveChanges();
-                long id = person.Id;
-                Console.WriteLine(id);
+                var tasks =  dbc.GetAll<TaskEntity>().ToList();
+                Console.WriteLine(tasks.Count());
                 Console.ReadKey();
             }
         }

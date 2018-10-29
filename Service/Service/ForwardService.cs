@@ -40,7 +40,7 @@ namespace Service.Service
                 {
                     return -1;
                 }
-                if (task.IsEnabled == false)
+                if (task.IsEnabled == 0)
                 {
                     return -2;
                 }
@@ -111,7 +111,7 @@ namespace Service.Service
                 {
                     return -1;
                 }
-                if(forward.Task.IsEnabled==false)
+                if(forward.Task.IsEnabled==0)
                 {
                     return -2;
                 }

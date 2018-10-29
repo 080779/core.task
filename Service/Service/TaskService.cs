@@ -84,7 +84,7 @@ namespace Service.Service
                 dbc.Tasks.Add(task);
                 await dbc.SaveChangesAsync();
                 task.Url = "/static/" + task.Id + ".html";
-                task.IsEnabled = endTime > DateTime.Now;
+                task.IsEnabled = endTime > DateTime.Now ? 1 : 0;
                 await dbc.SaveChangesAsync();
                 return task.Id;
             }
@@ -106,7 +106,7 @@ namespace Service.Service
                 task.Content = content;
                 //task.StartTime = startTime;
                 task.EndTime = endTime;
-                task.IsEnabled = endTime > DateTime.Now;
+                task.IsEnabled = endTime > DateTime.Now ? 1 : 0;
                 //task.Url = "/static/" + task.Id + ".html";
                 if (string.IsNullOrEmpty(task.Url))
                 {
@@ -149,7 +149,7 @@ namespace Service.Service
                 {
                     return null;
                 }
-                task.IsEnabled = task.EndTime > DateTime.Now;
+                task.IsEnabled = task.EndTime > DateTime.Now ? 1 : 0;
                 await dbc.SaveChangesAsync();
                 return ToDTO(task, dbc.GetId<CollectEntity>(c => c.UserId == userId && c.TaskId == id));
             }
@@ -166,7 +166,7 @@ namespace Service.Service
                 DateTime now = DateTime.Now;
                 foreach (var task in taskResult)
                 {
-                    task.IsEnabled = task.EndTime > now;
+                    task.IsEnabled = task.EndTime > now ? 1 : 0;
                 }
                 await dbc.SaveChangesAsync();
                 result.Tasks = taskResult.Select(a => ToDTO(a, dbc.GetId<CollectEntity>(c => c.UserId == userId && c.TaskId == a.Id))).ToArray();
@@ -198,7 +198,7 @@ namespace Service.Service
                 DateTime now = DateTime.Now;
                 foreach (var task in taskResult)
                 {
-                    task.IsEnabled = task.EndTime > now;
+                    task.IsEnabled = task.EndTime > now ? 1 : 0;
                 }
                 await dbc.SaveChangesAsync();
                 result.Tasks = taskResult.Select(a => ToDTO(a, dbc.GetId<CollectEntity>(c => c.UserId == userId && c.TaskId == a.Id))).ToArray();
@@ -218,7 +218,7 @@ namespace Service.Service
                 DateTime now = DateTime.Now;
                 foreach (var task in taskResult)
                 {
-                    task.IsEnabled = task.EndTime > now;
+                    task.IsEnabled = task.EndTime > now ? 1 : 0;
                 }
                 await dbc.SaveChangesAsync();
                 result.Tasks = taskResult.Select(a => ToDTO(a, dbc.GetId<CollectEntity>(c => c.UserId == userId && c.TaskId == a.Id))).ToArray();
@@ -231,7 +231,7 @@ namespace Service.Service
             using (MyDbContext dbc = new MyDbContext())
             {
                 TaskSearchResult result = new TaskSearchResult();
-                var entities = dbc.GetAll<TaskEntity>().Where(t => t.IsEnabled == true);                
+                var entities = dbc.GetAll<TaskEntity>().Where(t => t.IsEnabled == 1);                
                 if(within!=null)
                 {
                     DateTime date = DateTime.Now.AddDays(-within.Value);
@@ -242,7 +242,7 @@ namespace Service.Service
                 DateTime now = DateTime.Now;
                 foreach (var task in taskResult)
                 {
-                    task.IsEnabled = task.EndTime > now;
+                    task.IsEnabled = task.EndTime > now ? 1 : 0;
                 }
                 await dbc.SaveChangesAsync();
                 if (userId==null)
@@ -280,7 +280,7 @@ namespace Service.Service
                 DateTime now = DateTime.Now;
                 foreach (var task in taskResult)
                 {
-                    task.IsEnabled = task.EndTime > now;
+                    task.IsEnabled = task.EndTime > now ? 1 : 0;
                 }
                 await dbc.SaveChangesAsync();
                 if (userId == null)
