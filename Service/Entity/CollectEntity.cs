@@ -12,7 +12,7 @@ namespace Service.Entity
     public class CollectEntity : BaseEntity
     {
         public long TaskId { get; set; }
-        public virtual TaskEntity Task { get; set; }
+        public TaskEntity Task { get; set; }
         public long UserId { get; set; }
         public UserEntity User { get; set; }
     }
