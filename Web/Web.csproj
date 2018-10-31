@@ -17,7 +17,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Pages\Models\" />
     <Folder Include="wwwroot\static\" />
+    <Folder Include="wwwroot\tasks\images\" />
+    <Folder Include="wwwroot\tasks\js\" />
   </ItemGroup>
 
 </Project>

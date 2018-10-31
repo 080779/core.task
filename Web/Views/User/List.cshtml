@@ -75,7 +75,7 @@
                         <td v-html="user.name"></td>
                         <td v-html="user.mobile"></td>
                         <td v-html="user.amount"></td>
-                        <td v-html="user.isEnabled==true?'已启用':'停用'"></td>
+                        <td class="td-status"><span class="label label-success radius" v-html="user.isEnabled?'正常':'已冻结'"></span></td>
                         <td>
                             <a v-on:click="resetpwd(user.id,user.name)" href="javascript:;" title="重置密码" class="btn btn-xs btn-success">重置密码</a>
                             <a v-on:click="frozen(user.id,user.isEnabled)" href="javascript:;" title="冻结用户" class="btn btn-xs btn-success" v-html="user.isEnabled?'冻结用户':'解冻用户'"></a>

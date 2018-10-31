@@ -5,12 +5,13 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace Web.Pages.Person
+namespace Web.Pages.Login
 {
-    public class ListModel : PageModel
+    public class LoginModel : PageModel
     {
         public void OnGet()
         {
+
         }
     }
 }
