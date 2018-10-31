@@ -102,7 +102,7 @@ namespace Service.Service
                 {
                     return false;
                 }
-                entity.IsEnabled = !entity.IsEnabled;
+                entity.IsEnabled = entity.IsEnabled == 1 ? 0 : 1;
                 await dbc.SaveChangesAsync();
                 return true;
             }
@@ -136,7 +136,7 @@ namespace Service.Service
                 {
                     return -2;
                 }
-                if (entity.IsEnabled == false)
+                if (entity.IsEnabled == 0)
                 {
                     return -3;
                 }

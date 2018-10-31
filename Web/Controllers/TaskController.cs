@@ -7,6 +7,15 @@ using Common;
 using IService;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Abstractions;
+using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Mvc.Razor;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.ViewEngines;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Microsoft.Extensions.DependencyInjection;
+using Web.Filters;
 
 namespace Web.Controllers
 {
@@ -14,10 +23,12 @@ namespace Web.Controllers
     {
         #region 构造函数注入
         private readonly ITaskService taskService;
+        private IServiceProvider serviceProvider;
         private readonly int pageSize = 10;
-        public TaskController(ITaskService taskService)
+        public TaskController(ITaskService taskService, IServiceProvider serviceProvider)
         {
             this.taskService = taskService;
+            this.serviceProvider = serviceProvider;
         }
         #endregion
 
@@ -89,6 +100,31 @@ namespace Web.Controllers
         public async Task<IActionResult> UpContentImg(IFormFile imgFile)
         {            
             return Json(new { errno = "0", data = await ImageHelper.SaveAsync(imgFile)});
+        }
+        #endregion
+
+        #region 页面静态化，未能实现，后面去做
+        //页面静态化方法
+        public async Task<string> RenderViewToString(string viewName, object model = null)
+        {
+            var actionContext = new ActionContext(this.HttpContext, this.RouteData, new ActionDescriptor());
+            var razorViewEngine = serviceProvider.GetServices<IRazorViewEngine>().First();
+            var tempDataProvider = serviceProvider.GetServices<ITempDataProvider>().First();
+            using (var stringWriter = new StringWriter())
+            {
+                var viewResult = razorViewEngine.FindView(actionContext, viewName, true);
+                if (viewResult.View == null)
+                    throw new ArgumentNullException($"未找到视图： {viewName}");
+                var viewDictionary = new ViewDataDictionary(new EmptyModelMetadataProvider(), new ModelStateDictionary()) { Model = model };
+                var viewContext = new ViewContext(actionContext, viewResult.View, viewDictionary, new TempDataDictionary(actionContext.HttpContext, tempDataProvider), stringWriter, new HtmlHelperOptions());
+                await viewResult.View.RenderAsync(viewContext);
+                return stringWriter.ToString();
+            }
+        }
+
+        public IActionResult Info()
+        {
+            return View(10086);
         }
         #endregion
     }

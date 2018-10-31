@@ -33,6 +33,6 @@ namespace Service.Entity
         public string AccountHolder { get; set; }//银行账户持有人
         public string BankName { get; set; }
         public string BankAccount { get; set; }
-        public bool IsEnabled { get; set; } = true;
+        public int IsEnabled { get; set; } = 1;
     }
 }
