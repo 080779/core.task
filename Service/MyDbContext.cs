@@ -91,5 +91,6 @@ namespace Service
         public DbSet<CollectEntity> Collects { get; set; }
         public DbSet<AdminPermissionEntity> AdminPermissions { get; set; }
         public DbSet<PersonEntity> Persons { get; set; }
+        public DbSet<IdNameTypeEntity> IdNameTypes { get; set; }
     }
 }

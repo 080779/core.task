@@ -109,7 +109,7 @@ namespace Web.Controllers
 
         #region 添加权限
         [HttpPost]
-        public async Task<IActionResult> Add(string name,int sort,long permissionTypeId)
+        public async Task<IActionResult> Add(string name,long permissionTypeId, int sort=1)
         {
             var res = await permissionService.AddAsync(name,sort,permissionTypeId);
             if(res<=0)
@@ -139,7 +139,7 @@ namespace Web.Controllers
         }
         #endregion
 
-        #region 冻结、解冻权限类别
+        #region 冻结、解冻权限
         [HttpPost]
         public async Task<IActionResult> Frozen(long id)
         {
@@ -152,7 +152,7 @@ namespace Web.Controllers
         }
         #endregion
 
-        #region 删除权限类别
+        #region 删除权限
         [HttpPost]
         public async Task<IActionResult> Del(long id)
         {

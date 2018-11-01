@@ -9,9 +9,12 @@ namespace IService
 {
     public interface IIdNameService : IServiceSupport
     {
-        Task<bool> DelByNameAsync(string name);
-        Task<long> GetIdByNameAsync(string name);
-        Task<IdNameDTO> GetByNameAsync(string name);
-        Task<IdNameDTO[]> GetByTypeNameAsync(string typeName);
+        Task<long> AddAsync(string name, string description, int sort, long typeId);
+        Task<long> EditAsync(long id, string name, string description, int sort);
+        Task<bool> FrozenAsync(long id);
+        Task<bool> DelAsync(long id);
+        Task<IdNameDTO> GetModelByIdAsync(long id);
+        Task<IdNameDTO[]> GetByTypeIdIsEnableAsync(long id);
+        Task<IdNameDTO[]> GetByTypeIdAsync(long id);
     }
 }

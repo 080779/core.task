@@ -10,54 +10,43 @@ using System.Threading.Tasks;
 
 namespace Service.Service
 {
-    public class IdNameService : IIdNameService
+    public class IdNameTypeService : IIdNameTypeService
     {
-        private IdNameDTO ToDTO(IdNameEntity entity)
+        private IdNameTypeDTO ToDTO(IdNameTypeEntity entity)
         {
-            IdNameDTO dto = new IdNameDTO();
+            IdNameTypeDTO dto = new IdNameTypeDTO();
             dto.CreateTime = entity.CreateTime;
             dto.Id = entity.Id;
             dto.Name = entity.Name;
             dto.Description = entity.Description;
-            dto.Sort = entity.Sort;
             dto.IsEnabled = entity.IsEnabled;
-            dto.TypeName = entity.IdNameType.Name;
-            dto.TypeId = entity.IdNameTypeId;
             return dto;
         }
-        
-        public async Task<long> AddAsync(string name, string description, int sort, long typeId)
+
+        public async Task<long> AddAsync(string name, string description)
         {
             using (MyDbContext dbc = new MyDbContext())
             {
-                string typeName = await dbc.GetParameterAsync<IdNameTypeEntity>(p => p.Id == typeId, p => p.Name);
-                if (string.IsNullOrEmpty(typeName))
-                {
-                    return -1;
-                }
-                IdNameEntity entity = new IdNameEntity();
+                IdNameTypeEntity entity = new IdNameTypeEntity();
                 entity.Name = name;
                 entity.Description = description;
-                entity.Sort = sort;
-                entity.IdNameTypeId = typeId;
-                dbc.IdNames.Add(entity);
+                dbc.IdNameTypes.Add(entity);
                 await dbc.SaveChangesAsync();
                 return entity.Id;
             }
         }
 
-        public async Task<long> EditAsync(long id, string name, string description, int sort)
+        public async Task<long> EditAsync(long id, string name, string description)
         {
             using (MyDbContext dbc = new MyDbContext())
             {
-                IdNameEntity entity = await dbc.GetAll<IdNameEntity>().SingleOrDefaultAsync(p => p.Id == id);
+                IdNameTypeEntity entity = await dbc.GetAll<IdNameTypeEntity>().SingleOrDefaultAsync(p => p.Id == id);
                 if (entity == null)
                 {
                     return -1;
                 }
                 entity.Name = name;
                 entity.Description = description;
-                entity.Sort = sort;
                 await dbc.SaveChangesAsync();
                 return entity.Id;
             }
@@ -67,7 +56,7 @@ namespace Service.Service
         {
             using (MyDbContext dbc = new MyDbContext())
             {
-                IdNameEntity entity = await dbc.GetAll<IdNameEntity>().SingleOrDefaultAsync(p => p.Id == id);
+                IdNameTypeEntity entity = await dbc.GetAll<IdNameTypeEntity>().SingleOrDefaultAsync(p => p.Id == id);
                 if (entity == null)
                 {
                     return false;
@@ -82,7 +71,7 @@ namespace Service.Service
         {
             using (MyDbContext dbc = new MyDbContext())
             {
-                IdNameEntity entity = await dbc.GetAll<IdNameEntity>().SingleOrDefaultAsync(p => p.Id == id);
+                IdNameTypeEntity entity = await dbc.GetAll<IdNameTypeEntity>().SingleOrDefaultAsync(p => p.Id == id);
                 if (entity == null)
                 {
                     return false;
@@ -93,11 +82,11 @@ namespace Service.Service
             }
         }
 
-        public async Task<IdNameDTO> GetModelByIdAsync(long id)
+        public async Task<IdNameTypeDTO> GetModelAsync(long id)
         {
             using (MyDbContext dbc = new MyDbContext())
             {
-                var entity = await dbc.GetAll<IdNameEntity>().Include(p => p.IdNameType).AsNoTracking().SingleOrDefaultAsync(p => p.Id == id);
+                IdNameTypeEntity entity = await dbc.GetAll<IdNameTypeEntity>().SingleOrDefaultAsync(p => p.Id == id);
                 if (entity == null)
                 {
                     return null;
@@ -106,23 +95,23 @@ namespace Service.Service
             }
         }
 
-        public async Task<IdNameDTO[]> GetByTypeIdIsEnableAsync(long id)
+        public async Task<IdNameTypeDTO[]> GetModelListIsEnableAsync()
         {
             using (MyDbContext dbc = new MyDbContext())
             {
-                var entities = dbc.GetAll<IdNameEntity>().Include(p => p.IdNameType).AsNoTracking().Where(p => p.IdNameTypeId == id && p.IsEnabled == 1);
-                var idNames = await entities.OrderBy(p => p.Sort).ToListAsync();
-                return idNames.Select(p => ToDTO(p)).ToArray();
+                var entities = dbc.GetAll<IdNameTypeEntity>().AsNoTracking().Where(p => p.IsEnabled == 1);
+                var idNameTypes = await entities.ToListAsync();
+                return idNameTypes.Select(p => ToDTO(p)).ToArray();
             }
         }
 
-        public async Task<IdNameDTO[]> GetByTypeIdAsync(long id)
+        public async Task<IdNameTypeDTO[]> GetModelListAsync()
         {
             using (MyDbContext dbc = new MyDbContext())
             {
-                var entities = dbc.GetAll<IdNameEntity>().Include(p => p.IdNameType).AsNoTracking().Where(p => p.IdNameTypeId == id);
-                var idNames = await entities.OrderBy(p => p.Sort).ToListAsync();
-                return idNames.Select(p => ToDTO(p)).ToArray();
+                var entities = dbc.GetAll<IdNameTypeEntity>().AsNoTracking();
+                var idNameTypes = await entities.ToListAsync();
+                return idNameTypes.Select(p => ToDTO(p)).ToArray();
             }
         }
     }
