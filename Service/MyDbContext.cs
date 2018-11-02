@@ -17,6 +17,7 @@ namespace Service
         {
             base.OnConfiguring(optionsBuilder);
             optionsBuilder.UseMySQL("Server=18.191.6.120;database=db_task;uid=root;pwd=root;characterset=utf8");
+            //optionsBuilder.UseMySQL("Server=123.207.5.234;database=db_task;uid=root;pwd=root;characterset=utf8");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

@@ -15,6 +15,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewEngines;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.DependencyInjection;
+using MySqlX.XDevAPI.Common;
+using Qiniu.Http;
+using Qiniu.IO;
+using Qiniu.IO.Model;
+using Qiniu.Util;
 using Web.Filters;
 
 namespace Web.Controllers
@@ -96,10 +101,23 @@ namespace Web.Controllers
         #endregion
 
         #region 富文本编辑器上传图片
+        //上传到本地服务器
+        //[HttpPost]
+        //public async Task<IActionResult> UpContentImg(IFormFile imgFile)
+        //{            
+            //return Json(new { errno = "0", data = await ImageHelper.SaveAsync(imgFile)});
+        //}
+
+        //上传到七牛云存储服务器
         [HttpPost]
         public async Task<IActionResult> UpContentImg(IFormFile imgFile)
-        {            
-            return Json(new { errno = "0", data = await ImageHelper.SaveAsync(imgFile)});
+        {
+            var res = await QiniuHelper.UploadStreamAsync(imgFile);
+            if(res.Key!=200)
+            {
+                return Json(new { errno = res.Key.ToString(), data = new string[] { res.Value } });
+            }
+            return Json(new { errno = "0", data = new string[] { res.Value } });
         }
         #endregion
 
