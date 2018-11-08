@@ -54,7 +54,7 @@ namespace Service.Service
                 }
                 user.Amount = user.Amount - takeCash.Amount;
                 takeCash.StateId = (await dbc.GetAll<IdNameEntity>().SingleOrDefaultAsync(i => i.Name == "已结款")).Id;
-                takeCash.AdminMobile = (await dbc.GetAll<AdminEntity>().SingleOrDefaultAsync(a => a.Id == adminId)).Mobile;
+                takeCash.AdminCode = (await dbc.GetAll<AdminEntity>().SingleOrDefaultAsync(a => a.Id == adminId)).Mobile;
                 JournalEntity journal = new JournalEntity();
                 journal.OutAmount = takeCash.Amount;
                 journal.JournalTypeId = (await dbc.GetAll<IdNameEntity>().SingleOrDefaultAsync(i => i.Name == "余额提现")).Id;

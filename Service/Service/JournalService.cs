@@ -26,7 +26,7 @@ namespace Service.Service
             dto.Remark = entity.Remark;
             dto.RemarkEn = entity.RemarkEn;
             dto.UserId = entity.UserId;
-            dto.Name = entity.User.Name;
+            //dto.Name = entity.User.Name;
             dto.IsEnabled = entity.IsEnabled;
             dto.TaskId = entity.TaskId;
             dto.ForwardId = entity.ForwardId;
@@ -38,7 +38,7 @@ namespace Service.Service
             using (MyDbContext dbc = new MyDbContext())
             {
                 JournalSearchResult result = new JournalSearchResult();
-                var entities = dbc.GetAll<JournalEntity>().AsNoTracking().Where(j=>j.IsEnabled==true);
+                var entities = dbc.GetAll<JournalEntity>().AsNoTracking().Where(j=>j.IsEnabled==1);
                 if (userId != null)
                 {
                     entities = entities.Where(a => a.UserId == userId);

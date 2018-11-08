@@ -19,6 +19,6 @@ namespace Service.Entity
         public IdNameEntity State { get; set; }
         public long TypeId { get; set; }
         public IdNameEntity Type { get; set; }
-        public string AdminMobile { get; set; }
+        public string AdminCode { get; set; }
     }
 }

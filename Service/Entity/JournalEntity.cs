@@ -20,6 +20,6 @@ namespace Service.Entity
         public long JournalTypeId { get; set; }
         public IdNameEntity JournalType { get; set; }
         public long Journal01 { get; set; } = 0;
-        public bool IsEnabled { get; set; } = true;
+        public int IsEnabled { get; set; } = 1;
     }
 }

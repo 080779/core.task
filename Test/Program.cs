@@ -20,7 +20,7 @@ namespace Test
 
             }
         }
-        static void Main(string[] args)
+        static void Main1(string[] args)
         {
             using (MyDbContext dbc = new MyDbContext())
             {
@@ -34,6 +34,19 @@ namespace Test
                 Console.WriteLine(tasks.Count());
                 Console.ReadKey();
             }
+        }
+        static void Main(string[] args)
+        {
+            using (MyDbContext dbc = new MyDbContext())
+            {
+                TaskEntity task = new TaskEntity();
+                dbc.SaveChanges();
+            }
+        }
+        public class Task1
+        {
+            public long Id { get; set; }
+            public int IsEnabled { get; set; }
         }
     }
 }

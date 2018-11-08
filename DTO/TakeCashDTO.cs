@@ -20,6 +20,6 @@ namespace DTO
         public string TypeName { get; set; }
         //public PayCodeDTO PayCode { get; set; }
         //public BankAccountDTO BankAccount { get; set; }
-        public string AdminMobile { get; set; }
+        public string AdminCode { get; set; }
     }
 }

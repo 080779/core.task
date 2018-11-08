@@ -3,15 +3,13 @@
     padding: 0;
 }
 
-aaa
-
 body {
-    font-size: 12px;
+    font-size: 100%;
     font-family: 微软雅黑;
     color: #ccc;
     margin: 0 auto !important;
     background: #fff !important;
-    overflow-x: hidden;
+    /*overflow-x: hidden;*/
 }
 
 img {

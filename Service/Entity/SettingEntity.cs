@@ -13,6 +13,6 @@ namespace Service.Entity
         public string Description { get; set; }
         public long? LevelId { get; set; }
         public long TypeId { get; set; }
-        public SettingTypeEntity Type { get; set; }
+        public IdNameEntity Type { get; set; }
     }
 }

@@ -1,0 +1,28 @@
+﻿@page
+@model Web.Pages.Test.ListModel
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>List</title>
+    <script src="~/js/jquery-1.9.1.min.js"></script>
+</head>
+<body>
+    @Html.AntiForgeryToken()
+    <input type="button" id="btn" value="提交" />
+    <script>
+        $("#btn").click(function () {
+            $.ajax({
+                url: "/test/list?handler=add", type: "post",
+                data: { age: 8 },
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader("XSRF-TOKEN", $('input:hidden[name="__RequestVerificationToken"]').val());
+                },
+                success: function (res) { },
+                error: function () { alert("网络错误") }
+            });
+        });
+    </script>
+</body>
+</html>

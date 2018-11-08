@@ -19,6 +19,6 @@ namespace DTO
         public long TaskId { get; set; }
         public long UserId { get; set; }
         public string Name { get; set; }
-        public bool IsEnabled { get; set; }
+        public int IsEnabled { get; set; }
     }
 }
