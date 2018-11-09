@@ -93,5 +93,6 @@ namespace Service
         public DbSet<AdminPermissionEntity> AdminPermissions { get; set; }
         public DbSet<PersonEntity> Persons { get; set; }
         public DbSet<IdNameTypeEntity> IdNameTypes { get; set; }
+        public DbSet<LinkEntity> Links { get; set; }
     }
 }
