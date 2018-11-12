@@ -16,7 +16,7 @@ namespace Service.Service
         {
             SettingDTO dto = new SettingDTO();
             dto.Id = entity.Id;
-            dto.Parm = entity.Parm;
+            dto.Parameter = entity.Parameter;
             dto.Name = entity.Name;
             dto.TypeId = entity.TypeId;
             return dto;
@@ -27,7 +27,7 @@ namespace Service.Service
         {
             using (MyDbContext dbc = new MyDbContext())
             {
-                return await dbc.GetParameterAsync<SettingEntity>(s=>s.Name==name,s=>s.Parm);                 
+                return await dbc.GetParameterAsync<SettingEntity>(s=>s.Name==name,s=>s.Parameter);                 
             }
         }
 
@@ -66,7 +66,7 @@ namespace Service.Service
             }
         }
 
-        public async Task<bool> UpdateAsync(long id, string parm)
+        public async Task<bool> UpdateAsync(long id, string parameter)
         {
             using (MyDbContext dbc = new MyDbContext())
             {
@@ -75,7 +75,7 @@ namespace Service.Service
                 {
                     return false;
                 }
-                entity.Parm = parm;
+                entity.Parameter = parameter;
                 await dbc.SaveChangesAsync();
                 return true;
             }
@@ -92,7 +92,7 @@ namespace Service.Service
                     {
                         return false;
                     }
-                    entity.Parm = setting.Parm.ToString();
+                    entity.Parameter = setting.Parameter.ToString();
                 }
                 await dbc.SaveChangesAsync();
                 return true;

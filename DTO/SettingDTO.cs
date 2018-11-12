@@ -10,7 +10,7 @@ namespace DTO
     {
         public long Id { get; set; }
         public string Name { get; set; }
-        public string Parm { get; set; }
+        public string Parameter { get; set; }
         public long TypeId { get; set; }
     }
 }

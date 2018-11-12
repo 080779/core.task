@@ -9,7 +9,7 @@ namespace Service.Entity
     public class SettingEntity:BaseEntity
     {
         public string Name { get; set; }
-        public string Parm { get; set; }
+        public string Parameter { get; set; }
         public string Description { get; set; }
         public long? LevelId { get; set; }
         public long TypeId { get; set; }

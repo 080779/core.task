@@ -9,8 +9,8 @@ namespace IService
     /// </summary>
     public interface ISettingService : IServiceSupport
     {
-        Task<bool> UpdateAsync(long id, string parm);
-        Task<bool> UpdateAsync(params SettingDTO[] parms);
+        Task<bool> UpdateAsync(long id, string parameter);
+        Task<bool> UpdateAsync(params SettingDTO[] settings);
         Task<string> GetParmByNameAsync(string name);
         Task<SettingDTO> GetModelAsync(long id);
         Task<SettingDTO> GetModelByNameAsync(string name);
