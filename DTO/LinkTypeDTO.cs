@@ -6,13 +6,10 @@ using System.Threading.Tasks;
 
 namespace DTO
 {
-    public class LinkDTO : BaseDTO
+    public class LinkTypeDTO : BaseDTO
     {
         public string Name { get; set; }
-        public string ImgUrl { get; set; }
-        public string Url { get; set; }
-        public string TypeName { get; set; }
-        public int Sort { get; set; }
+        public string Description { get; set; }
         public int IsEnabled { get; set; }
     }
 }

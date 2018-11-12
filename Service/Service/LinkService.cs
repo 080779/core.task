@@ -22,11 +22,12 @@ namespace Service.Service
             dto.CreateTime = entity.CreateTime;
             dto.Id = entity.Id;
             dto.Sort = entity.Sort;
+            dto.TypeName = entity.Type.Name;
             dto.IsEnabled = entity.IsEnabled;
             return dto;
         }
 
-        public async Task<long> AddAsync(string name, string imgUrl, string url, int sort)
+        public async Task<long> AddAsync(long typeId, string name, string imgUrl, string url, int sort)
         {
             using (MyDbContext dbc = new MyDbContext())
             {
@@ -35,6 +36,7 @@ namespace Service.Service
                 entity.ImgUrl = imgUrl;
                 entity.Url = url;
                 entity.Sort = sort;
+                entity.TypeId = typeId;
                 dbc.Links.Add(entity);
                 await dbc.SaveChangesAsync();
                 return entity.Id;
@@ -89,12 +91,12 @@ namespace Service.Service
             }
         }
 
-        public async Task<LinkDTO> GetModelAsync(long id)
+        public async Task<LinkDTO> GetModelByIdAsync(long id)
         {
             using (MyDbContext dbc = new MyDbContext())
             {
-                LinkEntity entity = await dbc.GetAll<LinkEntity>().SingleOrDefaultAsync(p => p.Id == id);
-                if(entity==null)
+                LinkEntity entity = await dbc.GetAll<LinkEntity>().Include(l=>l.Type).SingleOrDefaultAsync(p => p.Id == id);
+                if (entity == null)
                 {
                     return null;
                 }
@@ -102,12 +104,32 @@ namespace Service.Service
             }
         }
 
-        public async Task<LinkSearchResult> GetModelListAsync(string keyword, DateTime? startTime, DateTime? endTime, int pageIndex, int pageSize)
+        public async Task<LinkDTO[]> GetByTypeIdIsEnableAsync(long id)
+        {
+            using (MyDbContext dbc = new MyDbContext())
+            {
+                var entities = dbc.GetAll<LinkEntity>().Include(p => p.Type).AsNoTracking().Where(p => p.TypeId == id && p.IsEnabled == 1);
+                var idNames = await entities.OrderBy(p => p.Sort).ToListAsync();
+                return idNames.Select(p => ToDTO(p)).ToArray();
+            }
+        }
+
+        public async Task<LinkDTO[]> GetByTypeIdAsync(long id)
+        {
+            using (MyDbContext dbc = new MyDbContext())
+            {
+                var entities = dbc.GetAll<LinkEntity>().Include(p => p.Type).AsNoTracking().Where(p => p.TypeId == id);
+                var idNames = await entities.OrderBy(p => p.Sort).ToListAsync();
+                return idNames.Select(p => ToDTO(p)).ToArray();
+            }
+        }
+
+        public async Task<LinkSearchResult> GetModelListAsync(long typeId, string keyword, DateTime? startTime, DateTime? endTime, int pageIndex, int pageSize)
         {
             using (MyDbContext dbc = new MyDbContext())
             {
                 LinkSearchResult result = new LinkSearchResult();
-                var links = dbc.GetAll<LinkEntity>().AsNoTracking();
+                var links = dbc.GetAll<LinkEntity>().AsNoTracking().Where(l=>l.TypeId==typeId);
                 if (!string.IsNullOrEmpty(keyword))
                 {
                     links = links.Where(a => a.Name.Contains(keyword));

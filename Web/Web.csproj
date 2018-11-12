@@ -24,4 +24,10 @@
     <Folder Include="wwwroot\tasks\js\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Update="Views\Link\List11.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+  </ItemGroup>
+
 </Project>

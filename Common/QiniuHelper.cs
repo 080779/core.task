@@ -15,8 +15,8 @@ namespace Common
     {
         private static readonly string accessKey = "2hrivlc6eBhOJdE4wd-n0oXlg_m6Bz5pG-PJW4lB";
         private static readonly string secretKey = "q9tYfpo4JkpqYQfW5FiY1okFHeuGT7ylMkcNND_U";
-        private static readonly string bucket = "mycloud"; //存储空间名
-        private static readonly string domain = "http://osvu57cx3.bkt.clouddn.com"; //融合 CDN 域名
+        private static readonly string bucket = "mycloud2"; //存储空间名
+        private static readonly string domain = "http://pi2nj2ap1.bkt.clouddn.com"; //融合 CDN 测试域名()
         public static async Task<KeyValuePair<int,string>> UploadStreamAsync(IFormFile imgFile)
         {
             // 生成(上传)凭证时需要使用此Mac

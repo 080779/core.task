@@ -94,5 +94,6 @@ namespace Service
         public DbSet<PersonEntity> Persons { get; set; }
         public DbSet<IdNameTypeEntity> IdNameTypes { get; set; }
         public DbSet<LinkEntity> Links { get; set; }
+        public DbSet<LinkTypeEntity> LinkTypes { get; set; }
     }
 }

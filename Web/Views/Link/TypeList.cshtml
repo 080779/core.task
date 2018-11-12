@@ -31,7 +31,7 @@
     <script type="text/javascript" src="~/lib/js/H-ui.admin.js"></script>
     <script src="~/lib/assets/layer/layer.js" type="text/javascript"></script>
     <script src="~/lib/assets/laydate/laydate.js" type="text/javascript"></script>
-    <title>IdName类别列表</title>
+    <title>图片类别列表</title>
 </head>
 
 <body>
@@ -41,7 +41,7 @@
                 <div class="d_Confirm_Order_style">
                     <div class="clearfix" style="margin-top:20px">
                         <span class="l_f">
-                            <a v-on:click="add" class="btn btn-warning"><i class="icon-plus"></i>添加IdName类别</a>
+                            <a v-on:click="add" class="btn btn-warning"><i class="icon-plus"></i>添加图片类别</a>
                         </span>
                     </div>
                     <div class="table_menu_list">
@@ -49,14 +49,14 @@
                             <thead>
                                 <tr>
                                     <th width="30">编号</th>
-                                    <th width="60">IdName类别名</th>
-                                    <th width="80">IdName描述</th>
+                                    <th width="60">图片类别名</th>
+                                    <th width="80">图片类别描述</th>
                                     <th width="50">状态</th>
                                     <th width="100">添加时间</th>
                                     <th width="200">操作</th>
                                 </tr>
                             </thead>
-                            <tbody v-for="type in idNameTypes">
+                            <tbody v-for="type in linkTypes">
                                 <tr>
                                     <td v-html="type.id"></td>
                                     <td v-html="type.name"></td>
@@ -64,10 +64,10 @@
                                     <td class="td-status"><span class="label label-success radius" v-html="type.isEnabled?'正常':'已冻结'"></span></td>
                                     <td v-html="type.createTime"></td>
                                     <td class="td-manage">
-                                        <a v-on:click="edit(type.id)" href="javascript:;" title="编辑IdName类别" class="btn btn-xs btn-success">编辑IdName类别</a>
-                                        <a title="冻结" href="javascript:;" v-on:click="frozen(type.id,type.isEnabled)" class="btn btn-xs btn-warning" v-html="type.isEnabled?'冻结IdName类别':'解冻IdName类别'"></a>
-                                        <a title="删除" href="javascript:;" v-on:click="del(type.id)" class="btn btn-xs btn-warning">删除IdName类别</a>
-                                        <a v-on:click="window.location.href='/admin/idname/list?typeId='+type.id" title="查看IdName列表" class="btn btn-xs btn-success">查看IdName列表</a>
+                                        <a v-on:click="edit(type.id)" href="javascript:;" title="编辑图片类别" class="btn btn-xs btn-success">编辑图片类别</a>
+                                        <a title="冻结" href="javascript:;" v-on:click="frozen(type.id,type.isEnabled)" class="btn btn-xs btn-warning" v-html="type.isEnabled?'冻结图片类别':'解冻图片类别'"></a>
+                                        <a title="删除" href="javascript:;" v-on:click="del(type.id)" class="btn btn-xs btn-warning">删除图片类别</a>
+                                        <a v-on:click="window.location.href='/admin/link/list?typeId='+type.id" title="查看图片列表" class="btn btn-xs btn-success">查看图片列表</a>
                                     </td>
                                 </tr>
                             </tbody>
@@ -93,15 +93,15 @@
         <!--添加权限类别图层-->
         <div class="add_menber" id="add" style="display:none">
             <ul class="page-content">
-                <li><label class="label_name">IdName类别名：</label><span class="add_name"><input value="" placeholder="IdName类别名" v-model="add_name" name="IdName类别名" type="text" class="text_add" /></span><div class="prompt r_f"></div></li>
-                <li><label class="label_name">IdName描述：</label><span class="add_name"><input value="" placeholder="IdName描述" v-model="add_description" name="IdName描述" type="text" class="text_add" /></span><div class="prompt r_f"></div></li>
+                <li><label class="label_name">图片类别名：</label><span class="add_name"><input value="" placeholder="图片类别名" v-model="add_name" name="图片类别名" type="text" class="text_add" /></span><div class="prompt r_f"></div></li>
+                <li><label class="label_name">图片类别描述：</label><span class="add_name"><input value="" placeholder="图片类别描述" v-model="add_description" name="图片类别描述" type="text" class="text_add" /></span><div class="prompt r_f"></div></li>
             </ul>
         </div>
         <!--添加权限类别图层-->
         <div class="add_menber" id="edit" style="display:none">
             <ul class="page-content">
-                <li><label class="label_name">IdName类别名：</label><span class="add_name"><input value="" placeholder="IdName类别名" v-model="editType.name" name="IdName类别名" type="text" class="text_add" /></span><div class="prompt r_f"></div></li>
-                <li><label class="label_name">IdName描述：</label><span class="add_name"><input value="" placeholder="IdName描述" v-model="editType.description" name="IdName描述" type="text" class="text_add" /></span><div class="prompt r_f"></div></li>                
+                <li><label class="label_name">图片类别名：</label><span class="add_name"><input value="" placeholder="图片类别名" v-model="editType.name" name="图片类别名" type="text" class="text_add" /></span><div class="prompt r_f"></div></li>
+                <li><label class="label_name">IdName描述：</label><span class="add_name"><input value="" placeholder="图片类别描述" v-model="editType.description" name="图片类别描述" type="text" class="text_add" /></span><div class="prompt r_f"></div></li>
             </ul>
         </div>
     </div>
@@ -114,7 +114,7 @@
     var vue = new Vue({
         el: "#app",
         data: {
-            idNameTypes: [],
+            linkTypes: [],
             pages: {
                 all: 1, cur: 1, txtpage: ""
             },
@@ -125,8 +125,8 @@
         },
         methods: {
             getpage: function () {
-                this.$http.post('/admin/idname/typeList', { }, { emulateJSON: true }).then(function (result) {
-                    this.idNameTypes = result.data.data;
+                this.$http.post('/admin/link/typeList', { }, { emulateJSON: true }).then(function (result) {
+                    this.linkTypes = result.data.data;
                 })
             },
             pageclick: function (index) {//页码点击事件
@@ -151,7 +151,7 @@
                 add_sort = "";
                 layer.open({
                     type: 1,
-                    title: '添加IdName类别',
+                    title: '添加图片类别',
                     maxmin: true,
                     shadeClose: false, //点击遮罩关闭层
                     area: ['400px', ''],
@@ -159,10 +159,10 @@
                     btn: ['确认', '取消'],
                     yes: function (index, layero) {
                         if (that.add_name == "") {
-                            layer.alert('IdName类别名不能为空', { icon: 0, title: '提示框' });
+                            layer.alert('图片类别名不能为空', { icon: 0, title: '提示框' });
                             return;
                         }
-                        that.$http.post('/admin/idname/addType', { name: that.add_name, description: that.add_description, sort: that.add_sort }, { emulateJSON: true }).then(function (result) {
+                        that.$http.post('/admin/link/addType', { name: that.add_name, description: that.add_description, sort: that.add_sort }, { emulateJSON: true }).then(function (result) {
                             if (result.data.status == 1) {
                                 layer.alert(result.data.msg, { icon: 6, title: '提示框' });
                                 layer.close(index);
@@ -183,7 +183,7 @@
             },
             edit: function (id) {
                 var that = this;
-                that.$http.post('/admin/idname/getType', { id: id }, { emulateJSON: true }).then(function (result) {
+                that.$http.post('/admin/link/getType', { id: id }, { emulateJSON: true }).then(function (result) {
                     if (result.data.status == 1) {
                         that.editType = result.data.data;
                     }
@@ -206,11 +206,11 @@
                     content: $('#edit'),
                     btn: ['确认', '取消'],
                     yes: function (index, layero) {
-                        if (that.edit_name == "") {
-                            layer.alert('IdName类别名不能为空', { icon: 0, title: '提示框' });
+                        if (that.editType.name == "") {
+                            layer.alert('图片类别名不能为空', { icon: 0, title: '提示框' });
                             return;
                         }
-                        that.$http.post('/admin/idname/editType', { id: id, name: that.editType.name, description: that.editType.description, sort: that.editType.sort }, { emulateJSON: true }).then(function (result) {
+                        that.$http.post('/admin/link/editType', { id: id, name: that.editType.name, description: that.editType.description, sort: that.editType.sort }, { emulateJSON: true }).then(function (result) {
                             if (result.data.status == 1) {
                                 layer.alert(result.data.msg, { icon: 6, title: '提示框' });
                                 layer.close(index);
@@ -231,14 +231,14 @@
             },
             frozen: function (id, isenabled) {
                 var that = this;
-                var msg = '确认冻结IdName类别吗？';
-                var msg1 = '是否冻结IdName类别';
+                var msg = '确认冻结图片类别吗？';
+                var msg1 = '是否冻结图片类别';
                 if (!isenabled) {
-                    msg = '确认解冻IdName类别吗？';
-                    msg1 = '是否解冻IdName类别';
+                    msg = '确认解冻图片类别吗？';
+                    msg1 = '是否解冻图片类别';
                 }
                 layer.confirm(msg, { icon: 0, title: msg1 }, function () {
-                    that.$http.post('/admin/idname/frozenType', { id: id }, { emulateJSON: true }).then(function (result) {
+                    that.$http.post('/admin/link/frozenType', { id: id }, { emulateJSON: true }).then(function (result) {
                         if (result.data.status == 1) {
                             layer.alert(result.data.msg, { icon: 0, title: '提示框' });
                             that.getpage();
@@ -258,8 +258,8 @@
             },
             del: function (id) {
                 var that = this;
-                layer.confirm("IdName类别删除后无法恢复，确认删除吗？", { icon: 0, title: '是否删除IdName类别' }, function (index) {
-                    that.$http.post('/admin/idname/delType', { id: id }, { emulateJSON: true }).then(function (result) {
+                layer.confirm("图片类别删除后无法恢复，确认删除吗？", { icon: 0, title: '是否删除图片类别' }, function (index) {
+                    that.$http.post('/admin/link/delType', { id: id }, { emulateJSON: true }).then(function (result) {
                         if (result.data.status == 1) {
                             layer.alert(result.data.msg, { icon: 6, title: '提示框' });
                             that.getpage();
@@ -305,8 +305,8 @@
             }
         },
         mounted: function () {
-            this.$http.post('/admin/idname/typeList', { }, { emulateJSON: true }).then(function (result) {
-                this.idNameTypes = result.data.data;
+            this.$http.post('/admin/link/typeList', { }, { emulateJSON: true }).then(function (result) {
+                this.linkTypes = result.data.data;
             })
         }
     });
