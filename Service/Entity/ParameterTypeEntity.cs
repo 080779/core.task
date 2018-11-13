@@ -4,13 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DTO
+namespace Service.Entity
 {
-    public class PermissionTypeDTO : BaseDTO
+    public class ParameterTypeEntity : BaseEntity
     {
         public string Name { get; set; }
         public string Description { get; set; }
-        public int Sort { get; set; }
-        public int IsEnabled { get; set; }
+        public int Sort { get; set; } = 1;
+        public int IsEnabled { get; set; } = 1;
     }
 }

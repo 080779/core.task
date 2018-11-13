@@ -95,5 +95,7 @@ namespace Service
         public DbSet<IdNameTypeEntity> IdNameTypes { get; set; }
         public DbSet<LinkEntity> Links { get; set; }
         public DbSet<LinkTypeEntity> LinkTypes { get; set; }
+        public DbSet<ParameterEntity> Parameters { get; set; }
+        public DbSet<ParameterTypeEntity> ParameterTypes { get; set; }
     }
 }

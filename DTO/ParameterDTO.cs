@@ -6,10 +6,13 @@ using System.Threading.Tasks;
 
 namespace DTO
 {
-    public class PermissionTypeDTO : BaseDTO
+    public class ParameterDTO : BaseDTO
     {
         public string Name { get; set; }
-        public string Description { get; set; }
+        public string StringValue { get; set; }
+        public decimal DecimalValue { get; set; }
+        public string Remark { get; set; }
+        public string TypeName { get; set; }
         public int Sort { get; set; }
         public int IsEnabled { get; set; }
     }

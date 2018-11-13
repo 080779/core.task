@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DTO
 {
-    public class PermissionTypeDTO : BaseDTO
+    public class ParameterTypeDTO : BaseDTO
     {
         public string Name { get; set; }
         public string Description { get; set; }
