@@ -16,5 +16,6 @@ namespace IService
         Task<ParameterDTO> GetModelByIdAsync(long id);
         Task<ParameterDTO[]> GetByTypeIdIsEnableAsync(long id);
         Task<ParameterDTO[]> GetByTypeIdAsync(long id);
+        Task<ParameterSettingDTO[]> GetAllIsEnableAsync();
     }
 }

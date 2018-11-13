@@ -14,6 +14,10 @@ namespace Service.Service
     {
         private ParameterDTO ToDTO(ParameterEntity entity)
         {
+            if(entity==null)
+            {
+                return null;
+            }
             ParameterDTO dto = new ParameterDTO();
             dto.CreateTime = entity.CreateTime;
             dto.Id = entity.Id;
@@ -21,12 +25,20 @@ namespace Service.Service
             dto.Remark = entity.Remark;
             dto.Sort = entity.Sort;
             dto.IsEnabled = entity.IsEnabled;
-            dto.TypeName = entity.Type.Name;
+            //dto.TypeName = entity.Type.Name;
             dto.DecimalValue = entity.DecimalValue;
             dto.StringValue = entity.StringValue;
             return dto;
         }
-        
+
+        private ParameterSettingDTO ToDTO(string typeName, ParameterDTO[] parameters)
+        {
+            ParameterSettingDTO dto = new ParameterSettingDTO();
+            dto.TypeName = typeName;
+            dto.Parameters = parameters;
+            return dto;
+        }
+
         public async Task<long> AddAsync(string name,string stringValue,decimal decimalValue, string remark, int sort, long typeId)
         {
             using (MyDbContext dbc = new MyDbContext())
@@ -128,6 +140,16 @@ namespace Service.Service
                 var entities = dbc.GetAll<ParameterEntity>().Include(p => p.Type).AsNoTracking().Where(p => p.TypeId == id);
                 var idNames = await entities.OrderBy(p => p.Sort).ToListAsync();
                 return idNames.Select(p => ToDTO(p)).ToArray();
+            }
+        }
+
+        public async Task<ParameterSettingDTO[]> GetAllIsEnableAsync()
+        {
+            using (MyDbContext dbc = new MyDbContext())
+            {
+                var entities = dbc.GetAll<ParameterTypeEntity>().AsNoTracking().Where(p => p.IsEnabled == 1);
+                var parameterSettings = await entities.OrderBy(p => p.Sort).ToListAsync();
+                return parameterSettings.Select(p => ToDTO(p.Name,dbc.GetAll<ParameterEntity>().AsNoTracking().Where(pp=>pp.TypeId==p.Id).ToList().Select(pp=>ToDTO(pp)).ToArray())).ToArray();
             }
         }
     }

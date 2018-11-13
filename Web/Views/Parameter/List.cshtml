@@ -56,6 +56,7 @@
                                     <th width="60">参数名</th>
                                     <th width="80">string值</th>
                                     <th width="80">decimal值</th>
+                                    <th width="80">参数标记</th>
                                     <th width="80">参数类别名</th>
                                     <th width="50">状态</th>
                                     <th width="30">排序</th>
@@ -69,6 +70,7 @@
                                     <td v-html="parameter.name"></td>
                                     <td v-html="parameter.stringValue"></td>
                                     <td v-html="parameter.decimalValue"></td>
+                                    <td v-html="parameter.remark"></td>
                                     <td v-html="parameter.typeName"></td>
                                     <td class="td-status"><span class="label label-success radius" v-html="parameter.isEnabled?'正常':'已冻结'"></span></td>
                                     <td v-html="parameter.sort"></td>
