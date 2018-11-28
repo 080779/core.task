@@ -50,13 +50,5 @@ namespace Test
             public long Id { get; set; }
             public int IsEnabled { get; set; }
         }
-
-        public enum LevelEnum
-        {
-            一级会员 = 0,
-            二级会员 = 2,
-            三级会员 = 3,
-            四级会员 = 9
-        }
     }
 }
