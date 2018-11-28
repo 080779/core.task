@@ -36,15 +36,17 @@
 
 <body>
     <div id="app">
-        <div class="xinxi">
-            <div style="margin-top:5px;margin-left:50px;"><a class="btn btn-warning"><i class="icon-plus"></i>修改全部</a></div>
-            <div class="form-group" style="border:1px solid skyblue;margin-top:20px;" v-for="setting in settings">
-                <span class="col-sm-3 control-label no-padding-right" style="color:red;" v-html="setting.typeName+'>>'"></span>
+        <div class="changeall"><a class="btn btn-primary">修改全部</a></div>
+        <div class="changelists" v-for="setting in settings">
+            <div class="listtype"><span style="color:red;" v-html="setting.typeName+'>>'"></span></div>            
+            <div class="changelist">
                 <div v-for="set in setting.parameters">
-                    <span v-html="set.name+'：'"></span><input type="text" v-model="set.stringValue" /><span v-html="set.remark"></span>
+                    <span class="changetitle" v-html="set.name+'：'"></span><input type="text" v-model="set.stringValue" /><span class="changeremark" v-html="set.remark"></span>
+                    <span><button class="btn-success">修改</button></span>
                 </div>
             </div>
         </div>
+        <div class="changeall"><a class="btn btn-primary">修改全部</a></div>
     </div>
     <script type="text/javascript">
         var startTime;

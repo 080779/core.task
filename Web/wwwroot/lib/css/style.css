@@ -2261,3 +2261,29 @@ body:nth-of-type(1) .table-responsive .table {
         #editperm .page-content li input {
             vertical-align: text-top;
         }
+.changeall {
+    margin-top: 5px;
+    margin-left: 30px;
+}
+.changelists {
+    border:1px solid #999;
+    margin:10px 30px 10px 30px;
+    position:relative;
+}
+
+.changelist{
+    position:absolute;
+    top:0px;
+    left:150px;
+}
+
+/*.changelists .changetitle{
+    display:inline-block;
+    text-align:right;
+    width:100px;
+}*/
+    /*.changelists .changeremark {
+        display: inline-block;
+        text-align: left;
+        width: 100px;
+    }*/

@@ -1,4 +1,5 @@
 ﻿using Common;
+using Common.Enums;
 using Microsoft.EntityFrameworkCore;
 using Service;
 using Service.Entity;
@@ -30,23 +31,32 @@ namespace Test
                 //admin.Description = "系统管理员";
                 //admin.Salt = CommonHelper.GetCaptcha(4);
                 //admin.Password = "1" + admin.Salt;
-                var tasks =  dbc.GetAll<TaskEntity>().ToList();
+                var tasks = dbc.GetAll<TaskEntity>().ToList();
                 Console.WriteLine(tasks.Count());
                 Console.ReadKey();
             }
         }
         static void Main(string[] args)
         {
-            using (MyDbContext dbc = new MyDbContext())
+            var arrays = EnumHelper.GetEnumList<LevelEnum>();
+            foreach (var item in arrays)
             {
-                TaskEntity task = new TaskEntity();
-                dbc.SaveChanges();
+                Console.WriteLine($"key={item.Id},value={item.Name}");
             }
+            Console.ReadKey();
         }
         public class Task1
         {
             public long Id { get; set; }
             public int IsEnabled { get; set; }
+        }
+
+        public enum LevelEnum
+        {
+            一级会员 = 0,
+            二级会员 = 2,
+            三级会员 = 3,
+            四级会员 = 9
         }
     }
 }

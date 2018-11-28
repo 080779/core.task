@@ -18,6 +18,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Areas\WebApi\Data\" />
+    <Folder Include="Areas\WebApi\Models\" />
+    <Folder Include="Areas\WebApi\Views\" />
     <Folder Include="Pages\Models\" />
     <Folder Include="wwwroot\static\" />
     <Folder Include="wwwroot\tasks\images\" />

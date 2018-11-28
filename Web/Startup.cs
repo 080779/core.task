@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Web.Filters;
 
 namespace Web
 {
@@ -45,7 +46,10 @@ namespace Web
             //services.AddTransient<IRazorViewEngine>();
             //services.AddSingleton(typeof(ITempDataProvider));
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddMvc(option =>
+            {
+                option.Filters.Add(typeof(WebAuthorizationFilter));
+            }).SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             services.AddAntiforgery(o => o.HeaderName = "XSRF-TOKEN");
         }
 
@@ -65,6 +69,9 @@ namespace Web
                 routes.MapRoute(
                     name: "admin",
                     template: "Admin/{controller=Home}/{action=Index}/{id?}");
+                routes.MapRoute(
+                    name: "Default",
+                    template: "Api/{controller=Home}/{action=Index}/{id?}");
             });
         }
     }
