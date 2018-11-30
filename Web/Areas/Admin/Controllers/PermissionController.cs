@@ -6,8 +6,9 @@ using Common;
 using IService;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Web.Controllers
+namespace Web.Areas.Admin.Controllers
 {
+    [Area("admin")]
     public class PermissionController : Controller
     {
         #region 构造函数注入

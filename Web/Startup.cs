@@ -48,8 +48,18 @@ namespace Web
 
             services.AddMvc(option =>
             {
-                option.Filters.Add(typeof(WebAuthorizationFilter));
-            }).SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+                option.Filters.Add(typeof(WebAuthorizeFilter));
+            })
+            .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
+            .AddJsonOptions(options =>
+            {
+                options.SerializerSettings.DateFormatString = "yyyy-MM-dd HH:mm:ss";
+            });
+
+            //services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1).AddJsonOptions(options=> {
+            //    options.SerializerSettings.DateFormatString = "yyyy-MM-dd HH:mm:ss";//json返回时间格式化
+            //});
+
             services.AddAntiforgery(o => o.HeaderName = "XSRF-TOKEN");
         }
 
@@ -67,11 +77,11 @@ namespace Web
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
-                    name: "admin",
-                    template: "Admin/{controller=Home}/{action=Index}/{id?}");
+                    name: "default",
+                    template: "{controller=Home}/{action=Index}/{id?}");
                 routes.MapRoute(
-                    name: "Default",
-                    template: "Api/{controller=Home}/{action=Index}/{id?}");
+                    name: "areas",
+                    template: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
             });
         }
     }

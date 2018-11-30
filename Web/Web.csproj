@@ -18,17 +18,24 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Areas\WebApi\Data\" />
-    <Folder Include="Areas\WebApi\Models\" />
-    <Folder Include="Areas\WebApi\Views\" />
+    <Folder Include="Models\" />
     <Folder Include="Pages\Models\" />
+    <Folder Include="Views\" />
     <Folder Include="wwwroot\static\" />
     <Folder Include="wwwroot\tasks\images\" />
     <Folder Include="wwwroot\tasks\js\" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Update="Views\Link\List11.cshtml">
+    <Content Update="Areas\Admin\Views\Home\GetPersonId.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="Areas\Admin\Views\Home\Index.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="Areas\Admin\Views\Link\List11.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
   </ItemGroup>

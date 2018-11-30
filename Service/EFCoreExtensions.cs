@@ -1,14 +1,17 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Service.Entity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Service
 {
     public static class EFCoreExtensions
     {
+        #region EFCore的config系统自动ApplyConfiguration加载
         private static bool IsIEntityTypeConfigurationType(Type typeIntf)
         {
             return typeIntf.IsInterface && typeIntf.IsGenericType && typeIntf.GetGenericTypeDefinition() == typeof(IEntityTypeConfiguration<>);
@@ -30,5 +33,82 @@ namespace Service
                 methodApplyConfiguration.Invoke(modelBuilder, new[] { entityTypeConfig });
             }
         }
+        #endregion
+
+        #region 根据参数表名获取参数值
+        /// <summary>
+        /// 根据参数表名获取参数值异步扩展方法,返回string类型
+        /// </summary>
+        /// <param name="dbc"></param>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public async static Task<string> GetStringParamAsync(this MyDbContext dbc, string name)
+        {
+            return await dbc.GetParameterAsync<SettingEntity>(s => s.Name == name, s => s.Parameter);
+        }
+
+        /// <summary>
+        /// 根据参数表名获取参数值扩展方法,返回string类型
+        /// </summary>
+        /// <param name="dbc"></param>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public static string GetStringParam(this MyDbContext dbc, string name)
+        {
+            return dbc.GetParameter<SettingEntity>(s => s.Name == name, s => s.Parameter);
+        }
+
+        /// <summary>
+        /// 根据参数表名获取参数值异步扩展方法,返回decimal类型
+        /// </summary>
+        /// <param name="dbc"></param>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public async static Task<decimal> GetDecimalParamAsync(this MyDbContext dbc, string name)
+        {
+            decimal param;
+            decimal.TryParse(await dbc.GetParameterAsync<SettingEntity>(s => s.Name == name, s => s.Parameter), out param);
+            return param;
+        }
+
+        /// <summary>
+        /// 根据参数表名获取参数值扩展方法,返回decimal类型
+        /// </summary>
+        /// <param name="dbc"></param>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public static decimal GetDecimalParam(this MyDbContext dbc, string name)
+        {
+            decimal param;
+            decimal.TryParse(dbc.GetParameter<SettingEntity>(s => s.Name == name, s => s.Parameter), out param);
+            return param;
+        }
+
+        /// <summary>
+        /// 根据参数表名获取参数值异步扩展方法,返回int类型
+        /// </summary>
+        /// <param name="dbc"></param>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public async static Task<int> GetIntParamAsync(this MyDbContext dbc, string name)
+        {
+            int param;
+            int.TryParse(await dbc.GetParameterAsync<SettingEntity>(s => s.Name == name, s => s.Parameter), out param);
+            return param;
+        }
+
+        /// <summary>
+        /// 根据参数表名获取参数值扩展方法,返回int类型
+        /// </summary>
+        /// <param name="dbc"></param>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public static int GetIntParam(this MyDbContext dbc, string name)
+        {
+            int param;
+            int.TryParse(dbc.GetParameter<SettingEntity>(s => s.Name == name, s => s.Parameter), out param);
+            return param;
+        }
+        #endregion
     }
 }

@@ -6,8 +6,9 @@ using Common;
 using IService;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Web.Controllers
+namespace Web.Areas.Admin.Controllers
 {
+    [Area("admin")]
     public class SettingController : Controller
     {
         private readonly IParameterService parameterService;

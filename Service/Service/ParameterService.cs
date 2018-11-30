@@ -52,7 +52,7 @@ namespace Service.Service
                 entity.Name = name;
                 entity.Remark = remark;
                 entity.Sort = sort;
-                entity.TypeId = typeId;
+                //entity.TypeId = typeId;
                 entity.StringValue = stringValue;
                 entity.DecimalValue = decimalValue;
                 dbc.Parameters.Add(entity);

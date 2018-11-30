@@ -21,8 +21,9 @@ using Qiniu.IO;
 using Qiniu.IO.Model;
 using Qiniu.Util;
 
-namespace Web.Controllers
+namespace Web.Areas.Admin.Controllers
 {
+    [Area("admin")]
     public class TaskController : Controller
     {
         #region 构造函数注入

@@ -7,11 +7,11 @@ using Common;
 using DTO;
 using IService;
 using Microsoft.AspNetCore.Mvc;
-using Web.Models.Admin;
+using Web.Areas.Admin.Models.Admin;
 
-namespace Web.Controllers
+namespace Web.Areas.Admin.Controllers
 {
-
+    [Area("admin")]
     public class AdminController : Controller
     {
         #region 构造函数注入

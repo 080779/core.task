@@ -19,7 +19,7 @@ namespace Common
             new FileInfo(fullPath).Directory.Create();
             using (FileStream createFileStream = new FileStream(fullPath, FileMode.OpenOrCreate))
             {
-               await formFile.CopyToAsync(createFileStream);
+                await formFile.CopyToAsync(createFileStream);
                 string[] paths = { path };
                 return paths;
             }

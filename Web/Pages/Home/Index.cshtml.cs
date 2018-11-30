@@ -4,11 +4,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using Common;
 using IService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace Web.Pages.Home
 {
+    //[AllowAnonymous]
     public class IndexModel : PageModel
     {
         private int pageSize = 10;

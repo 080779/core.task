@@ -5,14 +5,15 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Web.Areas.WebApi.Controllers
+namespace Web.Api.Controllers
 {
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class TestController : ControllerBase
     {
-        public string get ()
+        public object get()
         {
-            return "";
+            return new { Name="busl",DateTimes=DateTime.Now};
         }
     }
 }

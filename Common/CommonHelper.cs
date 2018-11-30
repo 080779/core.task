@@ -13,11 +13,24 @@ namespace Common
 {
     public static class CommonHelper
     {
+        #region 获取MD5值
+        /// <summary>
+        /// 获取字符串MD5值，默认大写
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
         public static string GetMD5(this string str)
         {
             byte[] bytes = System.Text.Encoding.UTF8.GetBytes(str);
             return GetMD5(bytes);
         }
+
+        public static string GetMD5ToLower(this string str)
+        {
+            byte[] bytes = System.Text.Encoding.UTF8.GetBytes(str);
+            return GetMD5(bytes).ToLower();
+        }
+
         public static string GetMD5(byte[] bytes)
         {
             using (MD5 md5 = MD5.Create())
@@ -46,6 +59,9 @@ namespace Common
                 return result;
             }
         }
+        #endregion
+
+        #region 生成验证码code
         public static string GetCaptcha(int length)
         {
             char[] data = { 'a', 'c', 'd', 'e', 'f', 'g', 'k', 'm', 'p', 'r', 's', 't', 'w', 'x', 'y', '3', '4', '5', '7', '8' };
@@ -70,6 +86,7 @@ namespace Common
             }
             return sbCode.ToString();
         }
+        #endregion
 
         #region 生成订单号
         public static object _lock = new object();
