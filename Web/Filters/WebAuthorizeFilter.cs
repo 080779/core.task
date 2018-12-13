@@ -60,13 +60,13 @@ namespace Web.Filters
             //{
             //    context.Result = new JsonResult(new AjaxResult { Status = 0, Data = "/admin/login/login" });
             //}
-            if (!context.HttpContext.Request.Headers.TryGetValue("token", out values))
-            {
-                res.Content = "token不能为空";
-                res.StatusCode = 401;
-                context.Result = res;
-                return;
-            }
+            //if (!context.HttpContext.Request.Headers.TryGetValue("token", out values))
+            //{
+            //    res.Content = "token不能为空";
+            //    res.StatusCode = 401;
+            //    context.Result = res;
+            //    return;
+            //}
         }
 
         private async Task Api(AuthorizationFilterContext context)

@@ -51,28 +51,6 @@ namespace Service.Service
                 return entity.Id;
             }
         }
-        public async Task<bool> EditAsync(long id, string mobile, string trueName, string password, long[] permissionIds)
-        {
-            using (MyDbContext dbc = new MyDbContext())
-            {
-                var entity = await dbc.GetAll<AdminEntity>().SingleOrDefaultAsync(a => a.Id == id);
-                if (entity == null)
-                {
-                    return false;
-                }
-
-                entity.Mobile = mobile;
-                entity.TrueName = trueName;
-                entity.Password = CommonHelper.GetMD5(password + entity.Salt);
-                dbc.AdminPermissions.RemoveRange(dbc.AdminPermissions.Where(a => a.AdminId == id));
-                foreach (long perimssionId in permissionIds)
-                {
-                    dbc.AdminPermissions.Add(new AdminPermissionEntity { AdminId = id, PermissionId = perimssionId });
-                }
-                await dbc.SaveChangesAsync();
-                return true;
-            }
-        }
 
         public async Task<bool> EditAsync(long id, List<long> permissionIds)
         {
@@ -200,35 +178,7 @@ namespace Service.Service
             }
         }
 
-        public async Task<AdminSearchResult> GetModelListHasPerAsync(string isAdmin, string mobile, DateTime? startTime, DateTime? endTime, int pageIndex, int pageSize)
-        {
-            using (MyDbContext dbc = new MyDbContext())
-            {
-                AdminSearchResult result = new AdminSearchResult();
-                var admins = dbc.GetAll<AdminEntity>().AsNoTracking();
-                if (isAdmin != "admin")
-                {
-                    admins = admins.Where(a => a.Mobile != "admin");
-                }
-                if (!string.IsNullOrEmpty(mobile))
-                {
-                    admins = admins.Where(a => a.Mobile.Contains(mobile));
-                }
-                if (startTime != null)
-                {
-                    admins = admins.Where(a => a.CreateTime.Year >= startTime.Value.Year && a.CreateTime.Month >= startTime.Value.Month && a.CreateTime.Day >= startTime.Value.Day);
-                }
-                if (endTime != null)
-                {
-                    admins = admins.Where(a => a.CreateTime <= endTime);
-                }
-                result.PageCount = (int)Math.Ceiling((await admins.LongCountAsync()) * 1.0f / pageSize);
-                var adminsResult = await admins.OrderByDescending(a => a.CreateTime).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
-                result.Admins = adminsResult.Select(a => ToDTO(a, dbc.GetAll<AdminPermissionEntity>().Where(ap => ap.AdminId == a.Id).Select(ap => ap.PermissionId).ToArray())).ToArray();
-                return result;
-            }
-        }
-
+        
         public bool HasPermission(long id, string description)
         {
             using (MyDbContext dbc = new MyDbContext())
@@ -237,7 +187,7 @@ namespace Service.Service
             }
         }
 
-        public async Task<long> CheckLogin(string mobile, string password)
+        public async Task<long> CheckLoginAsync(string mobile, string password)
         {
             using (MyDbContext dbc = new MyDbContext())
             {

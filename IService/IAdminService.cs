@@ -8,7 +8,6 @@ namespace IService
     public interface IAdminService : IServiceSupport
     {
         Task<long> AddAsync(string name, string mobile, string trueName, string password);
-        Task<bool> EditAsync(long id, string mobile, string trueName, string password, long[] permissionIds);
         Task<bool> EditAsync(long id, List<long> permissionIds);
         Task<bool> EditAsync(long id, string password);
         Task<bool> DelAsync(long id);
@@ -17,9 +16,8 @@ namespace IService
         Task<string> GetNameByIdAsync(long id);
         Task<AdminDTO> GetModelAsync(long id);
         Task<AdminSearchResult> GetModelListAsync(string isAdmin, string keyword, DateTime? startTime, DateTime? endTime, int pageIndex, int pageSize);
-        Task<AdminSearchResult> GetModelListHasPerAsync(string isAdmin, string mobile, DateTime? startTime, DateTime? endTime, int pageIndex, int pageSize);
         bool HasPermission(long id, string description);
-        Task<long> CheckLogin(string mobile, string password);
+        Task<long> CheckLoginAsync(string mobile, string password);
         Task<bool> DelAll();
     }
     public class AdminSearchResult
