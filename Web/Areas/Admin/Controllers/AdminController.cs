@@ -96,7 +96,7 @@ namespace Web.Areas.Admin.Controllers
             {
                 return Json(new AjaxResult { Status = 0, Msg = "管理员密码不能为空" });
             }
-            bool res = await adminService.UpdateAsync(id, password);
+            bool res = await adminService.EditAsync(id, password);
             if (!res)
             {
                 return Json(new AjaxResult { Status = 0, Msg = "管理员密码修改失败" });
@@ -113,7 +113,7 @@ namespace Web.Areas.Admin.Controllers
             {
                 permissionIds = new List<long>();
             }
-            bool res = await adminService.UpdateAsync(id, permissionIds);
+            bool res = await adminService.EditAsync(id, permissionIds);
             if (!res)
             {
                 return Json(new AjaxResult { Status = 0, Msg = "编管理员权限失败" });
@@ -165,7 +165,7 @@ namespace Web.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> Del(long id)
         {
-            bool res = await adminService.DeleteAsync(id);
+            bool res = await adminService.DelAsync(id);
             if (!res)
             {
                 return Json(new AjaxResult { Status = 0, Msg = "删除管理员账号失败" });

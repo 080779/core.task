@@ -7,11 +7,11 @@ namespace IService
 {
     public interface IAdminService : IServiceSupport
     {
-        Task<long> AddAsync(string name, string mobile, string description, string password);
-        Task<bool> UpdateAsync(long id, string mobile, string description, string password, long[] permissionIds);
-        Task<bool> UpdateAsync(long id, List<long> permissionIds);
-        Task<bool> UpdateAsync(long id, string password);
-        Task<bool> DeleteAsync(long id);
+        Task<long> AddAsync(string name, string mobile, string trueName, string password);
+        Task<bool> EditAsync(long id, string mobile, string trueName, string password, long[] permissionIds);
+        Task<bool> EditAsync(long id, List<long> permissionIds);
+        Task<bool> EditAsync(long id, string password);
+        Task<bool> DelAsync(long id);
         Task<bool> FrozenAsync(long id);
         Task<string> GetMobileByIdAsync(long id);
         Task<string> GetNameByIdAsync(long id);

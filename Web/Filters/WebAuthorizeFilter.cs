@@ -29,6 +29,7 @@ namespace Web.Filters
         //}
         public async override Task OnAuthorizationAsync(AuthorizationFilterContext context)
         {
+            var path = context.HttpContext.Request.Path;
             StringValues values;
             var res = new ContentResult();
             if (context.Filters.Any(item => item is IAllowAnonymousFilter))
