@@ -17,16 +17,15 @@ namespace Service.Service
         {
             AdminDTO dto = new AdminDTO();
             dto.CreateTime = entity.CreateTime;
-            dto.Description = entity.Description;
+            dto.TrueName = entity.TrueName;
             dto.Id = entity.Id;
             dto.Name = entity.Name;
             dto.Mobile = entity.Mobile;
             dto.IsEnabled = entity.IsEnabled;
-            //dto.PermissionIds = entity.AdminPermissions.Select(a => a.PermissionId).ToArray();
             dto.PermissionIds = permissionIds;
             return dto;
         }
-        public async Task<long> AddAsync(string name, string mobile, string description, string password)
+        public async Task<long> AddAsync(string name, string mobile, string trueName, string password)
         {
             using (MyDbContext dbc = new MyDbContext())
             {
@@ -44,7 +43,7 @@ namespace Service.Service
                 AdminEntity entity = new AdminEntity();
                 entity.Name = name;
                 entity.Mobile = mobile;
-                entity.Description = description;
+                entity.TrueName = trueName;
                 entity.Salt = CommonHelper.GetCaptcha(4);
                 entity.Password = CommonHelper.GetMD5(password + entity.Salt);
                 dbc.Admins.Add(entity);
@@ -52,7 +51,7 @@ namespace Service.Service
                 return entity.Id;
             }
         }
-        public async Task<bool> UpdateAsync(long id, string mobile, string description, string password, long[] permissionIds)
+        public async Task<bool> UpdateAsync(long id, string mobile, string trueName, string password, long[] permissionIds)
         {
             using (MyDbContext dbc = new MyDbContext())
             {
@@ -63,7 +62,7 @@ namespace Service.Service
                 }
 
                 entity.Mobile = mobile;
-                entity.Description = description;
+                entity.TrueName = trueName;
                 entity.Password = CommonHelper.GetMD5(password + entity.Salt);
                 dbc.AdminPermissions.RemoveRange(dbc.AdminPermissions.Where(a => a.AdminId == id));
                 foreach (long perimssionId in permissionIds)

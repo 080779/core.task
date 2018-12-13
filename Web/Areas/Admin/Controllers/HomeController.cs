@@ -33,7 +33,7 @@ namespace Web.Areas.Admin.Controllers
         {
             //long id = await adminService.AddAsync("admin","15615615616","系统管理员","1");
             var admin = await adminService.GetModelAsync(2);
-            string desc = admin.Description;
+            string trueName = admin.TrueName;
             return View(admin.Id);
         }
     }

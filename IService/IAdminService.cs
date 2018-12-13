@@ -7,8 +7,8 @@ namespace IService
 {
     public interface IAdminService : IServiceSupport
     {
-        Task<long> AddAsync(string name, string mobile, string description, string password);
-        Task<bool> UpdateAsync(long id, string mobile, string description, string password, long[] permissionIds);
+        Task<long> AddAsync(string name, string mobile, string trueName, string password);
+        Task<bool> UpdateAsync(long id, string mobile, string trueName, string password, long[] permissionIds);
         Task<bool> UpdateAsync(long id, List<long> permissionIds);
         Task<bool> UpdateAsync(long id, string password);
         Task<bool> DeleteAsync(long id);
