@@ -33,6 +33,7 @@ namespace Web
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
+            //自动注入Service继承了IServiceSupport接口的方法
             var serviceAsm = Assembly.Load(new AssemblyName("Service"));
             foreach (Type serviceType in serviceAsm.GetTypes()
             .Where(t => typeof(IServiceSupport).IsAssignableFrom(t) && !t.GetTypeInfo().IsAbstract))
@@ -43,24 +44,25 @@ namespace Web
                     services.AddSingleton(interfaceType, serviceType);
                 }
             }
+
             //services.AddTransient<IRazorViewEngine>();
             //services.AddSingleton(typeof(ITempDataProvider));
 
             services.AddMvc(option =>
             {
-                option.Filters.Add(typeof(WebAuthorizeFilter));
+                option.Filters.Add(typeof(WebAuthorizeFilter));//filter拦截验证
             })
             .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
             .AddJsonOptions(options =>
             {
-                options.SerializerSettings.DateFormatString = "yyyy-MM-dd HH:mm:ss";
+                options.SerializerSettings.DateFormatString = "yyyy-MM-dd HH:mm:ss";//json返回时间格式化
             });
 
             //services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1).AddJsonOptions(options=> {
             //    options.SerializerSettings.DateFormatString = "yyyy-MM-dd HH:mm:ss";//json返回时间格式化
             //});
 
-            services.AddAntiforgery(o => o.HeaderName = "XSRF-TOKEN");
+            services.AddAntiforgery(o => o.HeaderName = "XSRF-TOKEN"); //mvvm模式ajax提交需在header提交XSRF-TOKEN
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -79,6 +81,8 @@ namespace Web
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
+                //区域中的Controller上要添加标记[Area("admin")],admin表示区域名.
+                //core中webapi不一定在区域中新建，可以直接在web项目根目录下Controllers目录新建或新建一个目录中的Controllers目录新建
                 routes.MapRoute(
                     name: "areas",
                     template: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
