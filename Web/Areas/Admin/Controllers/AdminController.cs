@@ -8,22 +8,22 @@ using DTO;
 using IService;
 using Microsoft.AspNetCore.Mvc;
 using Web.Areas.Admin.Models.Admin;
+using Web.Attributes;
 
 namespace Web.Areas.Admin.Controllers
 {
+    [PermController("管理员管理")]
     [Area("admin")]
     public class AdminController : Controller
     {
         #region 构造函数注入
         private readonly IAdminService adminService;
         private readonly IPermissionService permissionService;
-        private readonly IPermissionTypeService permissionTypeService;
         private readonly int pageSize = 10;
-        public AdminController(IAdminService adminService, IPermissionService permissionService, IPermissionTypeService permissionTypeService)
+        public AdminController(IAdminService adminService, IPermissionService permissionService)
         {
             this.adminService = adminService;
             this.permissionService = permissionService;
-            this.permissionTypeService = permissionTypeService;
         }
         #endregion
 
@@ -38,25 +38,26 @@ namespace Web.Areas.Admin.Controllers
         {
             AdminSearchResult res = await adminService.GetModelListAsync("admin", keyword, startTime, endTime, pageIndex, pageSize);
             ListViewModel model = new ListViewModel();
-            model.Admins = res.Admins;
-            PermissionTypeDTO[] types = await permissionTypeService.GetModelListIsEnableAsync();
-            List<PermissionType> permissionTypes = new List<PermissionType>();
-            foreach (var type in types)
-            {
-                PermissionType permissionType = new PermissionType();
-                permissionType.Name = type.Name;
-                PermissionDTO[] permissions = await permissionService.GetByTypeIdAsync(type.Id);
-                permissionType.Permissions = permissions.ToList();
-                permissionTypes.Add(permissionType);
-            }
-            model.PermissionTypes = permissionTypes;
-            model.PageCount = res.PageCount;
+            //model.Admins = res.Admins;
+            //PermissionTypeDTO[] types = await permissionTypeService.GetModelListIsEnableAsync();
+            //List<PermissionType> permissionTypes = new List<PermissionType>();
+            //foreach (var type in types)
+            //{
+            //    PermissionType permissionType = new PermissionType();
+            //    permissionType.Name = type.Name;
+            //    PermissionDTO[] permissions = await permissionService.GetByTypeIdAsync(type.Id);
+            //    permissionType.Permissions = permissions.ToList();
+            //    permissionTypes.Add(permissionType);
+            //}
+            //model.PermissionTypes = permissionTypes;
+            //model.PageCount = res.PageCount;
             return Json(new AjaxResult { Status = 1, Data = model });
         }
         #endregion
 
         #region 添加管理员
         [HttpPost]
+        [PermAction("添加管理员")]
         public async Task<IActionResult> Add(string name, string mobile, string password)
         {
             if (string.IsNullOrEmpty(name))
@@ -90,7 +91,8 @@ namespace Web.Areas.Admin.Controllers
 
         #region 修改管理员密码
         [HttpPost]
-        public async Task<IActionResult> EditPassword(long id, string password)
+        [PermAction("修改管理员密码")]
+        public async Task<IActionResult> EditPwd(long id, string password)
         {
             if (string.IsNullOrEmpty(password))
             {
@@ -107,7 +109,8 @@ namespace Web.Areas.Admin.Controllers
 
         #region 修改管理员权限
         [HttpPost]
-        public async Task<IActionResult> EditPermission(long id, List<long> permissionIds)
+        [PermAction("修改管理员权限")]
+        public async Task<IActionResult> EditPerm(long id, List<long> permissionIds)
         {
             if (permissionIds == null)
             {
@@ -127,29 +130,29 @@ namespace Web.Areas.Admin.Controllers
             {
                 permissionIds = new List<long>();
             }
-            PermissionTypeDTO[] types = await permissionTypeService.GetModelListIsEnableAsync();
             List<PermissionType> permissionTypes = new List<PermissionType>();
-            foreach (var type in types)
-            {
-                PermissionType permissionType = new PermissionType();
-                permissionType.Name = type.Name;
-                PermissionDTO[] permissions = await permissionService.GetByTypeIdAsync(type.Id);
-                foreach (var perm in permissions)
-                {
-                    if (permissionIds.Contains(perm.Id))
-                    {
-                        perm.IsChecked = true;
-                    }
-                }
-                permissionType.Permissions = permissions.ToList();
-                permissionTypes.Add(permissionType);
-            }
+            //foreach (var type in types)
+            //{
+            //    PermissionType permissionType = new PermissionType();
+            //    permissionType.Name = type.Name;
+            //    PermissionDTO[] permissions = await permissionService.GetByTypeIdAsync(type.Id);
+            //    foreach (var perm in permissions)
+            //    {
+            //        if (permissionIds.Contains(perm.Id))
+            //        {
+            //            perm.IsChecked = true;
+            //        }
+            //    }
+            //    permissionType.Permissions = permissions.ToList();
+            //    permissionTypes.Add(permissionType);
+            //}
             return Json(new AjaxResult { Status = 1, Data = permissionTypes });
         }
         #endregion
 
         #region 冻结管理员账号
         [HttpPost]
+        [PermAction("冻结管理员账号")]
         public async Task<IActionResult> Frozen(long id)
         {
             bool res = await adminService.FrozenAsync(id);
@@ -163,6 +166,7 @@ namespace Web.Areas.Admin.Controllers
 
         #region 删除管理员账号
         [HttpPost]
+        [PermAction("删除管理员账号")]
         public async Task<IActionResult> Del(long id)
         {
             bool res = await adminService.DelAsync(id);

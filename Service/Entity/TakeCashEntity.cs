@@ -16,9 +16,7 @@ namespace Service.Entity
         public long StateId { get; set; }
         public decimal Amount { get; set; }
         public string Description { get; set; }
-        public IdNameEntity State { get; set; }
         public long TypeId { get; set; }
-        public IdNameEntity Type { get; set; }
         public string AdminCode { get; set; }
     }
 }

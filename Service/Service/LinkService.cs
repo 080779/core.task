@@ -22,7 +22,7 @@ namespace Service.Service
             dto.CreateTime = entity.CreateTime;
             dto.Id = entity.Id;
             dto.Sort = entity.Sort;
-            dto.TypeName = entity.Type.Name;
+            dto.TypeName = "";
             dto.IsEnabled = entity.IsEnabled;
             return dto;
         }
@@ -95,7 +95,7 @@ namespace Service.Service
         {
             using (MyDbContext dbc = new MyDbContext())
             {
-                LinkEntity entity = await dbc.GetAll<LinkEntity>().Include(l=>l.Type).SingleOrDefaultAsync(p => p.Id == id);
+                LinkEntity entity = await dbc.GetAll<LinkEntity>().SingleOrDefaultAsync(p => p.Id == id);
                 if (entity == null)
                 {
                     return null;
@@ -108,7 +108,7 @@ namespace Service.Service
         {
             using (MyDbContext dbc = new MyDbContext())
             {
-                var entities = dbc.GetAll<LinkEntity>().Include(p => p.Type).AsNoTracking().Where(p => p.TypeId == id && p.IsEnabled == 1);
+                var entities = dbc.GetAll<LinkEntity>().AsNoTracking().Where(p => p.TypeId == id && p.IsEnabled == 1);
                 var idNames = await entities.OrderBy(p => p.Sort).ToListAsync();
                 return idNames.Select(p => ToDTO(p)).ToArray();
             }
@@ -118,7 +118,7 @@ namespace Service.Service
         {
             using (MyDbContext dbc = new MyDbContext())
             {
-                var entities = dbc.GetAll<LinkEntity>().Include(p => p.Type).AsNoTracking().Where(p => p.TypeId == id);
+                var entities = dbc.GetAll<LinkEntity>().AsNoTracking().Where(p => p.TypeId == id);
                 var idNames = await entities.OrderBy(p => p.Sort).ToListAsync();
                 return idNames.Select(p => ToDTO(p)).ToArray();
             }

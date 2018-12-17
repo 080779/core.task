@@ -16,7 +16,6 @@ namespace Service.Entity
         public long UserId { get; set; }
         public UserEntity User { get; set; }
         public long StateId { get; set; }
-        public ForwardStateEntity State { get; set; }
         public long Count { get; set; } = 0;
         public string ImgUrl { get; set; }
     }

@@ -20,7 +20,7 @@ namespace Service.Service
             dto.Id = entity.Id;
             dto.ImgUrl = entity.ImgUrl;
             dto.StateId = entity.StateId;
-            dto.StateName = entity.State.Name;
+            dto.StateName = "";
             dto.TaskId = entity.TaskId;
             dto.TaskTitle = entity.Task.Title;
             dto.UserId = entity.UserId;
@@ -50,13 +50,13 @@ namespace Service.Service
                 //    return -3;
                 //}
 
-                long stateId = await dbc.GetIdAsync<ForwardStateEntity>(f => f.Name == "已接受");
+                long stateId =1;
                 if (stateId <= 0)
                 {
                     return -4;
                 }
 
-                ForwardEntity forward = await dbc.GetAll<ForwardEntity>().Include(f=>f.State).SingleOrDefaultAsync(f=>f.UserId==userId && f.TaskId==taskId);
+                ForwardEntity forward = await dbc.GetAll<ForwardEntity>().SingleOrDefaultAsync(f=>f.UserId==userId && f.TaskId==taskId);
                 if(forward==null)
                 {
                     forward = new ForwardEntity();
@@ -67,10 +67,10 @@ namespace Service.Service
                     await dbc.SaveChangesAsync();
                     return forward.Id;
                 }
-                if(forward.State.Name != "未通过审核")
-                {
-                    return -5;
-                }
+                //if(forward.State.Name != "未通过审核")
+                //{
+                //    return -5;
+                //}
                 forward.StateId = stateId;
                 forward.ImgUrl = "";
                 await dbc.SaveChangesAsync();
@@ -86,12 +86,12 @@ namespace Service.Service
                 {
                     return -1;
                 }
-                long stateId = await dbc.GetIdAsync<ForwardStateEntity>(f => f.Name == "已放弃");
+                long stateId = 1;
                 if (stateId <= 0)
                 {
                     return -2;
                 }
-                ForwardEntity forward = await dbc.GetAll<ForwardEntity>().Include(f => f.State).SingleOrDefaultAsync(f => f.UserId == userId && f.TaskId == taskId && f.State.Name=="已接受");
+                ForwardEntity forward = await dbc.GetAll<ForwardEntity>().SingleOrDefaultAsync(f => f.UserId == userId && f.TaskId == taskId);
                 if(forward==null)
                 {
                     return -3;
@@ -106,7 +106,7 @@ namespace Service.Service
         {
             using (MyDbContext dbc = new MyDbContext())
             {
-                ForwardEntity forward = await dbc.GetAll<ForwardEntity>().Include(f=>f.Task).SingleOrDefaultAsync(t => t.UserId == userId && t.TaskId==taskId && t.State.Name=="已接受");
+                ForwardEntity forward = await dbc.GetAll<ForwardEntity>().Include(f=>f.Task).SingleOrDefaultAsync(t => t.UserId == userId && t.TaskId==taskId);
                 if (forward == null)
                 {
                     return -1;
@@ -121,7 +121,7 @@ namespace Service.Service
                 //    return -3;
                 //}
 
-                long stateId = await dbc.GetIdAsync<ForwardStateEntity>(f => f.Name == "审核中");
+                long stateId =1;
                 if (stateId <= 0)
                 {
                     return -4;
@@ -142,11 +142,11 @@ namespace Service.Service
                 {
                     return -1;
                 }
-                if(forward.State.Name!="审核中")
-                {
-                    return -6;//不是审核中的任务不能通过审核或取消审核
-                }
-                long stateId = await dbc.GetIdAsync<ForwardStateEntity>(f => f.Name == "未通过审核");                
+                //if(forward.State.Name!="审核中")
+                //{
+                //    return -6;//不是审核中的任务不能通过审核或取消审核
+                //}
+                long stateId = 1;                
                 if (stateId <= 0)
                 {
                     return -2;
@@ -157,7 +157,7 @@ namespace Service.Service
                     await dbc.SaveChangesAsync();
                     return forward.Id;
                 }
-                stateId= await dbc.GetIdAsync<ForwardStateEntity>(f => f.Name == "任务完成");
+                stateId= 1;
                 forward.StateId = stateId;
                 UserEntity user = await dbc.GetAll<UserEntity>().SingleOrDefaultAsync(u=>u.Id==forward.UserId);
                 if(user==null)
@@ -167,7 +167,7 @@ namespace Service.Service
                 decimal bonus= forward.Task.Bonus;
                 user.Amount = user.Amount + bonus;
                 user.BonusAmount = user.BonusAmount + bonus;
-                long journalTypeId= await dbc.GetIdAsync<IdNameEntity>(f => f.Name == "任务转发");
+                long journalTypeId = 1;
                 if(journalTypeId <= 0)
                 {
                     return -5;
@@ -203,15 +203,16 @@ namespace Service.Service
 
         public async Task<string> GetStateNameAsync(long userId, long taskId)
         {
-            using (MyDbContext dbc = new MyDbContext())
-            {
-                long id = await dbc.GetlongParameterAsync<ForwardEntity>(f => f.UserId == userId && f.TaskId == taskId, f => f.StateId);
-                if(id==0)
-                {
-                    return null;
-                }
-                return await dbc.GetParameterAsync<ForwardStateEntity>(i=>i.Id==id,i=>i.Name);
-            }
+            //using (MyDbContext dbc = new MyDbContext())
+            //{
+            //    long id = await dbc.get<ForwardEntity>(f => f.UserId == userId && f.TaskId == taskId, f => f.StateId);
+            //    if(id==0)
+            //    {
+            //        return null;
+            //    }
+            //    return await dbc.GetParameterAsync<ForwardStateEntity>(i=>i.Id==id,i=>i.Name);
+            //}
+            return "";
         }
 
         //public async Task<long> GetUserForwardStatisticalAsync(long userId, DateTime? dateTime)
@@ -294,7 +295,7 @@ namespace Service.Service
                     forwards = forwards.Where(a => a.CreateTime <= endTime);
                 }
                 result.PageCount = (int)Math.Ceiling((await forwards.LongCountAsync()) * 1.0f / pageSize);
-                var forwordResult = await forwards.Include(f=>f.User).Include(f=>f.Task).Include(f=>f.State).OrderByDescending(a => a.CreateTime).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
+                var forwordResult = await forwards.Include(f=>f.User).Include(f=>f.Task).OrderByDescending(a => a.CreateTime).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
                 result.Forwards = forwordResult.Select(a => ToDTO(a)).ToArray();
                 return result;
             }

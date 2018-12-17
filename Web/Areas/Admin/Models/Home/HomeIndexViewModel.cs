@@ -8,7 +8,6 @@ namespace Web.Areas.Admin.Models.Home
 {
     public class HomeIndexViewModel
     {
-        public PermissionTypeDTO[] PermissionTypes { get; set; }
         public string Name { get; set; }
     }
 }

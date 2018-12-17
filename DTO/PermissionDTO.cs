@@ -9,11 +9,12 @@ namespace DTO
     public class PermissionDTO:BaseDTO
     {
         public string Name { get; set; }
-        public string Description { get; set; }
-        public long PermissionTypeId { get; set; }
-        public string PermissionTypeName { get; set; }
-        public bool IsChecked { get; set; } = false;
-        public int Sort { get; set; }
+        public string Remark { get; set; }
+        public int? LevelId { get; set; }
+        public string TypeName { get; set; }
+        public string TypeRemark { get; set; }
+        public string Url { get; set; }
         public int IsEnabled { get; set; }
+        public bool IsChecked { get; set; } = false;
     }
 }

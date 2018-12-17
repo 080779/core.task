@@ -44,7 +44,7 @@ namespace Service
         /// <returns></returns>
         public async static Task<string> GetStringParamAsync(this MyDbContext dbc, string name)
         {
-            return await dbc.GetParameterAsync<SettingEntity>(s => s.Name == name, s => s.Parameter);
+            return await dbc.GetStringPropertyAsync<SettingEntity>(s => s.Name == name, s => s.Parameter);
         }
 
         /// <summary>
@@ -55,7 +55,7 @@ namespace Service
         /// <returns></returns>
         public static string GetStringParam(this MyDbContext dbc, string name)
         {
-            return dbc.GetParameter<SettingEntity>(s => s.Name == name, s => s.Parameter);
+            return dbc.GetStringProperty<SettingEntity>(s => s.Name == name, s => s.Parameter);
         }
 
         /// <summary>
@@ -67,7 +67,7 @@ namespace Service
         public async static Task<decimal> GetDecimalParamAsync(this MyDbContext dbc, string name)
         {
             decimal param;
-            decimal.TryParse(await dbc.GetParameterAsync<SettingEntity>(s => s.Name == name, s => s.Parameter), out param);
+            decimal.TryParse(await dbc.GetStringPropertyAsync<SettingEntity>(s => s.Name == name, s => s.Parameter), out param);
             return param;
         }
 
@@ -80,7 +80,7 @@ namespace Service
         public static decimal GetDecimalParam(this MyDbContext dbc, string name)
         {
             decimal param;
-            decimal.TryParse(dbc.GetParameter<SettingEntity>(s => s.Name == name, s => s.Parameter), out param);
+            decimal.TryParse(dbc.GetStringProperty<SettingEntity>(s => s.Name == name, s => s.Parameter), out param);
             return param;
         }
 
@@ -93,7 +93,7 @@ namespace Service
         public async static Task<int> GetIntParamAsync(this MyDbContext dbc, string name)
         {
             int param;
-            int.TryParse(await dbc.GetParameterAsync<SettingEntity>(s => s.Name == name, s => s.Parameter), out param);
+            int.TryParse(await dbc.GetStringPropertyAsync<SettingEntity>(s => s.Name == name, s => s.Parameter), out param);
             return param;
         }
 
@@ -106,7 +106,7 @@ namespace Service
         public static int GetIntParam(this MyDbContext dbc, string name)
         {
             int param;
-            int.TryParse(dbc.GetParameter<SettingEntity>(s => s.Name == name, s => s.Parameter), out param);
+            int.TryParse(dbc.GetStringProperty<SettingEntity>(s => s.Name == name, s => s.Parameter), out param);
             return param;
         }
         #endregion

@@ -16,24 +16,24 @@ namespace Service.Service
         {
             AdminLogDTO dto = new AdminLogDTO();
             dto.AdminId = entity.AdminId;
-            dto.AdminMobile = entity.Admin.Mobile;
+            dto.AdminMobile = entity.AdminMobile;
             dto.CreateTime = entity.CreateTime;
-            dto.Description = entity.Description;
+            dto.Remark = entity.Remark;
             dto.Id = entity.Id;
             dto.IpAddress = entity.IpAddress;
-            dto.PermissionTypeId = entity.PermissionTypeId;
-            dto.PermissionTypeName = entity.PermissionType.Name;
+            dto.PermTypeName = entity.PermTypeName;
             dto.Tip = entity.Tip;
             return dto;
         }
-        public async Task<long> AddAsync(long adminId, long permissionTypeId, string description, string ipAddress, string tip)
+        public async Task<long> AddAsync(long adminId, string permTypeName, string remark, string ipAddress, string tip)
         {
             using (MyDbContext dbc = new MyDbContext())
             {
                 AdminLogEntity adminLog = new AdminLogEntity();
                 adminLog.AdminId = adminId;
-                adminLog.PermissionTypeId = permissionTypeId;
-                adminLog.Description = description;
+                adminLog.AdminMobile = await dbc.GetStringPropertyAsync<AdminEntity>(a => a.Id == adminId,a=>a.Mobile);
+                adminLog.PermTypeName = permTypeName;
+                adminLog.Remark = remark;
                 adminLog.IpAddress = ipAddress;
                 adminLog.Tip = tip;
                 dbc.AdminLogs.Add(adminLog);
@@ -41,24 +41,8 @@ namespace Service.Service
                 return adminLog.Id;
             }
         }
-        public long Add(long adminId, string permissionType, string description, string ipAddress, string tip)
-        {
-            using (MyDbContext dbc = new MyDbContext())
-            {
-                long permissionTypeId = dbc.GetAll<PermissionTypeEntity>().SingleOrDefault(p=>p.Name==permissionType).Id;
-                AdminLogEntity adminLog = new AdminLogEntity();
-                adminLog.AdminId = adminId;
-                adminLog.PermissionTypeId = permissionTypeId;
-                adminLog.Description = description;
-                adminLog.IpAddress = ipAddress;
-                adminLog.Tip = tip;
-                dbc.AdminLogs.Add(adminLog);
-                dbc.SaveChanges();
-                return adminLog.Id;
-            }
-        }
 
-        public async Task<AdminLogSearchResult> GetModelListAsync(string keyword, long? permissionTypeId, DateTime? startTime, DateTime? endTime, int pageIndex, int pageSize)
+        public async Task<AdminLogSearchResult> GetModelListAsync(string keyword, DateTime? startTime, DateTime? endTime, int pageIndex, int pageSize)
         {
             using (MyDbContext dbc = new MyDbContext())
             {
@@ -66,11 +50,7 @@ namespace Service.Service
                 var adminLogs = dbc.GetAll<AdminLogEntity>().AsNoTracking();
                 if (!string.IsNullOrEmpty(keyword))
                 {
-                    adminLogs = adminLogs.Where(a => a.Admin.Mobile.Contains(keyword));
-                }
-                if (permissionTypeId != null)
-                {
-                    adminLogs = adminLogs.Where(a => a.PermissionType.Id == permissionTypeId);
+                    adminLogs = adminLogs.Where(a => a.AdminMobile.Contains(keyword));
                 }
                 if (startTime != null)
                 {
@@ -81,7 +61,7 @@ namespace Service.Service
                     adminLogs = adminLogs.Where(a => a.CreateTime <= endTime);
                 }
                 result.PageCount = (int)Math.Ceiling((await adminLogs.LongCountAsync()) * 1.0f / pageSize);
-                var adminLogsResult = await adminLogs.Include(a => a.Admin).Include(a => a.PermissionType).OrderByDescending(a => a.CreateTime).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
+                var adminLogsResult = await adminLogs.OrderByDescending(a => a.CreateTime).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
                 result.AdminLogs = adminLogsResult.Select(a => ToDTO(a)).ToArray();
                 return result;
             }

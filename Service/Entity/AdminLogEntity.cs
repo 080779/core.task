@@ -14,11 +14,10 @@ namespace Service.Entity
     public class AdminLogEntity:BaseEntity
     {
         public string IpAddress { get; set; }
-        public string Description { get; set; }
+        public string Remark { get; set; }
         public string Tip { get; set; }
-        public long PermissionTypeId { get; set; }
+        public string PermTypeName { get; set; }
         public long AdminId { get; set; }
-        public PermissionTypeEntity PermissionType { get; set; }
-        public AdminEntity Admin { get; set; }
+        public string AdminMobile { get; set; }
     }
 }

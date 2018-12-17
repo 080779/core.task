@@ -5,10 +5,12 @@ using System.Threading.Tasks;
 using Common;
 using IService;
 using Microsoft.AspNetCore.Mvc;
+using Web.Attributes;
 
 namespace Web.Areas.Admin.Controllers
 {
     [Area("admin")]
+    [PermController("会员管理")]
     public class UserController : Controller
     {
         #region 构造函数注入
@@ -35,6 +37,7 @@ namespace Web.Areas.Admin.Controllers
         #endregion
 
         #region 添加用户
+        [PermAction]
         public async Task<IActionResult> Add(string name, string password)
         {
             if (string.IsNullOrEmpty(name))
@@ -69,7 +72,8 @@ namespace Web.Areas.Admin.Controllers
         #endregion
 
         #region 修改密码
-        public async Task<IActionResult> ResetPwd(long id, string password)
+        [PermAction("修改密码")]
+        public async Task<IActionResult> EditPwd(long id, string password)
         {
             if (string.IsNullOrEmpty(password))
             {
@@ -89,6 +93,7 @@ namespace Web.Areas.Admin.Controllers
         #endregion
 
         #region 冻结用户
+        [PermAction("冻结用户")]
         public async Task<IActionResult> Frozen(long id)
         {
             bool res = await userService.FrozenAsync(id);
@@ -101,7 +106,8 @@ namespace Web.Areas.Admin.Controllers
         #endregion
 
         #region 删除用户
-        public async Task<IActionResult> Delete(long id)
+        [PermAction("删除用户")]
+        public async Task<IActionResult> Del(long id)
         {
             long res = await userService.DeleteAsync(id);
             if (res <= 0)

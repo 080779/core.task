@@ -16,6 +16,7 @@ namespace Service.Entity
         public string Name { get; set; }
         public string Mobile { get; set; }
         public string TrueName { get; set; }
+        public string Remark { get; set; }
         public string Salt { get; set; }
         public string Password { get; set; }
         public int IsEnabled { get; set; } = 1;

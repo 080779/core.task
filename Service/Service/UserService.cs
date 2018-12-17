@@ -219,11 +219,11 @@ namespace Service.Service
             {
                 if(payTypeName=="微信")
                 {
-                    return dbc.GetParameter<UserEntity>(u => u.Id == userId, u => u.WechatPayCode);
+                    return dbc.GetStringProperty<UserEntity>(u => u.Id == userId, u => u.WechatPayCode);
                 }
                 else
                 {
-                    return dbc.GetParameter<UserEntity>(u => u.Id == userId, u => u.AliPayCode);
+                    return dbc.GetStringProperty<UserEntity>(u => u.Id == userId, u => u.AliPayCode);
                 }
             }
         }
@@ -232,7 +232,7 @@ namespace Service.Service
         {
             using (MyDbContext dbc = new MyDbContext())
             {
-                return await dbc.GetDecimalParameterAsync<UserEntity>(u=>u.Id==id,u=>u.Amount);
+                return await dbc.GetDecimalPropertyAsync<UserEntity>(u=>u.Id==id,u=>u.Amount);
             }
         }
 
@@ -253,7 +253,7 @@ namespace Service.Service
         {
             using (MyDbContext dbc = new MyDbContext())
             {
-                return await dbc.GetParameterAsync<UserEntity>(u=>u.Id==id,u=>u.Mobile);
+                return await dbc.GetStringPropertyAsync<UserEntity>(u=>u.Id==id,u=>u.Mobile);
             }
         }
 

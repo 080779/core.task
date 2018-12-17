@@ -47,32 +47,22 @@ namespace Service
             return this.Set<T>().AsNoTracking().Where(e => e.IsDeleted == 0).Where(expression).Select(e => e.Id);
         }
 
-        public string GetParameter<T>(Expression<Func<T, bool>> expression, Expression<Func<T, string>> parameterName) where T : BaseEntity
+        public string GetStringProperty<T>(Expression<Func<T, bool>> expression, Expression<Func<T, string>> parameterName) where T : BaseEntity
         {
             return this.Set<T>().AsNoTracking().Where(e => e.IsDeleted == 0).Where(expression).Select(parameterName).SingleOrDefault();
         }
 
-        public async Task<string> GetParameterAsync<T>(Expression<Func<T, bool>> expression, Expression<Func<T, string>> parameterName) where T : BaseEntity
+        public async Task<string> GetStringPropertyAsync<T>(Expression<Func<T, bool>> expression, Expression<Func<T, string>> parameterName) where T : BaseEntity
         {
             return await this.Set<T>().AsNoTracking().Where(e => e.IsDeleted == 0).Where(expression).Select(parameterName).SingleOrDefaultAsync();
         }
 
-        public long GetlongParameter<T>(Expression<Func<T, bool>> expression, Expression<Func<T, long>> parameterName) where T : BaseEntity
+        public decimal GetDecimalProperty<T>(Expression<Func<T, bool>> expression, Expression<Func<T, decimal>> parameterName) where T : BaseEntity
         {
             return this.Set<T>().AsNoTracking().Where(e => e.IsDeleted == 0).Where(expression).Select(parameterName).SingleOrDefault();
         }
 
-        public async Task<long> GetlongParameterAsync<T>(Expression<Func<T, bool>> expression, Expression<Func<T, long>> parameterName) where T : BaseEntity
-        {
-            return await this.Set<T>().AsNoTracking().Where(e => e.IsDeleted == 0).Where(expression).Select(parameterName).SingleOrDefaultAsync();
-        }
-
-        public decimal GetDecimalParameter<T>(Expression<Func<T, bool>> expression, Expression<Func<T, decimal>> parameterName) where T : BaseEntity
-        {
-            return this.Set<T>().AsNoTracking().Where(e => e.IsDeleted == 0).Where(expression).Select(parameterName).SingleOrDefault();
-        }
-
-        public async Task<decimal> GetDecimalParameterAsync<T>(Expression<Func<T, bool>> expression, Expression<Func<T, decimal>> parameterName) where T : BaseEntity
+        public async Task<decimal> GetDecimalPropertyAsync<T>(Expression<Func<T, bool>> expression, Expression<Func<T, decimal>> parameterName) where T : BaseEntity
         {
             return await this.Set<T>().AsNoTracking().Where(e => e.IsDeleted == 0).Where(expression).Select(parameterName).SingleOrDefaultAsync();
         }
@@ -81,21 +71,13 @@ namespace Service
         public DbSet<AdminEntity> Admins { get; set; }
         public DbSet<AdminLogEntity> AdminLogs { get; set; }
         public DbSet<PermissionEntity> Permissions { get; set; }
-        public DbSet<PermissionTypeEntity> PermissionTypes { get; set; }
         public DbSet<SettingEntity> Settings { get; set; }
         public DbSet<TakeCashEntity> TakeCashes { get; set; }
-        public DbSet<IdNameEntity> IdNames { get; set; }
         public DbSet<JournalEntity> Journals { get; set; }
         public DbSet<TaskEntity> Tasks { get; set; }
         public DbSet<ForwardEntity> Forwards { get; set; }
-        public DbSet<ForwardStateEntity> ForwardStates { get; set; }
         public DbSet<CollectEntity> Collects { get; set; }
         public DbSet<AdminPermissionEntity> AdminPermissions { get; set; }
-        public DbSet<PersonEntity> Persons { get; set; }
-        public DbSet<IdNameTypeEntity> IdNameTypes { get; set; }
         public DbSet<LinkEntity> Links { get; set; }
-        public DbSet<LinkTypeEntity> LinkTypes { get; set; }
-        public DbSet<ParameterEntity> Parameters { get; set; }
-        public DbSet<ParameterTypeEntity> ParameterTypes { get; set; }
     }
 }

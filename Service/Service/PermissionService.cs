@@ -16,123 +16,59 @@ namespace Service.Service
         public PermissionDTO ToDTO(PermissionEntity entity)
         {
             PermissionDTO dto = new PermissionDTO();
-            dto.Description = entity.Description;
-            dto.Name = entity.Name;
-            dto.PermissionTypeId = entity.PermissionTypeId;
-            dto.PermissionTypeName = entity.PermissionType.Name;
             dto.CreateTime = entity.CreateTime;
             dto.Id = entity.Id;
-            dto.Sort = entity.Sort;
             dto.IsEnabled = entity.IsEnabled;
+            dto.LevelId = entity.LevelId;
+            dto.Name = entity.Name;
+            dto.Remark = entity.Remark;
+            dto.TypeName = entity.TypeName;
+            dto.TypeRemark = entity.TypeRemark;
+            dto.Url = entity.Url;
             return dto;
         }
 
-        public async Task<long> AddAsync(string name, int sort, long permissionTypeId)
+        public async Task InitializeAsync()
         {
             using (MyDbContext dbc = new MyDbContext())
             {
-                string typeName = await dbc.GetParameterAsync<PermissionTypeEntity>(p=>p.Id==permissionTypeId,p=>p.Name);
-                if(string.IsNullOrEmpty(typeName))
-                {
-                    return -1;
-                }
-                PermissionEntity entity = new PermissionEntity();
-                entity.Name = name;
-                entity.Description = typeName + "_" + name;
-                entity.Sort = sort;
-                entity.PermissionTypeId = permissionTypeId;
-                dbc.Permissions.Add(entity);
+                await dbc.GetAll<PermissionEntity>().ForEachAsync(p => p.IsEnabled = 0);
                 await dbc.SaveChangesAsync();
-                return entity.Id;
             }
         }
 
-        public async Task<long> EditAsync(long id, string name, int sort)
+        public async Task<long> EditAsync(long id, string name, string remark, string typeName, string typeRemark, string url, int? levelId)
         {
             using (MyDbContext dbc = new MyDbContext())
             {
+
                 PermissionEntity entity = await dbc.GetAll<PermissionEntity>().SingleOrDefaultAsync(p=>p.Id==id);
-                if (entity==null)
+                if (entity != null)
                 {
-                    return -1;
+                    entity.Name = name;
+                    entity.Remark = remark;
+                    entity.TypeName = typeName;
+                    entity.TypeRemark = typeRemark;
+                    entity.Url = url;
+                    entity.LevelId = levelId;
+                    entity.IsEnabled = 1;
+                    await dbc.SaveChangesAsync();
+                    return entity.Id;
                 }
-                entity.Name = name;
-                entity.Description = entity.Description.Split('_')[0] + "_" + name;
-                entity.Sort = sort;
-                await dbc.SaveChangesAsync();
-                return entity.Id;
-            }
-        }
-
-        public async Task<bool> FrozenAsync(long id)
-        {
-            using (MyDbContext dbc = new MyDbContext())
-            {
-                PermissionEntity entity = await dbc.GetAll<PermissionEntity>().SingleOrDefaultAsync(p => p.Id == id);
-                if (entity == null)
+                else
                 {
-                    return false;
-                }
-                entity.IsEnabled = entity.IsEnabled == 1 ? 0 : 1;
-                await dbc.SaveChangesAsync();
-                return true;
+                    entity = new PermissionEntity();
+                    entity.Name = name;
+                    entity.Remark = remark;
+                    entity.TypeName = typeName;
+                    entity.TypeRemark = typeRemark;
+                    entity.Url = url;
+                    entity.LevelId = levelId;
+                    dbc.Permissions.Add(entity);
+                    await dbc.SaveChangesAsync();
+                    return entity.Id;
+                }                
             }
-        }
-
-        public async Task<bool> DelAsync(long id)
-        {
-            using (MyDbContext dbc = new MyDbContext())
-            {
-                PermissionEntity entity = await dbc.GetAll<PermissionEntity>().SingleOrDefaultAsync(p => p.Id == id);
-                if (entity == null)
-                {
-                    return false;
-                }
-                entity.IsDeleted = 1;
-                await dbc.SaveChangesAsync();
-                return true;
-            }
-        }
-
-        public async Task<PermissionDTO> GetModelByIdAsync(long id)
-        {
-            using (MyDbContext dbc = new MyDbContext())
-            {
-                var entity = await dbc.GetAll<PermissionEntity>().Include(p => p.PermissionType).AsNoTracking().SingleOrDefaultAsync(p => p.Id == id);
-                if(entity==null)
-                {
-                    return null;
-                }
-                return ToDTO(entity);
-            }
-        }
-
-        public string GetNameByDesc(string description)
-        {
-            using (MyDbContext dbc = new MyDbContext())
-            {
-                return dbc.GetParameter<PermissionEntity>(p => p.Description == description, p => p.Name);
-            }
-        }
-
-        public async Task<PermissionDTO[]> GetByTypeIdIsEnableAsync(long id)
-        {
-            using (MyDbContext dbc = new MyDbContext())
-            {
-                var entities = dbc.GetAll<PermissionEntity>().Include(p => p.PermissionType).AsNoTracking().Where(p => p.PermissionTypeId == id && p.IsEnabled==1);
-                var permissions = await entities.OrderBy(p => p.Sort).ToListAsync();
-                return permissions.Select(p => ToDTO(p)).ToArray();
-            }
-        }
-
-        public async Task<PermissionDTO[]> GetByTypeIdAsync(long id)
-        {
-            using (MyDbContext dbc = new MyDbContext())
-            {
-                var entities = dbc.GetAll<PermissionEntity>().Include(p => p.PermissionType).AsNoTracking().Where(p => p.PermissionTypeId == id);
-                var permissions = await entities.OrderBy(p=>p.Sort).ToListAsync();
-                return permissions.Select(p => ToDTO(p)).ToArray();
-            }
-        }
+        }        
     }
 }

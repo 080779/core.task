@@ -21,7 +21,7 @@ namespace Service.Service
             dto.Id = entity.Id;
             dto.InAmount = entity.InAmount;
             dto.JournalTypeId = entity.JournalTypeId;
-            dto.JournalTypeName = entity.JournalType.Name;
+            dto.JournalTypeName = "";
             dto.OutAmount = entity.OutAmount;
             dto.Remark = entity.Remark;
             dto.RemarkEn = entity.RemarkEn;
@@ -64,7 +64,7 @@ namespace Service.Service
                 decimal? totalOutAmount= await entities.SumAsync(j => j.OutAmount);
                 result.TotalInAmount = totalInAmount == null ? 0 : totalInAmount;
                 result.TotalOutAmount = totalOutAmount == null ? 0 : totalOutAmount;
-                var journalResult = await entities.Include(j => j.JournalType).Include(j => j.User).OrderByDescending(a => a.CreateTime).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
+                var journalResult = await entities.Include(j => j.User).OrderByDescending(a => a.CreateTime).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
                 result.Journals = journalResult.Select(a => ToDTO(a)).ToArray();
                 return result;
             }

@@ -20,9 +20,9 @@ namespace Service.Service
             dto.Description = entity.Description;
             dto.Id = entity.Id;
             dto.StateId = entity.StateId;
-            dto.StateName = entity.State.Name;
+            dto.StateName = "";
             dto.TypeId = entity.TypeId;
-            dto.TypeName = entity.Type.Name;
+            dto.TypeName = "";
             //dto.PayCode = payCode;
             //dto.BankAccount = bankAccount;
             dto.Name = entity.User.Name;
@@ -54,7 +54,7 @@ namespace Service.Service
                 TakeCashEntity takeCash = new TakeCashEntity();
                 takeCash.UserId = userId;
                 takeCash.TypeId = payTypeId;
-                var stateId = await dbc.GetIdAsync<IdNameEntity>(i => i.Name == "未结款");
+                var stateId = 1;
                 if (stateId == 0)
                 {
                     return -3;
@@ -67,7 +67,7 @@ namespace Service.Service
                 user.Amount = user.Amount - takeCash.Amount;
                 JournalEntity journal = new JournalEntity();
                 journal.OutAmount = takeCash.Amount;
-                journal.JournalTypeId = await dbc.GetIdAsync<IdNameEntity>(i => i.Name == "余额提现中");
+                journal.JournalTypeId = 1;
                 journal.Remark = "余额提现";
                 journal.UserId = takeCash.UserId;
                 journal.BalanceAmount = user.Amount;
@@ -94,19 +94,19 @@ namespace Service.Service
                 }
                 if (isSuccess == false)
                 {                    
-                    takeCash.StateId = await dbc.GetIdAsync<IdNameEntity>(i => i.Name == "已取消");
-                    takeCash.AdminCode = await dbc.GetParameterAsync<AdminEntity>(a => a.Id == adminId, a => a.Mobile);
-                    JournalEntity journal = await dbc.GetAll<JournalEntity>().SingleOrDefaultAsync(j=>j.Journal01==takeCash.Id && j.JournalType.Name== "余额提现中");
+                    takeCash.StateId = 1;
+                    takeCash.AdminCode = await dbc.GetStringPropertyAsync<AdminEntity>(a => a.Id == adminId, a => a.Mobile);
+                    JournalEntity journal = await dbc.GetAll<JournalEntity>().SingleOrDefaultAsync(j=>j.Journal01==takeCash.Id);
                     user.Amount = user.Amount + journal.OutAmount.Value;
                     await dbc.SaveChangesAsync();
                     return -4;
                 }                
                 else
                 {
-                    takeCash.StateId = await dbc.GetIdAsync<IdNameEntity>(i => i.Name == "已结款");
-                    takeCash.AdminCode = await dbc.GetParameterAsync<AdminEntity>(a => a.Id == adminId, a => a.Mobile);
-                    JournalEntity journal = await dbc.GetAll<JournalEntity>().SingleOrDefaultAsync(j=>j.Journal01==takeCash.Id && j.JournalType.Name== "余额提现中");
-                    journal.JournalTypeId = await dbc.GetIdAsync<IdNameEntity>(i=>i.Name== "余额提现");
+                    takeCash.StateId = 1;
+                    takeCash.AdminCode = await dbc.GetStringPropertyAsync<AdminEntity>(a => a.Id == adminId, a => a.Mobile);
+                    JournalEntity journal = await dbc.GetAll<JournalEntity>().SingleOrDefaultAsync(j=>j.Journal01==takeCash.Id );
+                    journal.JournalTypeId = 1;
                     user.TakeCashAmount = user.TakeCashAmount + journal.OutAmount.Value;
                     await dbc.SaveChangesAsync();
                     return takeCash.Id;

@@ -18,7 +18,6 @@ namespace Service.Entity
         public long TaskId { get; set; } = 0;
         public UserEntity User { get; set; }
         public long JournalTypeId { get; set; }
-        public IdNameEntity JournalType { get; set; }
         public long Journal01 { get; set; } = 0;
         public int IsEnabled { get; set; } = 1;
     }

@@ -271,7 +271,7 @@
                         $('input[name="perm"]:checked').each(function () {
                             that.permissionIds.push($(this).val());//向数组中添加元素
                         });
-                        that.$http.post('/admin/admin/editpermission', { id: id, permissionIds: that.permissionIds }, { emulateJSON: true }).then(function (result) {
+                        that.$http.post('/admin/admin/editperm', { id: id, permissionIds: that.permissionIds }, { emulateJSON: true }).then(function (result) {
                             if (result.data.status == 1) {
                                 layer.alert(result.data.msg, { icon: 6, title: '提示框' });
                                 layer.close(index);
@@ -310,7 +310,7 @@
                             layer.alert('两次输入的密码不一致', { icon: 0, title: '提示框' });
                             return;
                         }
-                        that.$http.post('/admin/admin/editpassword', { id: id, password: that.edit_password }, { emulateJSON: true }).then(function (result) {
+                        that.$http.post('/admin/admin/editpwd', { id: id, password: that.edit_password }, { emulateJSON: true }).then(function (result) {
                             if (result.data.status == 1) {
                                 layer.alert(result.data.msg, { icon: 6, title: '提示框' });
                                 layer.close(index);

@@ -14,7 +14,7 @@ namespace Service.Entity
     {
         public string Name { get; set; }
         public string Remark { get; set; }
-        public int LevelId { get; set; } = 0;
+        public int? LevelId { get; set; }
         public string TypeName { get; set; }
         public string TypeRemark { get; set; }
         public string Url { get; set; }

@@ -11,21 +11,16 @@ namespace Web.Areas.Admin.Controllers
     [Area("admin")]
     public class HomeController : Controller
     {
-        private readonly IPermissionTypeService permissionTypeService;
         private readonly IAdminService adminService;
-        private readonly IPersonService personService;
-        public HomeController(IPermissionTypeService permissionTypeService, IAdminService adminService, IPersonService personService)
+        public HomeController( IAdminService adminService)
         {
-            this.permissionTypeService = permissionTypeService;
             this.adminService = adminService;
-            this.personService = personService;
         }
         public async Task<IActionResult> Index()
         {
             //long userId = Convert.ToInt64(Session["Platform_AdminUserId"]);
             HomeIndexViewModel model = new HomeIndexViewModel();
             model.Name = await adminService.GetNameByIdAsync(2);
-            model.PermissionTypes = await permissionTypeService.GetModelListIsEnableAsync();
             return View(model);
         }
 

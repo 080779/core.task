@@ -53,11 +53,11 @@ namespace Service.Service
                     return -3;
                 }
                 user.Amount = user.Amount - takeCash.Amount;
-                takeCash.StateId = (await dbc.GetAll<IdNameEntity>().SingleOrDefaultAsync(i => i.Name == "已结款")).Id;
+                takeCash.StateId = 1;
                 takeCash.AdminCode = (await dbc.GetAll<AdminEntity>().SingleOrDefaultAsync(a => a.Id == adminId)).Mobile;
                 JournalEntity journal = new JournalEntity();
                 journal.OutAmount = takeCash.Amount;
-                journal.JournalTypeId = (await dbc.GetAll<IdNameEntity>().SingleOrDefaultAsync(i => i.Name == "余额提现")).Id;
+                journal.JournalTypeId = 2;
                 journal.Remark = "余额提现";
                 journal.UserId = takeCash.UserId;
                 journal.BalanceAmount = user.Amount;
@@ -136,7 +136,7 @@ namespace Service.Service
         {
             using (MyDbContext dbc = new MyDbContext())
             {
-                return await dbc.GetParameterAsync<TaskEntity>(t=>t.Id==id,t=>t.Content);
+                return await dbc.GetStringPropertyAsync<TaskEntity>(t=>t.Id==id,t=>t.Content);
             }
         }
 
@@ -211,7 +211,7 @@ namespace Service.Service
             using (MyDbContext dbc = new MyDbContext())
             {
                 TaskSearchResult result = new TaskSearchResult();
-                IQueryable<ForwardEntity> forwards = dbc.GetAll<ForwardEntity>().Where(c => c.UserId == userId).Where(c=>c.State.Name== "已接受" || c.State.Name== "审核中");
+                IQueryable<ForwardEntity> forwards = dbc.GetAll<ForwardEntity>().Where(c => c.UserId == userId);
                 IQueryable<TaskEntity> tasks = forwards.Select(c => c.Task).Where(t => t.IsDeleted == 0);
                 result.PageCount = (int)Math.Ceiling((await tasks.LongCountAsync()) * 1.0f / pageSize);
                 var taskResult = await tasks.OrderByDescending(a => a.CreateTime).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();

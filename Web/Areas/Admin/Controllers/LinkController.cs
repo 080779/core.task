@@ -13,84 +13,9 @@ namespace Web.Areas.Admin.Controllers
     {
         #region 构造函数注入
         private readonly ILinkService linkService;
-        private readonly ILinkTypeService linkTypeService;
-        public LinkController(ILinkService linkService, ILinkTypeService linkTypeService)
+        public LinkController(ILinkService linkService)
         {
             this.linkService = linkService;
-            this.linkTypeService = linkTypeService;
-        }
-        #endregion
-
-        #region 图片类别列表
-        [HttpGet]
-        public IActionResult TypeList()
-        {
-            return View();
-        }
-        [HttpPost]
-        public async Task<IActionResult> TypeList(bool flag = true)
-        {
-            var model = await linkTypeService.GetModelListAsync();
-            return Json(new AjaxResult { Status = 1, Data = model });
-        }
-        #endregion
-
-        #region 添加图片类别
-        [HttpPost]
-        public async Task<IActionResult> AddType(string name, string description)
-        {
-            long res = await linkTypeService.AddAsync(name, description);
-            if (res <= 0)
-            {
-                return Json(new AjaxResult { Status = 0, Msg = "添加图片类别失败" });
-            }
-            return Json(new AjaxResult { Status = 1, Msg = "添加图片类别成功", Data = "/admin/idname/typelist" });
-        }
-        #endregion
-
-        #region 修改图片类别
-        [HttpPost]
-        public async Task<IActionResult> EditType(long id, string name, string description)
-        {
-            long res = await linkTypeService.EditAsync(id, name, description);
-            if (res <= 0)
-            {
-                return Json(new AjaxResult { Status = 0, Msg = "修改图片类别失败" });
-            }
-            return Json(new AjaxResult { Status = 1, Msg = "修改图片类别成功", Data = "/admin/idname/typelist" });
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> GetType(long id)
-        {
-            var model = await linkTypeService.GetModelAsync(id);
-            return Json(new AjaxResult { Status = 1, Data = model });
-        }
-        #endregion
-
-        #region 冻结、解冻图片类别
-        [HttpPost]
-        public async Task<IActionResult> FrozenType(long id)
-        {
-            bool res = await linkTypeService.FrozenAsync(id);
-            if (!res)
-            {
-                return Json(new AjaxResult { Status = 0, Msg = "冻结、解冻图片类别失败" });
-            }
-            return Json(new AjaxResult { Status = 1, Msg = "冻结、解冻图片类别成功" });
-        }
-        #endregion
-
-        #region 删除图片类别
-        [HttpPost]
-        public async Task<IActionResult> DelType(long id)
-        {
-            bool res = await linkTypeService.DelAsync(id);
-            if (!res)
-            {
-                return Json(new AjaxResult { Status = 0, Msg = "删除图片类别失败" });
-            }
-            return Json(new AjaxResult { Status = 1, Msg = "删除图片类别成功" });
         }
         #endregion
 

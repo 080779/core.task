@@ -16,7 +16,6 @@ namespace Service.Entity
         public string Url { get; set; }
         public string Tip { get; set; }
         public long TypeId { get; set; }
-        public LinkTypeEntity Type { get; set; }
         public int Sort { get; set; } = 1;
         public int IsEnabled { get; set; } = 1;
     }

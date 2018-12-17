@@ -22,6 +22,7 @@ namespace Service.Service
             dto.Name = entity.Name;
             dto.Mobile = entity.Mobile;
             dto.IsEnabled = entity.IsEnabled;
+            dto.Remark = entity.Remark;
             dto.PermissionIds = permissionIds;
             return dto;
         }
@@ -121,7 +122,7 @@ namespace Service.Service
         {
             using (MyDbContext dbc = new MyDbContext())
             {
-                return await dbc.GetParameterAsync<AdminEntity>(a => a.Id == id, a => a.Mobile);
+                return await dbc.GetStringPropertyAsync<AdminEntity>(a => a.Id == id, a => a.Mobile);
             }
         }
 
@@ -129,7 +130,7 @@ namespace Service.Service
         {
             using (MyDbContext dbc = new MyDbContext())
             {
-                return await dbc.GetParameterAsync<AdminEntity>(a => a.Id == id, a => a.Name);
+                return await dbc.GetStringPropertyAsync<AdminEntity>(a => a.Id == id, a => a.Name);
             }
         }
 
@@ -179,11 +180,11 @@ namespace Service.Service
         }
 
         
-        public bool HasPermission(long id, string description)
+        public bool HasPermission(long id, string remark)
         {
             using (MyDbContext dbc = new MyDbContext())
             {
-                return dbc.GetAll<AdminPermissionEntity>().Include(a => a.Permission).Any(a => a.AdminId == id && a.Permission.Description == description);
+                return dbc.GetAll<AdminPermissionEntity>().Include(a => a.Permission).Any(a => a.AdminId == id && a.Permission.Remark == remark);
             }
         }
 

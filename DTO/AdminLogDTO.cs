@@ -9,10 +9,9 @@ namespace DTO
     public class AdminLogDTO:BaseDTO
     {
         public string IpAddress { get; set; }
-        public string Description { get; set; }
+        public string Remark { get; set; }
         public string Tip { get; set; }
-        public long PermissionTypeId { get; set; }
-        public string PermissionTypeName { get; set; }
+        public string PermTypeName { get; set; }
         public long AdminId { get; set; }
         public string AdminMobile { get; set; }
     }

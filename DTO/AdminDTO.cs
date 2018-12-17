@@ -11,6 +11,7 @@ namespace DTO
         public string Name { get; set; }
         public string Mobile { get; set; }
         public string TrueName { get; set; }
+        public string Remark { get; set; }
         public int IsEnabled { get; set; }
         public long[] PermissionIds { get; set; }
     }

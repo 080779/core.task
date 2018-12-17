@@ -9,9 +9,8 @@ namespace IService
 {
     public interface IAdminLogService:IServiceSupport
     {
-        Task<long> AddAsync(long adminId,long permissionTypeId,string description,string ipAddress,string tip);
-        long Add(long adminId,string permissionType,string description,string ipAddress,string tip);
-        Task<AdminLogSearchResult> GetModelListAsync(string keyword, long? permissionTypeId, DateTime? startTime, DateTime? endTime, int pageIndex, int pageSize);
+        Task<long> AddAsync(long adminId,string permTypeName,string remark,string ipAddress,string tip);
+        Task<AdminLogSearchResult> GetModelListAsync(string keyword, DateTime? startTime, DateTime? endTime, int pageIndex, int pageSize);
     }
     public class AdminLogSearchResult
     {

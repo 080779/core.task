@@ -27,7 +27,7 @@ namespace Service.Service
         {
             using (MyDbContext dbc = new MyDbContext())
             {
-                return await dbc.GetParameterAsync<SettingEntity>(s=>s.Name==name,s=>s.Parameter);                 
+                return await dbc.GetStringPropertyAsync<SettingEntity>(s=>s.Name==name,s=>s.Parameter);                 
             }
         }
 
@@ -35,7 +35,7 @@ namespace Service.Service
         {
             using (MyDbContext dbc = new MyDbContext())
             {
-                SettingEntity entity = await dbc.GetAll<SettingEntity>().Include(s => s.Type).AsNoTracking().SingleOrDefaultAsync(g => g.Id == id);
+                SettingEntity entity = await dbc.GetAll<SettingEntity>().AsNoTracking().SingleOrDefaultAsync(g => g.Id == id);
                 if (entity == null)
                 {
                     return null;
@@ -48,7 +48,7 @@ namespace Service.Service
         {
             using (MyDbContext dbc = new MyDbContext())
             {
-                SettingEntity entity = await dbc.GetAll<SettingEntity>().Include(s => s.Type).AsNoTracking().SingleOrDefaultAsync(g => g.Name == name);
+                SettingEntity entity = await dbc.GetAll<SettingEntity>().AsNoTracking().SingleOrDefaultAsync(g => g.Name == name);
                 if (entity == null)
                 {
                     return null;
@@ -61,7 +61,7 @@ namespace Service.Service
         {
             using (MyDbContext dbc = new MyDbContext())
             {
-                List<SettingEntity> settings = await dbc.GetAll<SettingEntity>().Include(s => s.Type).AsNoTracking().Where(g => g.Description == desc).ToListAsync();
+                List<SettingEntity> settings = await dbc.GetAll<SettingEntity>().AsNoTracking().Where(g => g.Description == desc).ToListAsync();
                 return settings.Select(s => ToDTO(s)).ToArray();
             }
         }
