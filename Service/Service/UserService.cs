@@ -39,7 +39,7 @@ namespace Service.Service
         {
             using (MyDbContext dbc = new MyDbContext())
             {
-                long id = await dbc.GetIdAsync<UserEntity>(u => u.Name == name);
+                long id = await dbc.GetEntityIdAsync<UserEntity>(u => u.Name == name);
                 if (id>0)
                 {
                     return -1;
@@ -148,7 +148,7 @@ namespace Service.Service
         {
             using (MyDbContext dbc = new MyDbContext())
             {
-                return await dbc.GetIdAsync<UserEntity>(u => u.Id==id && u.Mobile==mobile);
+                return await dbc.GetEntityIdAsync<UserEntity>(u => u.Id==id && u.Mobile==mobile);
             }
         }
 
@@ -156,7 +156,7 @@ namespace Service.Service
         {
             using (MyDbContext dbc = new MyDbContext())
             {
-                return await dbc.GetIdAsync<UserEntity>(u => u.Name == name);
+                return await dbc.GetEntityIdAsync<UserEntity>(u => u.Name == name);
             }
         }
 
@@ -164,7 +164,7 @@ namespace Service.Service
         {
             using (MyDbContext dbc = new MyDbContext())
             {
-                long res = dbc.GetId<UserEntity>(u => u.Id == id);
+                long res = dbc.GetEntityId<UserEntity>(u => u.Id == id);
                 if (res <= 0)
                 {
                     return false;
@@ -182,7 +182,7 @@ namespace Service.Service
                 {
                     return -1;
                 }
-                if((await dbc.GetIdAsync<UserEntity>(u=>u.Mobile==mobile))>0)
+                if((await dbc.GetEntityIdAsync<UserEntity>(u=>u.Mobile==mobile))>0)
                 {
                     return -2;
                 }

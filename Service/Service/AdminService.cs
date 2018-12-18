@@ -30,12 +30,12 @@ namespace Service.Service
         {
             using (MyDbContext dbc = new MyDbContext())
             {
-                long userId = await dbc.GetIdAsync<AdminEntity>(a => a.Name == name);
+                long userId = await dbc.GetEntityIdAsync<AdminEntity>(a => a.Name == name);
                 if (userId > 0)
                 {
                     return -1;
                 }
-                userId = await dbc.GetIdAsync<AdminEntity>(a => a.Mobile == mobile);
+                userId = await dbc.GetEntityIdAsync<AdminEntity>(a => a.Mobile == mobile);
                 if(userId>0)
                 {
                     return -2;

@@ -54,30 +54,8 @@ namespace Web.Filters
 
         private async Task Admin(AuthorizationFilterContext context)
         {
-            await permissionService.InitializeAsync();
-            Assembly assembly = Assembly.GetExecutingAssembly();
-            long count = 0;
-            var types = assembly.DefinedTypes.Where(t => t.BaseType == typeof(Controller) && t.Namespace == "Web.Areas.Admin.Controllers" && t.GetCustomAttribute(typeof(PermControllerAttribute)) != null);
-            foreach (var item in types)
-            {
-                string typeRemark = item.Name.Replace("Controller", "");
-                string typeName = ((PermControllerAttribute)item.GetCustomAttributes(typeof(PermControllerAttribute),false)[0]).Name;
-                var methods = item.GetMethods().Where(m => (m.ReturnParameter.ParameterType == typeof(IActionResult) || m.ReturnParameter.ParameterType == typeof(Task<IActionResult>)) && m.GetCustomAttribute(typeof(PermActionAttribute)) != null && ((PermActionAttribute)m.GetCustomAttributes(typeof(PermActionAttribute), false)[0]).Name!=null);
-                foreach (var item1 in methods)
-                {
-                    count++;
-                    int? levelId = null;
-                    string url = null;
-                    string name = ((PermActionAttribute)item1.GetCustomAttributes(typeof(PermActionAttribute), false)[0]).Name;
-                    string remark = typeRemark + "." + item1.Name;
-                    if (item1 == methods.First())
-                    {
-                        levelId = 0;                        
-                        url = "/admin/" + typeRemark + "/list";
-                    }
-                    await permissionService.EditAsync(count, name, remark, typeName, typeRemark, url, levelId);
-                }
-            }
+            //写入权限
+            await AutoCreatePermAsync();
 
             StringValues values;
             var res = new ContentResult();
@@ -118,6 +96,40 @@ namespace Web.Filters
                 return;
             }
             return;
+        }
+
+        /// <summary>
+        /// 根据控制器和方法上的PermControllerAttribute和PermActionAttribute,需要验证权限的方法添加权限到数据库
+        /// </summary>
+        /// <returns></returns>
+        private async Task AutoCreatePermAsync()
+        {
+            //初始化权限表
+            await permissionService.InitializeAsync();
+            Assembly assembly = Assembly.GetExecutingAssembly();
+            long count = 0;
+            //获得所有包含PermControllerAttribute的控制器
+            var types = assembly.DefinedTypes.Where(t => t.BaseType == typeof(Controller) && t.Namespace == "Web.Areas.Admin.Controllers" && t.GetCustomAttribute(typeof(PermControllerAttribute)) != null);
+            foreach (var item in types)
+            {
+                string typeRemark = item.Name.Replace("Controller", "");
+                string typeName = ((PermControllerAttribute)item.GetCustomAttributes(typeof(PermControllerAttribute), false)[0]).Name;
+                var methods = item.GetMethods().Where(m => (m.ReturnParameter.ParameterType == typeof(IActionResult) || m.ReturnParameter.ParameterType == typeof(Task<IActionResult>)) && m.GetCustomAttribute(typeof(PermActionAttribute)) != null && ((PermActionAttribute)m.GetCustomAttributes(typeof(PermActionAttribute), false)[0]).Name != null);
+                foreach (var item1 in methods)
+                {
+                    count++;
+                    int? levelId = null;
+                    string url = null;
+                    string name = ((PermActionAttribute)item1.GetCustomAttributes(typeof(PermActionAttribute), false)[0]).Name;
+                    string remark = typeRemark + "." + item1.Name;
+                    if (item1 == methods.First())
+                    {
+                        levelId = 0;
+                        url = "/admin/" + typeRemark + "/list";
+                    }
+                    await permissionService.EditAsync(count, name, remark, typeName, typeRemark, url, levelId);
+                }
+            }
         }
     }
 }

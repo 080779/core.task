@@ -82,7 +82,7 @@ namespace Service.Service
         {
             using (MyDbContext dbc = new MyDbContext())
             {
-                if ((await dbc.GetIdAsync<TaskEntity>(t=>t.Id==taskId))<=0)
+                if ((await dbc.GetEntityIdAsync<TaskEntity>(t=>t.Id==taskId))<=0)
                 {
                     return -1;
                 }

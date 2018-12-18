@@ -12,9 +12,11 @@ namespace Web.Areas.Admin.Controllers
     public class HomeController : Controller
     {
         private readonly IAdminService adminService;
-        public HomeController( IAdminService adminService)
+        private readonly IPermissionService permissionService;
+        public HomeController( IAdminService adminService, IPermissionService permissionService)
         {
             this.adminService = adminService;
+            this.permissionService = permissionService;
         }
         public async Task<IActionResult> Index()
         {
@@ -22,6 +24,16 @@ namespace Web.Areas.Admin.Controllers
             HomeIndexViewModel model = new HomeIndexViewModel();
             model.Name = await adminService.GetNameByIdAsync(2);
             return View(model);
+        }
+
+        public async Task<IActionResult> Index1()
+        {
+            var res = await permissionService.GetModelUrlListIsEnableAsync();
+            return View(res);
+        }
+        public IActionResult Home()
+        {
+            return View();
         }
 
         public async Task<IActionResult> GetPersonId()

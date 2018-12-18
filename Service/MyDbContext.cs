@@ -24,25 +24,27 @@ namespace Service
         {
             base.OnModelCreating(modelBuilder);
             
+            //自动应用config配置
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         }
 
+        #region MyDbContext通用方法
         public IQueryable<T> GetAll<T>() where T : BaseEntity
         {
             return this.Set<T>().Where(e => e.IsDeleted == 0);
         }
 
-        public long GetId<T>(Expression<Func<T, bool>> expression) where T : BaseEntity
+        public long GetEntityId<T>(Expression<Func<T, bool>> expression) where T : BaseEntity
         {
             return this.Set<T>().AsNoTracking().Where(e => e.IsDeleted == 0).Where(expression).Select(e => e.Id).SingleOrDefault();
         }
 
-        public async Task<long> GetIdAsync<T>(Expression<Func<T, bool>> expression) where T : BaseEntity
+        public async Task<long> GetEntityIdAsync<T>(Expression<Func<T, bool>> expression) where T : BaseEntity
         {
             return await this.Set<T>().AsNoTracking().Where(e => e.IsDeleted == 0).Where(expression).Select(e => e.Id).SingleOrDefaultAsync();
         }
 
-        public IQueryable<long> GetIds<T>(Expression<Func<T, bool>> expression) where T : BaseEntity
+        public IQueryable<long> GetEntityIds<T>(Expression<Func<T, bool>> expression) where T : BaseEntity
         {
             return this.Set<T>().AsNoTracking().Where(e => e.IsDeleted == 0).Where(expression).Select(e => e.Id);
         }
@@ -67,6 +69,18 @@ namespace Service
             return await this.Set<T>().AsNoTracking().Where(e => e.IsDeleted == 0).Where(expression).Select(parameterName).SingleOrDefaultAsync();
         }
 
+        public int GetIntProperty<T>(Expression<Func<T, bool>> expression, Expression<Func<T, int>> parameterName) where T : BaseEntity
+        {
+            return this.Set<T>().AsNoTracking().Where(e => e.IsDeleted == 0).Where(expression).Select(parameterName).SingleOrDefault();
+        }
+
+        public async Task<int> GetIntPropertyAsync<T>(Expression<Func<T, bool>> expression, Expression<Func<T, int>> parameterName) where T : BaseEntity
+        {
+            return await this.Set<T>().AsNoTracking().Where(e => e.IsDeleted == 0).Where(expression).Select(parameterName).SingleOrDefaultAsync();
+        }
+        #endregion
+
+        #region 实体类集合
         public DbSet<UserEntity> Users { get; set; }
         public DbSet<AdminEntity> Admins { get; set; }
         public DbSet<AdminLogEntity> AdminLogs { get; set; }
@@ -79,5 +93,6 @@ namespace Service
         public DbSet<CollectEntity> Collects { get; set; }
         public DbSet<AdminPermissionEntity> AdminPermissions { get; set; }
         public DbSet<LinkEntity> Links { get; set; }
+        #endregion
     }
 }

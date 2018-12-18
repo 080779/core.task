@@ -8,10 +8,12 @@ namespace Service.Entity
 {
     public class SettingEntity:BaseEntity
     {
+        public string TypeName { get; set; }
+        public int? LevelId { get; set; }
         public string Name { get; set; }
-        public string Parameter { get; set; }
-        public string Description { get; set; }
-        public long? LevelId { get; set; }
-        public long TypeId { get; set; }
+        public string Param { get; set; }
+        public string Remark { get; set; }
+        public int? TypeId { get; set; }
+        public int IsEnabled { get; set; } = 1;
     }
 }

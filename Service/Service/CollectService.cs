@@ -19,7 +19,7 @@ namespace Service.Service
             {
                 if(isCollect)
                 {
-                    if ((await dbc.GetIdAsync<CollectEntity>(c => c.UserId == userId && c.TaskId == taskId)) > 0)
+                    if ((await dbc.GetEntityIdAsync<CollectEntity>(c => c.UserId == userId && c.TaskId == taskId)) > 0)
                     {
                         return -1;
                     }
@@ -32,7 +32,7 @@ namespace Service.Service
                 }
                 else
                 {
-                    if ((await dbc.GetIdAsync<CollectEntity>(c => c.UserId == userId && c.TaskId == taskId)) <= 0)
+                    if ((await dbc.GetEntityIdAsync<CollectEntity>(c => c.UserId == userId && c.TaskId == taskId)) <= 0)
                     {
                         return -2;
                     }

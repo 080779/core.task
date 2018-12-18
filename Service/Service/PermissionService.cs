@@ -25,6 +25,7 @@ namespace Service.Service
             dto.TypeName = entity.TypeName;
             dto.TypeRemark = entity.TypeRemark;
             dto.Url = entity.Url;
+            dto.Icon = entity.Icon;
             return dto;
         }
 
@@ -50,6 +51,10 @@ namespace Service.Service
                     entity.TypeName = typeName;
                     entity.TypeRemark = typeRemark;
                     entity.Url = url;
+                    if(!string.IsNullOrEmpty(url))
+                    {
+                        entity.Icon = "icon-cogs";
+                    }
                     entity.LevelId = levelId;
                     entity.IsEnabled = 1;
                     await dbc.SaveChangesAsync();
@@ -63,6 +68,10 @@ namespace Service.Service
                     entity.TypeName = typeName;
                     entity.TypeRemark = typeRemark;
                     entity.Url = url;
+                    if (!string.IsNullOrEmpty(url))
+                    {
+                        entity.Icon = "icon-cogs";
+                    }
                     entity.LevelId = levelId;
                     dbc.Permissions.Add(entity);
                     await dbc.SaveChangesAsync();
@@ -70,5 +79,23 @@ namespace Service.Service
                 }                
             }
         }        
+
+        public async Task<PermissionDTO[]> GetModelListIsEnableAsync()
+        {
+            using (MyDbContext dbc=new MyDbContext())
+            {
+                var res = await dbc.GetAll<PermissionEntity>().AsNoTracking().Where(p => p.IsEnabled == 1).ToListAsync();
+                return res.Select(p => ToDTO(p)).ToArray();
+            }
+        }
+
+        public async Task<PermissionDTO[]> GetModelUrlListIsEnableAsync()
+        {
+            using (MyDbContext dbc = new MyDbContext())
+            {
+                var res = await dbc.GetAll<PermissionEntity>().AsNoTracking().Where(p => p.IsEnabled == 1 && p.LevelId==0).ToListAsync();
+                return res.Select(p => ToDTO(p)).ToArray();
+            }
+        }
     }
 }
