@@ -26,11 +26,24 @@ namespace Web
         public IConfiguration Configuration { get; }
         public void ConfigureServices(IServiceCollection services)
         {
-            services.Configure<CookiePolicyOptions>(options =>
+            //services.Configure<CookiePolicyOptions>(options =>
+            //{
+            //    // This lambda determines whether user consent for non-essential cookies is needed for a given request.
+            //    options.CheckConsentNeeded = context => true;
+            //    options.MinimumSameSitePolicy = SameSiteMode.None;
+            //});
+
+            //services.AddDistributedRedisCache(options =>
+            //{
+            //    options.Configuration = "localhost";
+            //    options.InstanceName = "SampleInstance";
+            //});
+
+            services.AddSession(options =>
             {
-                // This lambda determines whether user consent for non-essential cookies is needed for a given request.
-                options.CheckConsentNeeded = context => true;
-                options.MinimumSameSitePolicy = SameSiteMode.None;
+                // Set a short timeout for easy testing.
+                options.IdleTimeout = TimeSpan.FromSeconds(10);
+                options.Cookie.HttpOnly = true;
             });
 
             //自动注入Service继承了IServiceSupport接口的方法
@@ -46,11 +59,11 @@ namespace Web
             }
 
             //services.AddTransient<IRazorViewEngine>();
-            //services.AddSingleton(typeof(ITempDataProvider));
+            //services.AddSingleton<ITempDataProvider, CookieTempDataProvider>();            
 
             services.AddMvc(option =>
             {
-                option.Filters.Add(typeof(WebAuthorizeFilter));//filter拦截验证
+                //option.Filters.Add(typeof(WebAuthorizeFilter));//filter拦截验证
             })
             .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
             .AddJsonOptions(options =>
@@ -72,9 +85,10 @@ namespace Web
             {
                 app.UseDeveloperExceptionPage();
             }
-
+                        
             app.UseStaticFiles();
             app.UseCookiePolicy();
+            app.UseSession();
 
             app.UseMvc(routes =>
             {

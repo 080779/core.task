@@ -5,6 +5,11 @@ using System.Threading.Tasks;
 using IService;
 using Microsoft.AspNetCore.Mvc;
 using Web.Areas.Admin.Models.Home;
+using BlueFox.VerifyCode;
+using Common;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
+using System.Text;
 
 namespace Web.Areas.Admin.Controllers
 {
@@ -35,13 +40,31 @@ namespace Web.Areas.Admin.Controllers
         {
             return View();
         }
-
-        public async Task<IActionResult> GetPersonId()
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult Login()
         {
-            //long id = await adminService.AddAsync("admin","15615615616","系统管理员","1");
-            var admin = await adminService.GetModelAsync(2);
-            string trueName = admin.TrueName;
-            return View(admin.Id);
+            return View();
+        }
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<IActionResult> Login(string name, string password, string code)
+        {
+            object verifyCode = TempData["verifyCode"];
+            if (verifyCode!=null && code != verifyCode.ToString())
+            {
+                return new JsonResult(new AjaxResult { Status = 0, Msg = "验证码错误" });
+            }
+            return new JsonResult(new AjaxResult { Status = 1, Msg = "登录成功", Data = "/admin/home/index1" });
+        }
+        [AllowAnonymous]
+        public IActionResult ImgCode()
+        {
+            CaptchaInfo res = VerifyCodeService.Create(4,100,40);
+            TempData["verifyCode"] = res.Answer;
+            //byte[] bytes = Encoding.UTF8.GetBytes(res.Answer);
+            //HttpContext.Session.Set("verifyCode", bytes);
+            return File(res.Image, res.ContentType);
         }
     }
 }

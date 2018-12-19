@@ -1,6 +1,7 @@
 ﻿using Common;
 using IService;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -54,6 +55,7 @@ namespace Web.Filters
 
         private async Task Admin(AuthorizationFilterContext context)
         {
+            //var code = context.HttpContext.Session.GetString("code");
             //写入权限
             await AutoCreatePermAsync();
 
@@ -66,6 +68,10 @@ namespace Web.Filters
             if (context.HttpContext.Request.IsAjax())
             {
                 context.Result = new JsonResult(new AjaxResult { Status = 0, Data = "/admin/login/login" });
+            }
+            else
+            {
+                context.Result = new RedirectResult("/admin/home/login");
             }
             //if (!context.HttpContext.Request.Headers.TryGetValue("token", out values))
             //{
