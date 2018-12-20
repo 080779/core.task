@@ -180,32 +180,32 @@ namespace Service.Service
         }
 
         
-        public bool HasPermission(long id, string remark)
+        public async Task<string> GetPermNameAsync(long adminId, string remark)
         {
             using (MyDbContext dbc = new MyDbContext())
             {
-                return dbc.GetAll<AdminPermissionEntity>().Include(a => a.Permission).Any(a => a.AdminId == id && a.Permission.Remark == remark);
+                return await dbc.GetAll<AdminPermissionEntity>().Include(a => a.Permission).Where(a => a.AdminId == adminId && a.Permission.Remark == remark).Select(a=>a.Permission.Name).SingleOrDefaultAsync();
             }
         }
 
-        public async Task<long> CheckLoginAsync(string mobile, string password)
+        public async Task<long> CheckLoginAsync(string name, string password)
         {
             using (MyDbContext dbc = new MyDbContext())
             {
-                var admin = await dbc.GetAll<AdminEntity>().SingleOrDefaultAsync(a => a.Mobile == mobile);
+                var admin = await dbc.GetAll<AdminEntity>().SingleOrDefaultAsync(a => a.Name == name);
                 if (admin == null)
                 {
                     return -1;
                 }
-                if (admin.IsEnabled==0)
-                {
-                    return -2;
-                }
                 string pwd = CommonHelper.GetMD5(password + admin.Salt);
                 if (admin.Password != pwd)
                 {
-                    return -3;
+                    return -2;
                 }
+                if (admin.IsEnabled==0)
+                {
+                    return -3;
+                }                
                 return admin.Id;
             }
         }

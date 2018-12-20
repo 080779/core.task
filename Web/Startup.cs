@@ -38,13 +38,8 @@ namespace Web
             //    options.Configuration = "localhost";
             //    options.InstanceName = "SampleInstance";
             //});
-
-            services.AddSession(options =>
-            {
-                // Set a short timeout for easy testing.
-                options.IdleTimeout = TimeSpan.FromSeconds(10);
-                options.Cookie.HttpOnly = true;
-            });
+            services.AddDistributedMemoryCache();
+            services.AddSession();
 
             //自动注入Service继承了IServiceSupport接口的方法
             var serviceAsm = Assembly.Load(new AssemblyName("Service"));
@@ -63,7 +58,8 @@ namespace Web
 
             services.AddMvc(option =>
             {
-                //option.Filters.Add(typeof(WebAuthorizeFilter));//filter拦截验证
+                option.Filters.Add(typeof(WebAuthorizationFilter));//filter拦截验证
+                //option.Filters.Add(typeof(WebActionFilter));//filter拦截验证
             })
             .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
             .AddJsonOptions(options =>

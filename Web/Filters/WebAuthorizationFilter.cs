@@ -1,6 +1,5 @@
 ﻿using Common;
 using IService;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
@@ -10,78 +9,34 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
+using System.Text.Encodings.Web;
 using System.Threading.Tasks;
+using System.Web;
 using Web.Attributes;
 
 namespace Web.Filters
 {
-    public class WebAuthorizeFilter : AuthorizeFilter
+    public class WebAuthorizationFilter : IAsyncAuthorizationFilter
     {
         private IAdminService adminService;
         private IPermissionService permissionService;
 
-        public WebAuthorizeFilter(IAdminService adminService, IPermissionService permissionService)
+        public WebAuthorizationFilter(IAdminService adminService, IPermissionService permissionService)
         {
             this.adminService = adminService;
             this.permissionService = permissionService;
         }
 
-        public async override Task OnAuthorizationAsync(AuthorizationFilterContext context)
+        public async Task OnAuthorizationAsync(AuthorizationFilterContext context)
         {
             string path = context.HttpContext.Request.Path;
             string redirect = path.Split("/")[1];
 
-            //switch(redirect.ToLower())
-            //{
-            //    case "admin":await Admin(context);break;
-            //    case "api": await Api(context); break;
-            //    default:return;
-            //}
-            if(redirect.ToLower()=="admin")
+            switch (redirect.ToLower())
             {
-                string adminId = context.HttpContext.Session.GetString("Platform_Admin_Id");
-                bool isAjax = context.HttpContext.Request.IsAjax();
-                string displayName = context.ActionDescriptor.DisplayName;
-                if (string.IsNullOrEmpty(adminId))
-                {
-                    if (context.Filters.Any(item => item is IAllowAnonymousFilter))
-                    {
-                        return;
-                    }
-                    if (isAjax)
-                    {
-                        context.Result = new JsonResult(new AjaxResult { Status = 0, Data = "/admin/login/login" });
-                    }
-                    else
-                    {
-                        context.Result = new RedirectResult("/admin/home/login");
-                    }
-                    return;
-                }
-                if (context.Filters.Any(item => item is IAllowAnonymousFilter))
-                {
-                    return;
-                }
-                Assembly assembly = Assembly.GetExecutingAssembly();
-                string actionName = displayName.Split('.').Last().Split('(').First().ToString();
-                var type = assembly.DefinedTypes.Where(t => t.BaseType == typeof(Controller) && displayName.Contains(t.FullName)).First();
-                IEnumerable<MethodInfo> methods = type.GetMethods().Where(m => (m.ReturnParameter.ParameterType == typeof(IActionResult) || m.ReturnParameter.ParameterType == typeof(Task<IActionResult>)) && m.GetCustomAttribute(typeof(PermActionAttribute)) != null);
-                var method = methods.SingleOrDefault();
-                string typeRemark = type.Name.Replace("Controller", "");
-                string remark = typeRemark + "." + method.Name;
-                string name = await adminService.GetPermNameAsync(Convert.ToInt64(adminId), remark);
-                string message = "没有" + name + "这个权限";
-                if (isAjax)
-                {
-                    context.Result = new JsonResult(new AjaxResult { Status = 0, Msg = message });
-                    return;
-                }
-                else
-                {
-                    context.Result = new RedirectResult("/admin/home/permission?msg=" + message);
-                    return;
-                }
+                case "admin": await Admin(context); break;
+                case "api": await Api(context); break;
+                default: return;
             }
         }
 
@@ -106,29 +61,19 @@ namespace Web.Filters
                 }
                 return;
             }
-            if (context.Filters.Any(item => item is IAllowAnonymousFilter))
+            //if (context.Filters.Any(item => item is IAllowAnonymousFilter))
+            //{
+            //    return;
+            //}
+
+            var result = await ValidPermAsync(adminId, isAjax, displayName);
+            if(result==null)
             {
                 return;
             }
-            Assembly assembly = Assembly.GetExecutingAssembly();
-            string actionName = displayName.Split('.').Last().Split('(').First().ToString();
-            var type = assembly.DefinedTypes.Where(t => t.BaseType == typeof(Controller) && displayName.Contains(t.FullName)).First();
-            IEnumerable<MethodInfo> methods = type.GetMethods().Where(m => (m.ReturnParameter.ParameterType == typeof(IActionResult) || m.ReturnParameter.ParameterType == typeof(Task<IActionResult>)) && m.GetCustomAttribute(typeof(PermActionAttribute)) != null);
-            var method = methods.SingleOrDefault();
-            string typeRemark = type.Name.Replace("Controller", "");
-            string remark = typeRemark + "." + method.Name;
-            string name = await adminService.GetPermNameAsync(Convert.ToInt64(adminId), remark);
-            string message = "没有" + name + "这个权限";
-            if (isAjax)
-            {
-                context.Result = new JsonResult(new AjaxResult { Status = 0, Msg = message });
-                return;
-            }
-            else
-            {
-                context.Result = new RedirectResult("/admin/home/permission?msg=" + message);
-                return;
-            }
+            context.Result = result;
+            return;
+
             //写入权限
             //await AutoCreatePermAsync();
         }
@@ -191,16 +136,19 @@ namespace Web.Filters
         private async Task<IActionResult> ValidPermAsync(string adminId, bool isAjax, string displayName)
         {
             Assembly assembly = Assembly.GetExecutingAssembly();
-            string actionName = displayName.Split('.').Last().Split('(').First().ToString();
+            string actionName = displayName.Split('.').Last().Split('(').First().Trim(' ');
+            string actionname =HttpUtility.UrlEncode(actionName);
             var type = assembly.DefinedTypes.Where(t => t.BaseType == typeof(Controller) && displayName.Contains(t.FullName)).First();
-            IEnumerable<MethodInfo> methods = type.GetMethods().Where(m => (m.ReturnParameter.ParameterType == typeof(IActionResult) || m.ReturnParameter.ParameterType == typeof(Task<IActionResult>)) && m.GetCustomAttribute(typeof(PermActionAttribute)) != null);
-            
-            //IEnumerable<string> names = methods.Select(m => m.Name);
-            //if(!names.Contains(actionName))
-            //{
-            //    return null;
-            //}
-            var method = methods.SingleOrDefault();
+            var method = type.GetMethods()
+                .SingleOrDefault(m => (m.ReturnParameter.ParameterType == typeof(IActionResult) ||
+                m.ReturnParameter.ParameterType == typeof(Task<IActionResult>))
+                && m.GetCustomAttribute(typeof(PermActionAttribute)) != null
+                && m.Name == actionname);
+            if(method==null)
+            {
+                return null;
+            }
+
             string typeRemark = type.Name.Replace("Controller", "");
             string remark = typeRemark + "." + method.Name;
             string name = await adminService.GetPermNameAsync(Convert.ToInt64(adminId), remark);
@@ -212,7 +160,7 @@ namespace Web.Filters
             }
             else
             {
-                return new RedirectResult("/admin/home/permission?msg=" + message);
+                return new RedirectResult("/admin/home/permission?msg=" + HttpUtility.UrlEncode(message));
             }
         }
     }

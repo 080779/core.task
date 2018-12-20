@@ -16,8 +16,8 @@ namespace IService
         Task<string> GetNameByIdAsync(long id);
         Task<AdminDTO> GetModelAsync(long id);
         Task<AdminSearchResult> GetModelListAsync(string isAdmin, string keyword, DateTime? startTime, DateTime? endTime, int pageIndex, int pageSize);
-        bool HasPermission(long id, string description);
-        Task<long> CheckLoginAsync(string mobile, string password);
+        Task<string> GetPermNameAsync(long adminId, string remark);
+        Task<long> CheckLoginAsync(string name, string password);
         Task<bool> DelAll();
     }
     public class AdminSearchResult
