@@ -5,6 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Filters\WebAuthorizeFilter.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.Extensions.Caching.Redis" Version="2.1.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.1" />
@@ -25,9 +29,24 @@
     <Folder Include="wwwroot\static\" />
     <Folder Include="wwwroot\tasks\images\" />
     <Folder Include="wwwroot\tasks\js\" />
+    <Folder Include="wwwroot\upload\2018\" />
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="wwwroot\admin\assets\icheck\jquery.icheck.min.js" />
+    <None Include="wwwroot\admin\assets\icheck\Thumbs.db" />
+    <None Include="wwwroot\admin\assets\zTree\css\zTreeStyle\img\Thumbs.db" />
+    <None Include="wwwroot\admin\assets\zTree\js\jquery.ztree.all-3.5.min.js" />
+    <None Include="wwwroot\admin\assets\zTree\js\jquery.ztree.core-3.5.min.js" />
+    <None Include="wwwroot\admin\assets\zTree\js\jquery.ztree.excheck-3.5.min.js" />
+    <None Include="wwwroot\admin\assets\zTree\js\jquery.ztree.exedit-3.5.min.js" />
+    <None Include="wwwroot\admin\assets\zTree\js\jquery.ztree.exhide-3.5.min.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="Areas\Admin\Views\Admin\List1.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
     <Content Update="Areas\Admin\Views\Home\home.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
@@ -45,6 +64,9 @@
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
     <Content Update="Areas\Admin\Views\Link\List11.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Admin\Views\Product\List1.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
   </ItemGroup>

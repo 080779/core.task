@@ -33,7 +33,7 @@ a:hover{ color:#F90}
 .l_f{ float:left}
 .mleft{ margin-left:10px;}
 .margin{ margin:15px;}
-.border{ border:1px solid #ddd; padding:10px; height:60px; line-height:36px; margin-bottom:20px; }
+.border{ border:2px solid #ddd; padding-top:7px; padding-left:20px; height:54px; line-height:36px; margin-bottom:10px; }
 .border  span{ display:block; height:100%;}
 .table_menu_list{}
 .alert { margin-top:20px;}
@@ -73,10 +73,10 @@ body
 	hidden;float:left
 }
 .Manager_style,
-.search_style{ border:1px solid #ddd; padding:30px 20px; position:relative; margin-top:20px; }
+.search_style{ border:2px solid #ddd; padding:15px 20px; position:relative; margin-top:20px; }
 #parentIframe,#parentIfour{ display:none;}
 .Manager_style .title_name,
-.search_style .title_names{ position:absolute; top:-20px; font-size:18px; background-color:#ffffff; padding:5px 20px; left:10px;}
+.search_style .title_names{ position:absolute; top:-20px; font-size:16px; background-color:#ffffff; padding:5px 20px; left:10px;}
 .state-overview{ margin-top:15px;}
 #add_administrator_style .c-red{ color:#F33}
 /*****************************面包屑样式*****************************/
@@ -154,7 +154,7 @@ body
 .state-overview .symbol, .state-overview .value {display: inline-block;text-align: center;}
 .state-overview .panel{border:1px solid #dddddd; margin-bottom:15px;}
 /***********************搜索查询***********************/
-.search_style{ margin-bottom:20px;}
+.search_style{ margin-bottom:10px;}
 .search_style .search_content li{ margin-right:20px; float:left; line-height:30px;}
 .search_style .search_content li .btn_search{
 	 height:32px; 

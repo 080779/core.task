@@ -14,12 +14,13 @@ namespace DTO
         public string Name { get; set; }
         public long StateId { get; set; }
         public decimal? Amount { get; set; }
-        public string Description { get; set; }
+        public string Remark { get; set; }
         public string StateName { get; set; }
         public long TypeId { get; set; }
         public string TypeName { get; set; }
         //public PayCodeDTO PayCode { get; set; }
         //public BankAccountDTO BankAccount { get; set; }
         public string AdminCode { get; set; }
+        public DateTime CreateTime { get; set; }
     }
 }

@@ -35,7 +35,7 @@ namespace Web.Areas.Admin.Controllers
 
         #region 添加图片
         [HttpPost]
-        public async Task<IActionResult> Add(long typeId, string name, string imgUrl, string url,int sort)
+        public async Task<IActionResult> Add(int typeId, string name, string imgUrl, string url,int sort)
         {
             if (string.IsNullOrEmpty(name))
             {

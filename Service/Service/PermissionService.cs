@@ -16,7 +16,6 @@ namespace Service.Service
         public PermissionDTO ToDTO(PermissionEntity entity)
         {
             PermissionDTO dto = new PermissionDTO();
-            dto.CreateTime = entity.CreateTime;
             dto.Id = entity.Id;
             dto.IsEnabled = entity.IsEnabled;
             dto.LevelId = entity.LevelId;
@@ -26,6 +25,7 @@ namespace Service.Service
             dto.TypeRemark = entity.TypeRemark;
             dto.Url = entity.Url;
             dto.Icon = entity.Icon;
+            dto.Sort = entity.Sort;
             return dto;
         }
 
@@ -33,7 +33,7 @@ namespace Service.Service
         {
             using (MyDbContext dbc = new MyDbContext())
             {
-                await dbc.GetAll<PermissionEntity>().ForEachAsync(p => p.IsEnabled = 0);
+                await dbc.GetAll<PermissionEntity>().ForEachAsync(p => { p.IsEnabled = 0; p.Icon = null; p.Sort = null; });
                 await dbc.SaveChangesAsync();
             }
         }
@@ -54,6 +54,7 @@ namespace Service.Service
                     if(!string.IsNullOrEmpty(url))
                     {
                         entity.Icon = "icon-cogs";
+                        entity.Sort = 1;
                     }
                     entity.LevelId = levelId;
                     entity.IsEnabled = 1;
@@ -71,6 +72,7 @@ namespace Service.Service
                     if (!string.IsNullOrEmpty(url))
                     {
                         entity.Icon = "icon-cogs";
+                        entity.Sort = 1;
                     }
                     entity.LevelId = levelId;
                     dbc.Permissions.Add(entity);

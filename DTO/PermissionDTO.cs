@@ -15,6 +15,7 @@ namespace DTO
         public string TypeRemark { get; set; }
         public string Url { get; set; }
         public string Icon { get; set; }
+        public int? Sort { get; set; }
         public int IsEnabled { get; set; }
         public bool IsChecked { get; set; } = false;
     }

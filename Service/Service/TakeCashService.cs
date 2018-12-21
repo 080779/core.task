@@ -17,7 +17,7 @@ namespace Service.Service
             TakeCashDTO dto = new TakeCashDTO();
             dto.Amount = entity.Amount;
             dto.CreateTime = entity.CreateTime;
-            dto.Description = entity.Description;
+            dto.Remark = entity.Remark;
             dto.Id = entity.Id;
             dto.StateId = entity.StateId;
             dto.StateName = "";
@@ -33,7 +33,7 @@ namespace Service.Service
             return dto;
         }
 
-        public async Task<long> AddAsync(long userId, long payTypeId, decimal amount, string descripton)
+        public async Task<long> AddAsync(long userId, int payTypeId, decimal amount, string remark)
         {
             using (MyDbContext dbc = new MyDbContext())
             {
@@ -61,7 +61,7 @@ namespace Service.Service
                 }
                 takeCash.StateId = stateId;
                 takeCash.Amount = amount;
-                takeCash.Description = descripton;
+                takeCash.Remark = remark;
                 dbc.TakeCashes.Add(takeCash);
                 await dbc.SaveChangesAsync();
                 user.Amount = user.Amount - takeCash.Amount;
@@ -71,7 +71,7 @@ namespace Service.Service
                 journal.Remark = "余额提现";
                 journal.UserId = takeCash.UserId;
                 journal.BalanceAmount = user.Amount;
-                journal.Journal01 = takeCash.Id;
+                journal.Journal01 = (int)takeCash.Id;
                 dbc.Journals.Add(journal);
                 await dbc.SaveChangesAsync();
                 return takeCash.Id;

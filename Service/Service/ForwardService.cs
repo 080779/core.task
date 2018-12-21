@@ -167,7 +167,7 @@ namespace Service.Service
                 decimal bonus= forward.Task.Bonus;
                 user.Amount = user.Amount + bonus;
                 user.BonusAmount = user.BonusAmount + bonus;
-                long journalTypeId = 1;
+                int journalTypeId = 1;
                 if(journalTypeId <= 0)
                 {
                     return -5;

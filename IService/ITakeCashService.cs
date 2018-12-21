@@ -9,7 +9,7 @@ namespace IService
 {
     public interface ITakeCashService:IServiceSupport
     {
-        Task<long> AddAsync(long userId,long payTypeId,decimal amount,string descripton);
+        Task<long> AddAsync(long userId,int payTypeId,decimal amount,string remark);
         Task<long> Confirm(long id,long adminId, bool isSuccess);
         Task<TakeCashSearchResult> GetModelListAsync(long? userId,long? stateId, string keyword, DateTime? startTime,DateTime? endTime,int pageIndex,int pageSize);
     }

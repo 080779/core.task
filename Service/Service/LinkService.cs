@@ -16,10 +16,10 @@ namespace Service.Service
         public LinkDTO ToDTO(LinkEntity entity)
         {
             LinkDTO dto = new LinkDTO();
+            dto.CreateTime = entity.CreateTime;
             dto.Name = entity.Name;
             dto.ImgUrl = entity.ImgUrl;
             dto.Url = entity.Url;
-            dto.CreateTime = entity.CreateTime;
             dto.Id = entity.Id;
             dto.Sort = entity.Sort;
             dto.TypeName = "";
@@ -27,7 +27,7 @@ namespace Service.Service
             return dto;
         }
 
-        public async Task<long> AddAsync(long typeId, string name, string imgUrl, string url, int sort)
+        public async Task<long> AddAsync(int typeId, string name, string imgUrl, string url, int sort)
         {
             using (MyDbContext dbc = new MyDbContext())
             {

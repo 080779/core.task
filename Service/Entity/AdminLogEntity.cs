@@ -19,5 +19,6 @@ namespace Service.Entity
         public string PermTypeName { get; set; }
         public long AdminId { get; set; }
         public string AdminMobile { get; set; }
+        public DateTime CreateTime { get; set; } = DateTime.Now;
     }
 }

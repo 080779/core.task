@@ -22,5 +22,6 @@ namespace Service.Entity
         public DateTime EndTime { get; set; }//任务结束时间
         public string Publisher { get; set; }//发布人
         public int IsEnabled { get; set; } = 1;
+        public DateTime CreateTime { get; set; } = DateTime.Now;
     }
 }

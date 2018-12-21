@@ -31,52 +31,52 @@ namespace Service
         #region MyDbContext通用方法
         public IQueryable<T> GetAll<T>() where T : BaseEntity
         {
-            return this.Set<T>().Where(e => e.IsDeleted == 0);
+            return this.Set<T>().Where(e => e.IsDeleted == 0 || e.IsDeleted==null);
         }
 
         public long GetEntityId<T>(Expression<Func<T, bool>> expression) where T : BaseEntity
         {
-            return this.Set<T>().AsNoTracking().Where(e => e.IsDeleted == 0).Where(expression).Select(e => e.Id).SingleOrDefault();
+            return this.Set<T>().AsNoTracking().Where(e => e.IsDeleted == 0 || e.IsDeleted == null).Where(expression).Select(e => e.Id).SingleOrDefault();
         }
 
         public async Task<long> GetEntityIdAsync<T>(Expression<Func<T, bool>> expression) where T : BaseEntity
         {
-            return await this.Set<T>().AsNoTracking().Where(e => e.IsDeleted == 0).Where(expression).Select(e => e.Id).SingleOrDefaultAsync();
+            return await this.Set<T>().AsNoTracking().Where(e => e.IsDeleted == 0 || e.IsDeleted == null).Where(expression).Select(e => e.Id).SingleOrDefaultAsync();
         }
 
         public IQueryable<long> GetEntityIds<T>(Expression<Func<T, bool>> expression) where T : BaseEntity
         {
-            return this.Set<T>().AsNoTracking().Where(e => e.IsDeleted == 0).Where(expression).Select(e => e.Id);
+            return this.Set<T>().AsNoTracking().Where(e => e.IsDeleted == 0 || e.IsDeleted == null).Where(expression).Select(e => e.Id);
         }
 
         public string GetStringProperty<T>(Expression<Func<T, bool>> expression, Expression<Func<T, string>> parameterName) where T : BaseEntity
         {
-            return this.Set<T>().AsNoTracking().Where(e => e.IsDeleted == 0).Where(expression).Select(parameterName).SingleOrDefault();
+            return this.Set<T>().AsNoTracking().Where(e => e.IsDeleted == 0 || e.IsDeleted == null).Where(expression).Select(parameterName).SingleOrDefault();
         }
 
         public async Task<string> GetStringPropertyAsync<T>(Expression<Func<T, bool>> expression, Expression<Func<T, string>> parameterName) where T : BaseEntity
         {
-            return await this.Set<T>().AsNoTracking().Where(e => e.IsDeleted == 0).Where(expression).Select(parameterName).SingleOrDefaultAsync();
+            return await this.Set<T>().AsNoTracking().Where(e => e.IsDeleted == 0 || e.IsDeleted == null).Where(expression).Select(parameterName).SingleOrDefaultAsync();
         }
 
         public decimal GetDecimalProperty<T>(Expression<Func<T, bool>> expression, Expression<Func<T, decimal>> parameterName) where T : BaseEntity
         {
-            return this.Set<T>().AsNoTracking().Where(e => e.IsDeleted == 0).Where(expression).Select(parameterName).SingleOrDefault();
+            return this.Set<T>().AsNoTracking().Where(e => e.IsDeleted == 0 || e.IsDeleted == null).Where(expression).Select(parameterName).SingleOrDefault();
         }
 
         public async Task<decimal> GetDecimalPropertyAsync<T>(Expression<Func<T, bool>> expression, Expression<Func<T, decimal>> parameterName) where T : BaseEntity
         {
-            return await this.Set<T>().AsNoTracking().Where(e => e.IsDeleted == 0).Where(expression).Select(parameterName).SingleOrDefaultAsync();
+            return await this.Set<T>().AsNoTracking().Where(e => e.IsDeleted == 0 || e.IsDeleted == null).Where(expression).Select(parameterName).SingleOrDefaultAsync();
         }
 
         public int GetIntProperty<T>(Expression<Func<T, bool>> expression, Expression<Func<T, int>> parameterName) where T : BaseEntity
         {
-            return this.Set<T>().AsNoTracking().Where(e => e.IsDeleted == 0).Where(expression).Select(parameterName).SingleOrDefault();
+            return this.Set<T>().AsNoTracking().Where(e => e.IsDeleted == 0 || e.IsDeleted == null).Where(expression).Select(parameterName).SingleOrDefault();
         }
 
         public async Task<int> GetIntPropertyAsync<T>(Expression<Func<T, bool>> expression, Expression<Func<T, int>> parameterName) where T : BaseEntity
         {
-            return await this.Set<T>().AsNoTracking().Where(e => e.IsDeleted == 0).Where(expression).Select(parameterName).SingleOrDefaultAsync();
+            return await this.Set<T>().AsNoTracking().Where(e => e.IsDeleted == 0 || e.IsDeleted == null).Where(expression).Select(parameterName).SingleOrDefaultAsync();
         }
         #endregion
 

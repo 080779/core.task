@@ -14,5 +14,6 @@ namespace DTO
         public string Remark { get; set; }
         public int IsEnabled { get; set; }
         public long[] PermissionIds { get; set; }
+        public DateTime CreateTime { get; set; }
     }
 }

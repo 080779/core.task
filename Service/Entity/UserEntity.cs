@@ -34,5 +34,6 @@ namespace Service.Entity
         public string BankName { get; set; }
         public string BankAccount { get; set; }
         public int IsEnabled { get; set; } = 1;
+        public DateTime CreateTime { get; set; } = DateTime.Now;
     }
 }

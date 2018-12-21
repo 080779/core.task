@@ -180,11 +180,21 @@ namespace Service.Service
         }
 
         
-        public async Task<string> GetPermNameAsync(long adminId, string remark)
+        public async Task<KeyValuePair<bool, string>> CheckPermAsync(long adminId, string typeRemark, string remark)
         {
             using (MyDbContext dbc = new MyDbContext())
             {
-                return await dbc.GetAll<AdminPermissionEntity>().Include(a => a.Permission).Where(a => a.AdminId == adminId && a.Permission.Remark == remark).Select(a=>a.Permission.Name).SingleOrDefaultAsync();
+                PermissionEntity perm = await dbc.GetAll<PermissionEntity>().AsNoTracking().SingleOrDefaultAsync(p => p.TypeRemark==typeRemark && p.Remark == remark);
+                if(perm==null)
+                {
+                    return new KeyValuePair<bool, string>(false,null);
+                }
+                long res = await dbc.GetEntityIdAsync<AdminPermissionEntity>(a => a.AdminId == adminId && a.PermissionId == perm.Id);
+                if(res<=0)
+                {
+                    return new KeyValuePair<bool, string>(false, perm.Name);
+                }
+                return new KeyValuePair<bool, string>(true, perm.Name);
             }
         }
 

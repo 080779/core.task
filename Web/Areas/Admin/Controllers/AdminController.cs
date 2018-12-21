@@ -33,6 +33,10 @@ namespace Web.Areas.Admin.Controllers
         {
             return View();
         }
+        public IActionResult List1()
+        {
+            return View();
+        }
         [HttpPost]
         public async Task<IActionResult> List(string keyword, DateTime? startTime, DateTime? endTime, int pageIndex = 1)
         {

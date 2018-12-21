@@ -58,8 +58,8 @@ namespace Web
 
             services.AddMvc(option =>
             {
-                option.Filters.Add(typeof(WebAuthorizationFilter));//filter拦截验证
-                //option.Filters.Add(typeof(WebActionFilter));//filter拦截验证
+                option.Filters.Add(typeof(WebAuthorizationFilter));//filter拦截验证,实现接口的形式
+                //option.Filters.Add(typeof(WebAuthorizeFilter));//filter拦截验证,重写虚方法的形式
             })
             .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
             .AddJsonOptions(options =>

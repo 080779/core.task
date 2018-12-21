@@ -31,7 +31,6 @@ namespace Web.Areas.Admin.Controllers
             model.Name = await adminService.GetNameByIdAsync(2);
             return View(model);
         }
-        [PermAction]
         public async Task<IActionResult> Index1()
         {
             var res = await permissionService.GetModelUrlListIsEnableAsync();

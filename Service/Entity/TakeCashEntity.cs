@@ -13,10 +13,11 @@ namespace Service.Entity
     {
         public long UserId { get; set; }
         public UserEntity User { get; set; }
-        public long StateId { get; set; }
+        public int StateId { get; set; }
         public decimal Amount { get; set; }
-        public string Description { get; set; }
-        public long TypeId { get; set; }
+        public string Remark { get; set; }
+        public int TypeId { get; set; }
         public string AdminCode { get; set; }
+        public DateTime CreateTime { get; set; } = DateTime.Now;
     }
 }

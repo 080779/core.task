@@ -42,15 +42,15 @@ namespace Web.Filters
 
         private async Task Admin(AuthorizationFilterContext context)
         {
+            if (context.Filters.Any(item => item is IAllowAnonymousFilter))
+            {
+                return;
+            }
             string adminId = context.HttpContext.Session.GetString("Platform_Admin_Id");
             bool isAjax = context.HttpContext.Request.IsAjax();
             string displayName = context.ActionDescriptor.DisplayName;
             if (string.IsNullOrEmpty(adminId))
             {
-                if (context.Filters.Any(item => item is IAllowAnonymousFilter))
-                {
-                    return;
-                }
                 if (isAjax)
                 {
                     context.Result = new JsonResult(new AjaxResult { Status = 0, Data = "/admin/login/login" });
@@ -61,11 +61,9 @@ namespace Web.Filters
                 }
                 return;
             }
-            //if (context.Filters.Any(item => item is IAllowAnonymousFilter))
-            //{
-            //    return;
-            //}
 
+            //写入权限
+            //await AutoCreatePermAsync();
             var result = await ValidPermAsync(adminId, isAjax, displayName);
             if(result==null)
             {
@@ -73,9 +71,6 @@ namespace Web.Filters
             }
             context.Result = result;
             return;
-
-            //写入权限
-            //await AutoCreatePermAsync();
         }
 
         private async Task Api(AuthorizationFilterContext context)
@@ -93,6 +88,7 @@ namespace Web.Filters
             return;
         }
 
+        #region 根据控制器和方法上的PermControllerAttribute和PermActionAttribute,需要验证权限的方法添加权限到数据库
         /// <summary>
         /// 根据控制器和方法上的PermControllerAttribute和PermActionAttribute,需要验证权限的方法添加权限到数据库
         /// </summary>
@@ -116,7 +112,7 @@ namespace Web.Filters
                     int? levelId = null;
                     string url = null;
                     string name = ((PermActionAttribute)item1.GetCustomAttributes(typeof(PermActionAttribute), false)[0]).Name;
-                    string remark = typeRemark + "." + item1.Name;
+                    string remark = item1.Name;
                     if (item1 == methods.First())
                     {
                         levelId = 0;
@@ -126,7 +122,9 @@ namespace Web.Filters
                 }
             }
         }
+        #endregion
 
+        #region 所有含有PermActionAttribute的action验证权限
         /// <summary>
         /// 所有含有PermActionAttribute的action验证权限
         /// </summary>
@@ -137,22 +135,26 @@ namespace Web.Filters
         {
             Assembly assembly = Assembly.GetExecutingAssembly();
             string actionName = displayName.Split('.').Last().Split('(').First().Trim(' ');
-            string actionname =HttpUtility.UrlEncode(actionName);
+            //string actionname =HttpUtility.UrlEncode(actionName);
             var type = assembly.DefinedTypes.Where(t => t.BaseType == typeof(Controller) && displayName.Contains(t.FullName)).First();
             var method = type.GetMethods()
                 .SingleOrDefault(m => (m.ReturnParameter.ParameterType == typeof(IActionResult) ||
                 m.ReturnParameter.ParameterType == typeof(Task<IActionResult>))
                 && m.GetCustomAttribute(typeof(PermActionAttribute)) != null
-                && m.Name == actionname);
+                && m.Name == actionName);
             if(method==null)
             {
                 return null;
             }
 
             string typeRemark = type.Name.Replace("Controller", "");
-            string remark = typeRemark + "." + method.Name;
-            string name = await adminService.GetPermNameAsync(Convert.ToInt64(adminId), remark);
-            string message = "没有" + name + "这个权限";
+            string remark = method.Name;
+            var res = await adminService.CheckPermAsync(Convert.ToInt64(adminId), typeRemark, remark);
+            if (res.Key)
+            {
+                return null;
+            }
+            string message = "没有" + res.Value + "这个权限";
             //string message = "no " + name + " permission";
             if (isAjax)
             {
@@ -163,5 +165,6 @@ namespace Web.Filters
                 return new RedirectResult("/admin/home/permission?msg=" + HttpUtility.UrlEncode(message));
             }
         }
+        #endregion
     }
 }

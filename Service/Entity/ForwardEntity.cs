@@ -18,5 +18,6 @@ namespace Service.Entity
         public long StateId { get; set; }
         public long Count { get; set; } = 0;
         public string ImgUrl { get; set; }
+        public DateTime CreateTime { get; set; } = DateTime.Now;
     }
 }

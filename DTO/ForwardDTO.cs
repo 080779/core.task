@@ -18,5 +18,6 @@ namespace DTO
         public long StateId { get; set; }
         public string StateName { get; set; }
         public string ImgUrl { get; set; }
+        public DateTime CreateTime { get; set; }
     }
 }

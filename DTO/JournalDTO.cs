@@ -20,5 +20,6 @@ namespace DTO
         public long UserId { get; set; }
         public string Name { get; set; }
         public int IsEnabled { get; set; }
+        public DateTime CreateTime { get; set; }
     }
 }

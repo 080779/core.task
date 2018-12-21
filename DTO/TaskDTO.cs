@@ -20,5 +20,6 @@ namespace DTO
         public string Publisher { get; set; }//发布人
         public bool? IsCollect { get; set; } = false;
         public int IsEnabled { get; set; }
+        public DateTime CreateTime { get; set; }
     }
 }

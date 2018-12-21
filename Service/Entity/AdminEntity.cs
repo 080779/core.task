@@ -20,5 +20,6 @@ namespace Service.Entity
         public string Salt { get; set; }
         public string Password { get; set; }
         public int IsEnabled { get; set; } = 1;
+        public DateTime CreateTime { get; set; } = DateTime.Now;
     }
 }

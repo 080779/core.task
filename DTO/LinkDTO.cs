@@ -14,5 +14,6 @@ namespace DTO
         public string TypeName { get; set; }
         public int Sort { get; set; }
         public int IsEnabled { get; set; }
+        public DateTime CreateTime { get; set; }
     }
 }
