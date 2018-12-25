@@ -10,7 +10,7 @@ namespace IService
     public interface ISettingService : IServiceSupport
     {
         Task<bool> EditAsync(long id, string parameter);
-        Task<bool> EditAsync(params SettingDTO[] settings);
+        Task<bool> EditAsync(params SettingSetDTO[] settings);
         Task<string> GetParmByNameAsync(string name);
         Task<SettingDTO> GetModelAsync(long id);
         Task<SettingDTO[]> GetModelListIsEnableAsync();

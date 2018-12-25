@@ -147,30 +147,23 @@ namespace Service.Service
             }
         }
 
-        public async Task<AdminSearchResult> GetModelListAsync(string isAdmin, string keyword, DateTime? startTime, DateTime? endTime, int pageIndex, int pageSize)
+        public async Task<AdminSearchResult> GetModelListAsync(string keyword, DateTime? startTime, DateTime? endTime, int pageIndex, int pageSize)
         {
             using (MyDbContext dbc = new MyDbContext())
             {
                 AdminSearchResult result = new AdminSearchResult();
                 var admins = dbc.GetAll<AdminEntity>().AsNoTracking();
-                if (isAdmin != "admin")
+                if (!string.IsNullOrEmpty(keyword))
                 {
-                    admins = admins.Where(a => a.Name == isAdmin);
+                    admins = admins.Where(a => a.Name.Contains(keyword));
                 }
-                else
+                if (startTime != null)
                 {
-                    if (!string.IsNullOrEmpty(keyword))
-                    {
-                        admins = admins.Where(a => a.Name.Contains(keyword));
-                    }
-                    if (startTime != null)
-                    {
-                        admins = admins.Where(a => a.CreateTime >= startTime);
-                    }
-                    if (endTime != null)
-                    {
-                        admins = admins.Where(a => a.CreateTime.Year <= endTime.Value.Year && a.CreateTime.Month <= endTime.Value.Month && a.CreateTime.Day <= endTime.Value.Day);
-                    }
+                    admins = admins.Where(a => a.CreateTime >= startTime);
+                }
+                if (endTime != null)
+                {
+                    admins = admins.Where(a => a.CreateTime.Year <= endTime.Value.Year && a.CreateTime.Month <= endTime.Value.Month && a.CreateTime.Day <= endTime.Value.Day);
                 }
                 result.PageCount = (int)Math.Ceiling((await admins.LongCountAsync()) * 1.0f / pageSize);
                 var adminsResult = await admins.OrderByDescending(a => a.CreateTime).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();

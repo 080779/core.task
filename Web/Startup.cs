@@ -51,10 +51,7 @@ namespace Web
                 {
                     services.AddSingleton(interfaceType, serviceType);
                 }
-            }
-
-            //services.AddTransient<IRazorViewEngine>();
-            //services.AddSingleton<ITempDataProvider, CookieTempDataProvider>();            
+            }      
 
             services.AddMvc(option =>
             {
@@ -67,11 +64,7 @@ namespace Web
                 options.SerializerSettings.DateFormatString = "yyyy-MM-dd HH:mm:ss";//json返回时间格式化
             });
 
-            //services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1).AddJsonOptions(options=> {
-            //    options.SerializerSettings.DateFormatString = "yyyy-MM-dd HH:mm:ss";//json返回时间格式化
-            //});
-
-            services.AddAntiforgery(o => o.HeaderName = "XSRF-TOKEN"); //mvvm模式ajax提交需在header提交XSRF-TOKEN
+            services.AddAntiforgery(o => o.HeaderName = "XSRF-TOKEN"); //razor pages的mvvm模式ajax提交需在header提交XSRF-TOKEN
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

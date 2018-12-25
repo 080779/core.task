@@ -27,7 +27,6 @@ namespace Service.Service
             //dto.BankAccount = bankAccount;
             dto.Name = entity.User.Name;
             dto.Mobile = entity.User.Mobile;
-            dto.Code = entity.User.Code;
             dto.AdminCode = entity.AdminCode;
             dto.UserId = entity.UserId;
             return dto;
@@ -107,7 +106,6 @@ namespace Service.Service
                     takeCash.AdminCode = await dbc.GetStringPropertyAsync<AdminEntity>(a => a.Id == adminId, a => a.Mobile);
                     JournalEntity journal = await dbc.GetAll<JournalEntity>().SingleOrDefaultAsync(j=>j.Journal01==takeCash.Id );
                     journal.JournalTypeId = 1;
-                    user.TakeCashAmount = user.TakeCashAmount + journal.OutAmount.Value;
                     await dbc.SaveChangesAsync();
                     return takeCash.Id;
                 }

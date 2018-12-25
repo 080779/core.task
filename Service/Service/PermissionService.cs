@@ -82,11 +82,20 @@ namespace Service.Service
             }
         }        
 
-        public async Task<PermissionDTO[]> GetModelListIsEnableAsync()
+        public async Task<string[]> GetModelTypeListIsEnableAsync()
         {
             using (MyDbContext dbc=new MyDbContext())
             {
-                var res = await dbc.GetAll<PermissionEntity>().AsNoTracking().Where(p => p.IsEnabled == 1).ToListAsync();
+                var res = await dbc.GetAll<PermissionEntity>().AsNoTracking().Where(p => p.IsEnabled == 1 && p.LevelId==0).OrderBy(p=>p.Sort).ToListAsync();
+                return res.Select(p => p.TypeName).ToArray();
+            }
+        }
+
+        public async Task<PermissionDTO[]> GetModelListIsEnableByTypeNameAsync(string typeName)
+        {
+            using (MyDbContext dbc = new MyDbContext())
+            {
+                var res = await dbc.GetAll<PermissionEntity>().AsNoTracking().Where(p => p.IsEnabled == 1 && p.TypeName == typeName).ToListAsync();
                 return res.Select(p => ToDTO(p)).ToArray();
             }
         }
@@ -95,7 +104,7 @@ namespace Service.Service
         {
             using (MyDbContext dbc = new MyDbContext())
             {
-                var res = await dbc.GetAll<PermissionEntity>().AsNoTracking().Where(p => p.IsEnabled == 1 && p.LevelId==0).ToListAsync();
+                var res = await dbc.GetAll<PermissionEntity>().AsNoTracking().Where(p => p.IsEnabled == 1 && p.LevelId==0).OrderBy(p=>p.Sort).ToListAsync();
                 return res.Select(p => ToDTO(p)).ToArray();
             }
         }

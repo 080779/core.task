@@ -88,9 +88,6 @@ namespace Service
         public DbSet<SettingEntity> Settings { get; set; }
         public DbSet<TakeCashEntity> TakeCashes { get; set; }
         public DbSet<JournalEntity> Journals { get; set; }
-        public DbSet<TaskEntity> Tasks { get; set; }
-        public DbSet<ForwardEntity> Forwards { get; set; }
-        public DbSet<CollectEntity> Collects { get; set; }
         public DbSet<AdminPermissionEntity> AdminPermissions { get; set; }
         public DbSet<LinkEntity> Links { get; set; }
         #endregion

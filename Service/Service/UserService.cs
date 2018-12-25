@@ -1,4 +1,5 @@
 ﻿using Common;
+using Common.Enums;
 using DTO;
 using IService;
 using Microsoft.EntityFrameworkCore;
@@ -19,7 +20,6 @@ namespace Service.Service
             UserDTO dto = new UserDTO();
             dto.Amount = entity.Amount;
             dto.Name = entity.Name;
-            dto.Code = entity.Code;
             dto.CreateTime = entity.CreateTime;
             dto.Id = entity.Id;
             dto.IsEnabled = entity.IsEnabled;
@@ -27,11 +27,18 @@ namespace Service.Service
             dto.Mobile = entity.Mobile;
             dto.NickName = entity.NickName;
             dto.HeadPic = entity.HeadPic;
-            dto.WechatPayCode = entity.WechatPayCode;
-            dto.AliPayCode = entity.AliPayCode;
             dto.AccountHolder = entity.AccountHolder;
             dto.BankName = entity.BankName;
             dto.BankAccount = entity.BankAccount;
+            dto.RecommendCode = entity.RecommendCode;
+            dto.RecommendGenera = entity.RecommendGenera;
+            dto.RecommendId = entity.RecommendId;
+            dto.RecommendPath = entity.RecommendPath;
+            dto.RegAmount = entity.RegAmount;
+            dto.BonusAmount = entity.BonusAmount;
+            dto.FrozenAmount = entity.FrozenAmount;
+            dto.UserCode = entity.UserCode;
+            dto.LevelName = entity.LevelId.GetEnumName<LevelEnum>();
             return dto;
         }
 
@@ -53,6 +60,71 @@ namespace Service.Service
                 dbc.Users.Add(user);
                 await dbc.SaveChangesAsync();
                 return user.Id;
+            }
+        }
+
+        public async Task<long> AddAsync(string mobile, int levelTypeId, string password, string tradePassword, string recommend, string nickName, string avatarUrl)
+        {
+            string userCode = string.Empty;
+
+            using (MyDbContext dbc = new MyDbContext())
+            {
+                long userId = 0;
+                do
+                {
+                    userCode = CommonHelper.GetNumberCaptcha(6);
+                    userId = await dbc.GetEntityIdAsync<UserEntity>(u => u.UserCode == userCode);
+                } while (userId != 0);
+
+                UserEntity recUser;
+                if (string.IsNullOrWhiteSpace(recommend))
+                {
+                    recUser = await dbc.GetAll<UserEntity>().AsNoTracking().SingleOrDefaultAsync(u => u.Id == 1);
+                }
+                else
+                {
+                    recUser = await dbc.GetAll<UserEntity>().AsNoTracking().SingleOrDefaultAsync(u => u.UserCode == recommend);
+                }
+
+                if (recUser == null)
+                {
+                    return -1;
+                }
+
+                if ((await dbc.GetEntityIdAsync<UserEntity>(u => u.Mobile == mobile)) > 0)
+                {
+                    return -2;
+                }
+
+                try
+                {
+                    UserEntity user = new UserEntity();
+                    user.UserCode = userCode;
+                    user.LevelId = levelTypeId;
+                    user.Mobile = mobile;
+                    user.Salt = CommonHelper.GetCaptcha(4);
+                    user.Password = CommonHelper.GetMD5(password + user.Salt);
+                    //user.TradePassword = "";// tradePassword;// CommonHelper.GetMD5(tradePassword + user.Salt);
+                    user.NickName = string.IsNullOrEmpty(nickName) ? "无昵称" : nickName;
+                    user.HeadPic = string.IsNullOrEmpty(avatarUrl) ? "/images/headpic.png" : avatarUrl;
+
+                    user.RecommendId = recUser.Id;
+                    user.RecommendGenera = recUser.RecommendGenera + 1;
+                    user.RecommendPath = recUser.RecommendPath;
+                    user.RecommendCode = recUser.Mobile;
+
+                    dbc.Users.Add(user);
+                    await dbc.SaveChangesAsync();
+
+                    var userModel = await dbc.GetAll<UserEntity>().SingleOrDefaultAsync(s => s.Id == user.Id);
+                    user.RecommendPath = user.RecommendPath + "-" + user.Id;
+                    await dbc.SaveChangesAsync();
+                    return user.Id;
+                }
+                catch (Exception ex)
+                {
+                    return -3;
+                }
             }
         }
 
@@ -187,9 +259,6 @@ namespace Service.Service
                     return -2;
                 }
                 user.Mobile = mobile;
-                user.TrueName = trueName;
-                user.WechatPayCode = wechatPayCode;
-                user.AliPayCode = aliPayCode;
                 await dbc.SaveChangesAsync();
                 return user.Id;
             }
@@ -205,26 +274,8 @@ namespace Service.Service
                     return -1;
                 }
                 user.Mobile = mobile;
-                user.TrueName = trueName;
-                user.WechatPayCode = wechatPayCode;
-                user.AliPayCode = aliPayCode;
                 await dbc.SaveChangesAsync();
                 return user.Id;
-            }
-        }
-
-        public string GetPayInfo(long userId, string payTypeName)
-        {
-            using (MyDbContext dbc = new MyDbContext())
-            {
-                if(payTypeName=="微信")
-                {
-                    return dbc.GetStringProperty<UserEntity>(u => u.Id == userId, u => u.WechatPayCode);
-                }
-                else
-                {
-                    return dbc.GetStringProperty<UserEntity>(u => u.Id == userId, u => u.AliPayCode);
-                }
             }
         }
 
@@ -266,7 +317,7 @@ namespace Service.Service
 
                 if (!string.IsNullOrEmpty(keyword))
                 {
-                    users = users.Where(a => a.Mobile.Contains(keyword) || a.Code.Contains(keyword) || a.NickName.Contains(keyword));
+                    users = users.Where(a => a.Mobile.Contains(keyword) || a.NickName.Contains(keyword));
                 }
                 if (startTime != null)
                 {

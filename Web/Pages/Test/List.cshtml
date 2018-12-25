@@ -6,11 +6,16 @@
 <head>
     <meta name="viewport" content="width=device-width" />
     <title>List</title>
-    <script src="~/js/jquery-1.9.1.min.js"></script>
+    <script src="~/admin/js/jquery-1.9.1.min.js"></script>
+    <script src="~/admin/js/vue.min2.5.16.js"></script>
+    <script src="~/admin/js/vue-resource.min1.5.0.js"></script>
 </head>
 <body>
-    @Html.AntiForgeryToken()
-    <input type="button" id="btn" value="提交" />
+    <div id="app">
+        @Html.AntiForgeryToken()
+        <input type="button" id="btn" value="jquery ajax提交" />
+        <input type="button" v-on:click="submit" value="vue.js ajax提交" />
+    </div>
     <script>
         $("#btn").click(function () {
             $.ajax({
@@ -22,6 +27,20 @@
                 success: function (res) { },
                 error: function () { alert("网络错误") }
             });
+        });
+
+        var vue = new Vue({
+            el: "#app",
+            data: {
+            },
+            methods: {
+                submit: function () {
+                    this.$http.post('/test/list?handler=add', { age: 8 }, { headers: { "XSRF-TOKEN": $('input:hidden[name="__RequestVerificationToken"]').val() } }).then(function (result) {
+                    });
+                }
+            },
+            mounted: function () {
+            }
         });
     </script>
 </body>

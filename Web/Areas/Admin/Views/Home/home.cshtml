@@ -9,7 +9,7 @@
     <script src="~/admin/assets/js/jquery.min.js"></script>
     <script src="~/admin/assets/dist/echarts.js"></script>
     <script src="~/admin/assets/js/bootstrap.min.js"></script>
-    <title>无标题文档</title>
+    <title>home</title>
 </head>
 
 <body>
@@ -91,7 +91,8 @@
             $(window).resize(function () {
                 $(".t_Record").width($(window).width() - 320);
             });
-        });
+        });
+
 
         require.config({
             paths: {
@@ -151,7 +152,8 @@
                                     { type: 'min', name: '最小值' }
                                 ]
                             }
-                        },
+                        }
+                        ,
                         {
                             name: '待付款',
                             type: 'bar',

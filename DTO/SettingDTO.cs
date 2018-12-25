@@ -16,4 +16,10 @@ namespace DTO
         public string Remark { get; set; }
         public int? TypeId { get; set; }
     }
+
+    public class SettingSetDTO
+    {
+        public long Id { get; set; }
+        public string Param { get; set; }
+    }
 }

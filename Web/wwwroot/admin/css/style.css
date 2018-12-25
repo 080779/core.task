@@ -576,10 +576,10 @@ body
 .xinxi-xs span{ margin-right:30px; color:#438EB9}
 /*****************************添加用户样式属性************************/
 .add_menber{}
-.add_menber li{ margin:10px 0px; height:40px; line-height:40px; float:left; width:50%}
+.add_menber li{ margin:10px 0px; height:40px; line-height:40px; float:left; width:100%}
 .add_menber li.adderss{ width:100%}
 .add_menber li .label_name,
-.member_content li .label_name { width:80px; text-align:right; float:left; line-height:30px;}
+.member_content li .label_name { width:35%; text-align:right; float:left; line-height:30px;}
 .add_menber li .add_name{ float:left; margin-left:10px; line-height:30px;}
 .add_menber li .add_name .lbl{ top:-5px; left:10px;}
 /******用户信息********/
@@ -688,3 +688,23 @@ body
     color: #c00;
 }
 .formControls>* {vertical-align: middle;}
+#edit_perm .page-content {
+    border-bottom: 1px solid #eee;
+    margin-bottom: 6px;
+}
+
+    #edit_perm .page-content li {
+        display: inline-block;
+        width: 120px;
+        vertical-align: middle;
+        padding: 2px 0;
+    }
+
+        #edit_perm .page-content li:first-child {
+            display: block;
+            width: 100%;
+        }
+
+        #edit_perm .page-content li input {
+            vertical-align: text-top;
+        }

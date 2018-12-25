@@ -53,7 +53,7 @@ namespace Web.Filters
             {
                 if (isAjax)
                 {
-                    context.Result = new JsonResult(new AjaxResult { Status = 0, Data = "/admin/login/login" });
+                    context.Result = new JsonResult(new AjaxResult { Status = 302, Data = "/admin/home/login" });
                 }
                 else
                 {

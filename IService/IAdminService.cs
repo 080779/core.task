@@ -15,7 +15,7 @@ namespace IService
         Task<string> GetMobileByIdAsync(long id);
         Task<string> GetNameByIdAsync(long id);
         Task<AdminDTO> GetModelAsync(long id);
-        Task<AdminSearchResult> GetModelListAsync(string isAdmin, string keyword, DateTime? startTime, DateTime? endTime, int pageIndex, int pageSize);
+        Task<AdminSearchResult> GetModelListAsync(string keyword, DateTime? startTime, DateTime? endTime, int pageIndex, int pageSize);
         Task<KeyValuePair<bool,string>> CheckPermAsync(long adminId, string typeRemark, string remark);
         Task<long> CheckLoginAsync(string name, string password);
         Task<bool> DelAll();

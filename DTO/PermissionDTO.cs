@@ -19,4 +19,9 @@ namespace DTO
         public int IsEnabled { get; set; }
         public bool IsChecked { get; set; } = false;
     }
+
+    public class PermissionTypeDTO
+    {        
+        public string TypeName { get; set; }
+    }
 }

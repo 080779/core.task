@@ -11,25 +11,23 @@ namespace Service.Entity
     /// </summary>
     public class UserEntity : BaseEntity
     {
-        public string Mobile { get; set; } = string.Empty;
+        public string UserCode { get; set; }
+        public long RecommendId { get; set; }
+        public string RecommendCode { get; set; }
+        public string RecommendPath { get; set; }
+        public int RecommendGenera { get; set; }
+        public string Mobile { get; set; }
         public string Name { get; set; }
-        public string Code { get; set; }
-        public string TrueName { get; set; }
+        public decimal Amount { get; set; }
+        public decimal BonusAmount { get; set; }
+        public decimal FrozenAmount { get; set; }
+        public decimal RegAmount { get; set; }
+        public int LevelId { get; set; }
         public string NickName { get; set; }
         public string HeadPic { get; set; }
-        public decimal Amount { get; set; } = 0;//账户金额
-        public decimal BonusAmount { get; set; } = 0;//佣金总额
-        public decimal TakeCashAmount { get; set; } = 0;//提现总额
-        public long? LevelId { get; set; } = 0;
-        //public IdNameEntity Level { get; set; }
-        public string Description { get; set; }
-        public string Salt { get; set; } = string.Empty;
+        public string Salt { get; set; }
         public string Password { get; set; }
         public string TradePassword { get; set; }
-        public string WechatPayCode { get; set; }
-        public string AliPayCode { get; set; }
-        public int ErrorCount { get; set; } = 0;
-        public DateTime ErrorTime { get; set; } = DateTime.Now;
         public string AccountHolder { get; set; }//银行账户持有人
         public string BankName { get; set; }
         public string BankAccount { get; set; }

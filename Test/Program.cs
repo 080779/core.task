@@ -31,8 +31,6 @@ namespace Test
                 //admin.Description = "系统管理员";
                 //admin.Salt = CommonHelper.GetCaptcha(4);
                 //admin.Password = "1" + admin.Salt;
-                var tasks = dbc.GetAll<TaskEntity>().ToList();
-                Console.WriteLine(tasks.Count());
                 Console.ReadKey();
             }
         }

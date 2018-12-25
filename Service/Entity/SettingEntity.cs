@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Service.Entity
 {
-    public class SettingEntity:BaseEntity
+    public class SettingEntity : BaseEntity
     {
         public string TypeName { get; set; }
         public int? LevelId { get; set; }

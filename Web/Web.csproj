@@ -5,6 +5,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Pages\Models\**" />
+    <Compile Remove="wwwroot\static\**" />
+    <Content Remove="Pages\Models\**" />
+    <Content Remove="wwwroot\static\**" />
+    <EmbeddedResource Remove="Pages\Models\**" />
+    <EmbeddedResource Remove="wwwroot\static\**" />
+    <None Remove="Pages\Models\**" />
+    <None Remove="wwwroot\static\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Remove="Filters\WebAuthorizeFilter.cs" />
   </ItemGroup>
 
@@ -23,10 +34,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Models\" />
-    <Folder Include="Pages\Models\" />
-    <Folder Include="Views\" />
-    <Folder Include="wwwroot\static\" />
     <Folder Include="wwwroot\tasks\images\" />
     <Folder Include="wwwroot\tasks\js\" />
     <Folder Include="wwwroot\upload\2018\" />
@@ -44,7 +51,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Update="Areas\Admin\Views\Admin\List1.cshtml">
+    <Content Update="Areas\Admin\Views\Admin\List.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
     <Content Update="Areas\Admin\Views\Home\home.cshtml">
@@ -67,6 +74,9 @@
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
     <Content Update="Areas\Admin\Views\Product\List1.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Admin\Views\User\List1.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
   </ItemGroup>

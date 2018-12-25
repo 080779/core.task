@@ -11,7 +11,8 @@ namespace IService
     {
         Task InitializeAsync();
         Task<long> EditAsync(long id, string name,string remark,string typeName,string typeRemark,string url,int? levelId);
-        Task<PermissionDTO[]> GetModelListIsEnableAsync();
+        Task<string[]> GetModelTypeListIsEnableAsync();
+        Task<PermissionDTO[]> GetModelListIsEnableByTypeNameAsync(string typeName);
         Task<PermissionDTO[]> GetModelUrlListIsEnableAsync();
     }
 }

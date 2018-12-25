@@ -8,13 +8,14 @@ namespace Web.Areas.Admin.Models.Admin
 {
     public class ListViewModel
     {
-        public AdminDTO[] Admins { get; set; }
-        public List<PermissionType> PermissionTypes { get; set; }
+        public AdminDTO[] List { get; set; }
+        public List<PermTypeModel> PermTypes { get; set; }
         public long PageCount { get; set; }
     }
-    public class PermissionType
+
+    public class PermTypeModel
     {
-        public string Name { get; set; }
-        public List<PermissionDTO> Permissions { get; set; }
+        public string TypeName { get; set; }
+        public PermissionDTO[] Permissions { get; set; }
     }
 }

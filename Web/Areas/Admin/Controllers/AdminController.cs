@@ -33,28 +33,23 @@ namespace Web.Areas.Admin.Controllers
         {
             return View();
         }
-        public IActionResult List1()
-        {
-            return View();
-        }
         [HttpPost]
         public async Task<IActionResult> List(string keyword, DateTime? startTime, DateTime? endTime, int pageIndex = 1)
         {
-            AdminSearchResult res = await adminService.GetModelListAsync("admin", keyword, startTime, endTime, pageIndex, pageSize);
+            AdminSearchResult res = await adminService.GetModelListAsync(keyword, startTime, endTime, pageIndex, pageSize);
+            string[] types = await permissionService.GetModelTypeListIsEnableAsync();
+            List<PermTypeModel> permTypes = new List<PermTypeModel>(); 
             ListViewModel model = new ListViewModel();
-            //model.Admins = res.Admins;
-            //PermissionTypeDTO[] types = await permissionTypeService.GetModelListIsEnableAsync();
-            //List<PermissionType> permissionTypes = new List<PermissionType>();
-            //foreach (var type in types)
-            //{
-            //    PermissionType permissionType = new PermissionType();
-            //    permissionType.Name = type.Name;
-            //    PermissionDTO[] permissions = await permissionService.GetByTypeIdAsync(type.Id);
-            //    permissionType.Permissions = permissions.ToList();
-            //    permissionTypes.Add(permissionType);
-            //}
-            //model.PermissionTypes = permissionTypes;
-            //model.PageCount = res.PageCount;
+            model.List = res.Admins;
+            foreach (var item in types)
+            {
+                PermTypeModel typeModel = new PermTypeModel();
+                typeModel.TypeName = item;
+                typeModel.Permissions = await permissionService.GetModelListIsEnableByTypeNameAsync(item);
+                permTypes.Add(typeModel);
+            }
+            model.PermTypes = permTypes;
+            model.PageCount = res.PageCount;
             return Json(new AjaxResult { Status = 1, Data = model });
         }
         #endregion
@@ -134,23 +129,25 @@ namespace Web.Areas.Admin.Controllers
             {
                 permissionIds = new List<long>();
             }
-            List<PermissionType> permissionTypes = new List<PermissionType>();
-            //foreach (var type in types)
-            //{
-            //    PermissionType permissionType = new PermissionType();
-            //    permissionType.Name = type.Name;
-            //    PermissionDTO[] permissions = await permissionService.GetByTypeIdAsync(type.Id);
-            //    foreach (var perm in permissions)
-            //    {
-            //        if (permissionIds.Contains(perm.Id))
-            //        {
-            //            perm.IsChecked = true;
-            //        }
-            //    }
-            //    permissionType.Permissions = permissions.ToList();
-            //    permissionTypes.Add(permissionType);
-            //}
-            return Json(new AjaxResult { Status = 1, Data = permissionTypes });
+
+            string[] types = await permissionService.GetModelTypeListIsEnableAsync();
+            List<PermTypeModel> permTypes = new List<PermTypeModel>();
+            foreach (var item in types)
+            {
+                PermissionDTO[] permissions = await permissionService.GetModelListIsEnableByTypeNameAsync(item);
+                PermTypeModel typeModel = new PermTypeModel();
+                typeModel.TypeName = item;
+                foreach (var perm in permissions)
+                {
+                    if(permissionIds.Contains(perm.Id))
+                    {
+                        perm.IsChecked = true;
+                    }
+                }
+                typeModel.Permissions = permissions;
+                permTypes.Add(typeModel);
+            }
+            return Json(new AjaxResult { Status = 1, Data = permTypes });
         }
         #endregion
 

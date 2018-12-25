@@ -40,18 +40,18 @@ namespace Service.Service
             }
         }
 
-        public async Task<bool> EditAsync(params SettingDTO[] settings)
+        public async Task<bool> EditAsync(params SettingSetDTO[] settings)
         {
             using (MyDbContext dbc = new MyDbContext())
             {
-                foreach (SettingDTO setting in settings)
+                foreach (SettingSetDTO setting in settings)
                 {
                     SettingEntity entity = await dbc.GetAll<SettingEntity>().SingleOrDefaultAsync(g => g.Id == setting.Id);
                     if (entity == null)
                     {
                         return false;
                     }
-                    entity.Param = setting.Param.ToString();
+                    entity.Param = setting.Param;
                 }
                 await dbc.SaveChangesAsync();
                 return true;
