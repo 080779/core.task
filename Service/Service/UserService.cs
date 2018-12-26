@@ -42,6 +42,17 @@ namespace Service.Service
             return dto;
         }
 
+        public MemberTreeDTO ToMemberTreeDTO(UserEntity entity,long count)
+        {
+            MemberTreeDTO dto = new MemberTreeDTO();
+            dto.Id = entity.Id;
+            dto.Mobile = entity.Mobile;
+            dto.Amount = entity.Amount;
+            dto.LevelName = entity.LevelId.GetEnumName<LevelEnum>();
+            dto.Count = count;
+            return dto;
+        }
+
         public async Task<long> AddAsync(string name, string password,string nickName,string avatarUrl)
         {
             using (MyDbContext dbc = new MyDbContext())
@@ -150,7 +161,7 @@ namespace Service.Service
             }
         }
 
-        public async Task<long> DeleteAsync(long id)
+        public async Task<long> DelAsync(long id)
         {
             using (MyDbContext dbc = new MyDbContext())
             {
@@ -180,7 +191,7 @@ namespace Service.Service
             }
         }
 
-        public async Task<long> ResetPasswordAsync(long id, string password)
+        public async Task<long> EditPwdAsync(long id, string password)
         {
             using (MyDbContext dbc = new MyDbContext())
             {
@@ -300,6 +311,14 @@ namespace Service.Service
             }
         }
 
+        public async Task<long> GetIdByMobileAsync(string mobile)
+        {
+            using (MyDbContext dbc = new MyDbContext())
+            {
+                return await dbc.GetEntityIdAsync<UserEntity>(u=>u.Mobile==mobile);
+            }
+        }
+
         public async Task<string> GetMobileByIdAsync(long id)
         {
             using (MyDbContext dbc = new MyDbContext())
@@ -331,6 +350,57 @@ namespace Service.Service
                 var userResult = await users.OrderByDescending(a => a.CreateTime).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
                 result.Users = userResult.Select(a => ToDTO(a)).ToArray();
                 return result;
+            }
+        }
+
+        public async Task<MemberTreeDTO> GetMemberTreeModelAsync(long id)
+        {
+            using (MyDbContext dbc = new MyDbContext())
+            {
+                var user = await dbc.GetAll<UserEntity>().AsNoTracking().FirstOrDefaultAsync(u => u.Id == id);
+                if (user == null)
+                {
+                    return null;
+                }
+                long count;
+                string keyword;
+                if (user.UserCode == "system")
+                {
+                    keyword = (user.Id + "-").ToString();
+                    count = await dbc.GetAll<UserEntity>().AsNoTracking().Where(u => u.RecommendPath.Contains(keyword)).LongCountAsync();
+                }
+                else
+                {
+                    keyword = ("-" + user.Id + "-").ToString();
+                    count = await dbc.GetAll<UserEntity>().AsNoTracking().Where(u => u.RecommendPath.Contains(keyword)).LongCountAsync();
+                }
+                return ToMemberTreeDTO(user, count);
+            }
+        }
+
+        public async Task<MemberTreeDTO[]> GetMemberTreeListAsync(long id)
+        {
+            using (MyDbContext dbc = new MyDbContext())
+            {
+                var res = await dbc.GetAll<UserEntity>().Where(u => u.RecommendId == id).ToListAsync();
+                List<MemberTreeDTO> list = new List<MemberTreeDTO>();
+                long count;
+                string keyword;
+                foreach (var user in res)
+                {
+                    if (user.UserCode == "system")
+                    {
+                        keyword = (user.Id + "-").ToString();
+                        count = await dbc.GetAll<UserEntity>().AsNoTracking().Where(u => u.RecommendPath.Contains(keyword)).LongCountAsync();
+                    }
+                    else
+                    {
+                        keyword = ("-" + user.Id + "-").ToString();
+                        count = await dbc.GetAll<UserEntity>().AsNoTracking().Where(u => u.RecommendPath.Contains(keyword)).LongCountAsync();
+                    }
+                    list.Add(ToMemberTreeDTO(user, count));
+                }
+                return list.ToArray();
             }
         }
     }

@@ -34,8 +34,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\tasks\images\" />
-    <Folder Include="wwwroot\tasks\js\" />
+    <Folder Include="wwwroot\lib\jstree\" />
     <Folder Include="wwwroot\upload\2018\" />
   </ItemGroup>
 

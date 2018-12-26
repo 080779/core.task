@@ -29,4 +29,13 @@ namespace DTO
         public int IsEnabled { get; set; }
         public DateTime CreateTime { get; set; }
     }
+
+    public class MemberTreeDTO
+    {
+        public long Id { get; set; }
+        public string Mobile { get; set; }
+        public decimal Amount { get; set; }
+        public string LevelName { get; set; }
+        public long Count { get; set; }
+    }
 }

@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Common;
+using DTO;
 using IService;
 using Microsoft.AspNetCore.Mvc;
 using Web.Attributes;
@@ -59,16 +61,6 @@ namespace Web.Areas.Admin.Controllers
             }
             return Json(new AjaxResult { Status = 1, Msg = "会员添加成功" });
         }
-
-        public async Task<IActionResult> Check(string name)
-        {
-            if (string.IsNullOrEmpty(name))
-            {
-                return Json(new AjaxResult { Status = 0, Msg = "用户名不能为空" });
-            }
-            long id = await userService.CheckUserNameAsync(name);
-            return Json(new AjaxResult { Status = 1, Msg = "检测成功", Data = id });
-        }
         #endregion
 
         #region 修改密码
@@ -79,7 +71,7 @@ namespace Web.Areas.Admin.Controllers
             {
                 return Json(new AjaxResult { Status = 0, Msg = "登录密码不能为空" });
             }
-            long res = await userService.ResetPasswordAsync(id, password);
+            long res = await userService.EditPwdAsync(id, password);
             if (res <= 0)
             {
                 if (id == -1)
@@ -109,12 +101,132 @@ namespace Web.Areas.Admin.Controllers
         [PermAction("删除用户")]
         public async Task<IActionResult> Del(long id)
         {
-            long res = await userService.DeleteAsync(id);
+            long res = await userService.DelAsync(id);
             if (res <= 0)
             {
                 return Json(new AjaxResult { Status = 0, Msg = "删除用户失败" });
             }
             return Json(new AjaxResult { Status = 1, Msg = "删除用户成功" });
+        }
+        #endregion
+
+        #region 查看直接推荐图
+        [HttpGet]
+        [PermAction("查看直接推荐图")]
+        public IActionResult MemberTree(long id=1)
+        {
+            return View(id);
+        }
+        //获取数据
+        public async Task<string> Get(long uid, string id)
+        {
+            StringBuilder sb = new StringBuilder();
+            if (id != "#")
+            {
+                uid = long.Parse(id);
+            }
+            MemberTreeDTO user;
+            MemberTreeDTO[] list;
+            string treeText;
+            if (uid != -1)
+            {
+                if (uid != 0)
+                {
+                    user = await userService.GetMemberTreeModelAsync(uid);
+                    list = await userService.GetMemberTreeListAsync(user.Id);
+                    treeText = Treetext(user.Mobile, user.Amount, user.LevelName, user.Count);
+                }
+                else
+                {
+                    list = new MemberTreeDTO[0];
+                    treeText = "查询无结果";
+                }
+            }
+            else
+            {
+                list = new MemberTreeDTO[0];
+                treeText = "查询无结果";
+            }
+            if (id == "#")
+            {
+                sb.Append("\"text\":\"" + treeText + "\",\"expanded\":\"false\",\"state\":{\"opened\":\"true\"}");
+            }
+            if (list.Count() > 0)
+            {
+                if (id == "#")
+                {
+                    sb.Append(",\"children\":[{");
+                }
+
+                for (int i = 0; i < list.Count(); i++)
+                {
+
+                    var list2 = await userService.GetMemberTreeListAsync(list[i].Id);
+                    if (list2.Count() > 0)
+                    {
+                        sb.Append("\"text\":\"" + Treetext(list[i].Mobile, list[i].Amount, list[i].LevelName, list[i].Count) + "\",\"children\":true,\"id\":\"" + list[i].Id + "\"");
+                    }
+                    else
+                    {
+                        sb.Append("\"text\":\"" + Treetext(list[i].Mobile, list[i].Amount, list[i].LevelName, list[i].Count) + "\"");
+                    }
+
+                    if (i != list.Count() - 1)
+                    {
+                        sb.AppendLine("},{");
+                    }
+                }
+                if (id == "#")
+                {
+                    sb.Append("}]");
+                }
+            }
+            return "[{" + sb.ToString() + "}]";
+        }
+        //根据手机号查询
+        public async Task<string> Search(string mobile, string token, string id)
+        {
+            //if (string.IsNullOrEmpty(token))
+            //{
+            //    return "token不能为空";
+            //}
+
+            //if (!Valid(token))
+            //{
+            //    return "token_invalid";
+            //}
+            long res;
+            if (!string.IsNullOrEmpty(mobile))
+            {
+                res = await userService.GetIdByMobileAsync(mobile);
+                if (res <= 0)
+                {
+                    res = -1;
+                }
+            }
+            else
+            {
+                res = 1;
+            }
+            return await Get(res, id);
+        }
+        //内容格式
+        private string Treetext(string mobile, decimal amount, string levelName, long count)
+        {
+            string treeText = "";
+            treeText = "<span style='color:green;'>" + mobile + "</span>|<span style='color:green;'>" + levelName + "</span>|<span style='color:green;'>" + amount + "</span>|<span style='color:green;'>" + count + "</span> ";
+            return treeText;
+        }
+        //token验证
+        private bool Valid(string token)
+        {
+            string KEY = "321wqeewqwqsdaewq";
+            string validToken = CommonHelper.GetMD5(DateTime.Now.ToString("yyyyMMdd") + KEY).ToLower();
+            if (token != validToken)
+            {
+                return false;
+            }
+            return true;
         }
         #endregion
     }

@@ -1,0 +1,72 @@
+﻿@model long
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>MemberTree</title>
+    <link href="~/admin/css/style.css" rel="stylesheet" />
+    <link href="~/admin/assets/css/ace.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/admin/assets/css/font-awesome.min.css" />
+    <link href="~/lib/jstree/themes/default/style.css" rel="stylesheet" />
+    <script src="~/lib/js/jquery-1.9.1.min.js"></script>
+    <style>
+        body {
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="search_style">
+        <div class="title_names">用户直推图查询</div>
+        <ul class="search_content clearfix">
+            <li><label class="l_f">会员账号</label><input type="text" class="text_add" id="txtMobile" placeholder="输入会员账号" style=" width:200px" /></li>
+            <li style="width:90px;"><button type="button" onclick="search()" class="btn_search"><i class="icon-search"></i>查询</button></li>
+            <li><button type="button" style="width:65px;" onclick="javascript :history.back(-1)" class="btn_search"><i class="icon-reply"></i>返回</button></li>
+        </ul>
+    </div>
+    <input type="hidden" id="userId" value="@Model" />
+    <div id="tree" class="tree tree-unselectable">
+        <ul id="membertree">
+            =
+            <li data-jstree='{"opened":true}'></li>
+        </ul>
+    </div>
+    <script src="~/lib/jstree/jstree.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            var userId = $("#userId").val();
+            $('#membertree').jstree({
+                'core': {
+                    'data': {
+                        "url": "/admin/user/get?uid=" + userId + "",
+                        "dataType": "json",
+                        "data": function (node) {
+                            return { "id": node.id };
+                        }
+                    }
+                }
+
+            });
+            $('#membertree').jstree().hide_icons();
+        })
+
+        function search() {
+            $('#membertree').data('jstree', false).empty();
+            var mobile = $("#txtMobile").val();
+            $('#membertree').jstree({
+                'core': {
+                    'data': {
+                        "url": "/admin/user/search?mobile=" + mobile + "",
+                        "dataType": "json",
+                        "data": function (node) {
+                            return { "id": node.id };
+                        }
+                    }
+                }
+
+            });
+            $('#membertree').jstree().hide_icons();
+        }
+    </script>
+</body>
+</html>

@@ -3,16 +3,15 @@
     margin-top: 20px;
 }
 
-ul,li{
+.page-bar>ul>li{
     margin: 0px;
     padding: 0px;
 }
-li{
+.page-bar>li {
     list-style: none;
-      float:left;
-
+    float: left;
 }
-.page-bar li:first-child>a {
+.page-bar>li:first-child>a {
    margin-left: 0px
 }
 .page-bar a{
