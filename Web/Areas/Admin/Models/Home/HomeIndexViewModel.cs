@@ -9,5 +9,6 @@ namespace Web.Areas.Admin.Models.Home
     public class HomeIndexViewModel
     {
         public string Name { get; set; }
+        public PermissionDTO[] List { get; set; }
     }
 }

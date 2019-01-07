@@ -28,6 +28,19 @@ namespace Service
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         }
 
+        #region 实体类集合
+        public DbSet<UserEntity> Users { get; set; }
+        public DbSet<AdminEntity> Admins { get; set; }
+        public DbSet<AdminLogEntity> AdminLogs { get; set; }
+        public DbSet<PermissionEntity> Permissions { get; set; }
+        public DbSet<SettingEntity> Settings { get; set; }
+        public DbSet<TakeCashEntity> TakeCashes { get; set; }
+        public DbSet<JournalEntity> Journals { get; set; }
+        public DbSet<AdminPermissionEntity> AdminPermissions { get; set; }
+        public DbSet<LinkEntity> Links { get; set; }
+        public DbSet<NoticeEntity> Notices { get; set; }
+        #endregion
+
         #region MyDbContext通用方法
         public IQueryable<T> GetAll<T>() where T : BaseEntity
         {
@@ -78,18 +91,6 @@ namespace Service
         {
             return await this.Set<T>().AsNoTracking().Where(e => e.IsDeleted == 0 || e.IsDeleted == null).Where(expression).Select(parameterName).SingleOrDefaultAsync();
         }
-        #endregion
-
-        #region 实体类集合
-        public DbSet<UserEntity> Users { get; set; }
-        public DbSet<AdminEntity> Admins { get; set; }
-        public DbSet<AdminLogEntity> AdminLogs { get; set; }
-        public DbSet<PermissionEntity> Permissions { get; set; }
-        public DbSet<SettingEntity> Settings { get; set; }
-        public DbSet<TakeCashEntity> TakeCashes { get; set; }
-        public DbSet<JournalEntity> Journals { get; set; }
-        public DbSet<AdminPermissionEntity> AdminPermissions { get; set; }
-        public DbSet<LinkEntity> Links { get; set; }
         #endregion
     }
 }

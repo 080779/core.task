@@ -13,7 +13,7 @@ namespace IService
     }
     public class JournalSearchResult
     {
-        public JournalDTO[] Journals { get; set; }
+        public JournalDTO[] List { get; set; }
         public long PageCount { get; set; }
         public decimal? TotalInAmount { get; set; }
         public decimal? TotalOutAmount { get; set; }

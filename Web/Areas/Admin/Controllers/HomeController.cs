@@ -24,17 +24,21 @@ namespace Web.Areas.Admin.Controllers
             this.adminService = adminService;
             this.permissionService = permissionService;
         }
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index1()
         {
             //long userId = Convert.ToInt64(Session["Platform_AdminUserId"]);
             HomeIndexViewModel model = new HomeIndexViewModel();
             model.Name = await adminService.GetNameByIdAsync(2);
             return View(model);
         }
-        public async Task<IActionResult> Index1()
+        public async Task<IActionResult> Index()
         {
+            long adminId = Convert.ToInt64(HttpContext.Session.GetString("Platform_Admin_Id"));
+            HomeIndexViewModel model = new HomeIndexViewModel();
             var res = await permissionService.GetModelUrlListIsEnableAsync();
-            return View(res);
+            model.Name = await adminService.GetNameByIdAsync(adminId);
+            model.List = res;
+            return View(model);
         }
         public IActionResult Home()
         {
@@ -87,8 +91,14 @@ namespace Web.Areas.Admin.Controllers
                 return new JsonResult(new AjaxResult { Status = 0, Msg = "登录失败"});
             }
             HttpContext.Session.SetString("Platform_Admin_Id",res.ToString());
-            return new JsonResult(new AjaxResult { Status = 1, Msg = "登录成功", Data = "/admin/home/index1" });
+            return new JsonResult(new AjaxResult { Status = 1, Msg = "登录成功", Data = "/admin/home/index" });
         }
+        public IActionResult Logout()
+        {
+            HttpContext.Session.Remove("Platform_Admin_Id");
+            return Redirect("/admin/home/login");
+        }
+
         [AllowAnonymous]
         public IActionResult ImgCode()
         {

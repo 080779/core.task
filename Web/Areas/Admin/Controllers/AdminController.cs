@@ -40,7 +40,7 @@ namespace Web.Areas.Admin.Controllers
             string[] types = await permissionService.GetModelTypeListIsEnableAsync();
             List<PermTypeModel> permTypes = new List<PermTypeModel>(); 
             ListViewModel model = new ListViewModel();
-            model.List = res.Admins;
+            model.List = res.List;
             foreach (var item in types)
             {
                 PermTypeModel typeModel = new PermTypeModel();

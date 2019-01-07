@@ -30,26 +30,38 @@ namespace Service.Service
         {
             using (MyDbContext dbc = new MyDbContext())
             {
-                long userId = await dbc.GetEntityIdAsync<AdminEntity>(a => a.Name == name);
-                if (userId > 0)
+                using (var scope = dbc.Database.BeginTransaction())
                 {
-                    return -1;
-                }
-                userId = await dbc.GetEntityIdAsync<AdminEntity>(a => a.Mobile == mobile);
-                if(userId>0)
-                {
-                    return -2;
-                }
+                    try
+                    {
+                        long userId = await dbc.GetEntityIdAsync<AdminEntity>(a => a.Name == name);
+                        if (userId > 0)
+                        {
+                            return -1;
+                        }
+                        userId = await dbc.GetEntityIdAsync<AdminEntity>(a => a.Mobile == mobile);
+                        if (userId > 0)
+                        {
+                            return -2;
+                        }
 
-                AdminEntity entity = new AdminEntity();
-                entity.Name = name;
-                entity.Mobile = mobile;
-                entity.TrueName = trueName;
-                entity.Salt = CommonHelper.GetCaptcha(4);
-                entity.Password = CommonHelper.GetMD5(password + entity.Salt);
-                dbc.Admins.Add(entity);
-                await dbc.SaveChangesAsync();
-                return entity.Id;
+                        AdminEntity entity = new AdminEntity();
+                        entity.Name = name;
+                        entity.Mobile = mobile;
+                        entity.TrueName = trueName;
+                        entity.Salt = CommonHelper.GetCaptcha(4);
+                        entity.Password = CommonHelper.GetMD5(password + entity.Salt);
+                        dbc.Admins.Add(entity);
+                        await dbc.SaveChangesAsync();
+                        scope.Commit();
+                        return entity.Id;
+                    }
+                    catch (Exception ex)
+                    {
+                        scope.Rollback();
+                        return -3;
+                    }
+                }                
             }
         }
 
@@ -167,7 +179,7 @@ namespace Service.Service
                 }
                 result.PageCount = (int)Math.Ceiling((await admins.LongCountAsync()) * 1.0f / pageSize);
                 var adminsResult = await admins.OrderByDescending(a => a.CreateTime).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
-                result.Admins = adminsResult.Select(a => ToDTO(a, dbc.GetAll<AdminPermissionEntity>().Where(ap => ap.AdminId == a.Id).Select(ap => ap.PermissionId).ToArray())).ToArray();
+                result.List = adminsResult.Select(a => ToDTO(a, dbc.GetAll<AdminPermissionEntity>().Where(ap => ap.AdminId == a.Id).Select(ap => ap.PermissionId).ToArray())).ToArray();
                 return result;
             }
         }

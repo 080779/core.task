@@ -22,7 +22,7 @@ namespace IService
     }
     public class AdminSearchResult
     {
-        public AdminDTO[] Admins { get; set; }
+        public AdminDTO[] List { get; set; }
         public long PageCount { get; set; }
     }
 }

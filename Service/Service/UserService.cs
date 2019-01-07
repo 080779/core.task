@@ -139,28 +139,6 @@ namespace Service.Service
             }
         }
 
-        public async Task<bool> UpdateInfoAsync(long id, string nickName, string headpic)
-        {
-            using (MyDbContext dbc = new MyDbContext())
-            {
-                UserEntity entity = await dbc.GetAll<UserEntity>().SingleOrDefaultAsync(u => u.Id == id);
-                if (entity == null)
-                {
-                    return false;
-                }
-                if (nickName != null)
-                {
-                    entity.NickName = nickName;
-                }
-                if (headpic != null)
-                {
-                    entity.HeadPic = headpic;
-                }
-                await dbc.SaveChangesAsync();
-                return true;
-            }
-        }
-
         public async Task<long> DelAsync(long id)
         {
             using (MyDbContext dbc = new MyDbContext())
@@ -206,11 +184,11 @@ namespace Service.Service
             }
         }  
 
-        public async Task<long> CheckLoginAsync(string name, string password)
+        public async Task<long> CheckLoginAsync(string mobile, string password)
         {
             using (MyDbContext dbc = new MyDbContext())
             {
-                UserEntity entity = await dbc.GetAll<UserEntity>().SingleOrDefaultAsync(u => u.Name == name);
+                UserEntity entity = await dbc.GetAll<UserEntity>().SingleOrDefaultAsync(u => u.Mobile == mobile);
                 if (entity == null)
                 {
                     return -1;
@@ -225,78 +203,7 @@ namespace Service.Service
                 }
                 return entity.Id;
             }
-        }
-
-        public async Task<long> CheckUserMobileAsync(long id, string mobile)
-        {
-            using (MyDbContext dbc = new MyDbContext())
-            {
-                return await dbc.GetEntityIdAsync<UserEntity>(u => u.Id==id && u.Mobile==mobile);
-            }
-        }
-
-        public async Task<long> CheckUserNameAsync(string name)
-        {
-            using (MyDbContext dbc = new MyDbContext())
-            {
-                return await dbc.GetEntityIdAsync<UserEntity>(u => u.Name == name);
-            }
-        }
-
-        public bool CheckUserId(long id)
-        {
-            using (MyDbContext dbc = new MyDbContext())
-            {
-                long res = dbc.GetEntityId<UserEntity>(u => u.Id == id);
-                if (res <= 0)
-                {
-                    return false;
-                }
-                return true;
-            }
-        }
-
-        public async Task<long> BindInfoAsync(long id, string mobile, string trueName, string wechatPayCode, string aliPayCode)
-        {
-            using (MyDbContext dbc = new MyDbContext())
-            {
-                UserEntity user = await dbc.GetAll<UserEntity>().SingleOrDefaultAsync(u => u.Id == id);
-                if (user == null)
-                {
-                    return -1;
-                }
-                if((await dbc.GetEntityIdAsync<UserEntity>(u=>u.Mobile==mobile))>0)
-                {
-                    return -2;
-                }
-                user.Mobile = mobile;
-                await dbc.SaveChangesAsync();
-                return user.Id;
-            }
-        }
-
-        public async Task<long> ResetBindInfoAsync(long id, string mobile, string trueName, string wechatPayCode, string aliPayCode)
-        {
-            using (MyDbContext dbc = new MyDbContext())
-            {
-                UserEntity user = await dbc.GetAll<UserEntity>().SingleOrDefaultAsync(u => u.Id == id && u.Mobile==mobile);
-                if (user == null)
-                {
-                    return -1;
-                }
-                user.Mobile = mobile;
-                await dbc.SaveChangesAsync();
-                return user.Id;
-            }
-        }
-
-        public async Task<decimal> GetAmountByIdAsync(long id)
-        {
-            using (MyDbContext dbc = new MyDbContext())
-            {
-                return await dbc.GetDecimalPropertyAsync<UserEntity>(u=>u.Id==id,u=>u.Amount);
-            }
-        }
+        }       
 
         public async Task<UserDTO> GetModelAsync(long id)
         {
@@ -348,7 +255,7 @@ namespace Service.Service
                 }
                 result.PageCount = (int)Math.Ceiling((await users.LongCountAsync()) * 1.0f / pageSize);
                 var userResult = await users.OrderByDescending(a => a.CreateTime).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
-                result.Users = userResult.Select(a => ToDTO(a)).ToArray();
+                result.List = userResult.Select(a => ToDTO(a)).ToArray();
                 return result;
             }
         }

@@ -91,7 +91,7 @@ namespace Service.Service
             }
         }
 
-        public async Task<LinkDTO> GetModelByIdAsync(long id)
+        public async Task<LinkDTO> GetModelAsync(long id)
         {
             using (MyDbContext dbc = new MyDbContext())
             {
@@ -104,32 +104,32 @@ namespace Service.Service
             }
         }
 
-        public async Task<LinkDTO[]> GetByTypeIdIsEnableAsync(long id)
+        public async Task<LinkDTO[]> GetModelListIsEnableAsync()
         {
             using (MyDbContext dbc = new MyDbContext())
             {
-                var entities = dbc.GetAll<LinkEntity>().AsNoTracking().Where(p => p.TypeId == id && p.IsEnabled == 1);
+                var entities = dbc.GetAll<LinkEntity>().AsNoTracking().Where(p => p.IsEnabled == 1);
                 var idNames = await entities.OrderBy(p => p.Sort).ToListAsync();
                 return idNames.Select(p => ToDTO(p)).ToArray();
             }
         }
 
-        public async Task<LinkDTO[]> GetByTypeIdAsync(long id)
+        public async Task<LinkDTO[]> GetModelListAsync()
         {
             using (MyDbContext dbc = new MyDbContext())
             {
-                var entities = dbc.GetAll<LinkEntity>().AsNoTracking().Where(p => p.TypeId == id);
+                var entities = dbc.GetAll<LinkEntity>().AsNoTracking();
                 var idNames = await entities.OrderBy(p => p.Sort).ToListAsync();
                 return idNames.Select(p => ToDTO(p)).ToArray();
             }
         }
 
-        public async Task<LinkSearchResult> GetModelListAsync(long typeId, string keyword, DateTime? startTime, DateTime? endTime, int pageIndex, int pageSize)
+        public async Task<LinkSearchResult> GetModelListAsync(string keyword, DateTime? startTime, DateTime? endTime, int pageIndex, int pageSize)
         {
             using (MyDbContext dbc = new MyDbContext())
             {
                 LinkSearchResult result = new LinkSearchResult();
-                var links = dbc.GetAll<LinkEntity>().AsNoTracking().Where(l=>l.TypeId==typeId);
+                var links = dbc.GetAll<LinkEntity>().AsNoTracking();
                 if (!string.IsNullOrEmpty(keyword))
                 {
                     links = links.Where(a => a.Name.Contains(keyword));
@@ -144,7 +144,7 @@ namespace Service.Service
                 }
                 result.PageCount = (int)Math.Ceiling((await links.LongCountAsync()) * 1.0f / pageSize);
                 var linksResult = await links.OrderBy(a => a.Sort).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
-                result.Links = linksResult.Select(a => ToDTO(a)).ToArray();
+                result.List = linksResult.Select(a => ToDTO(a)).ToArray();
                 return result;
             }
         }

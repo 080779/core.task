@@ -65,7 +65,7 @@ namespace Service.Service
                 result.TotalInAmount = totalInAmount == null ? 0 : totalInAmount;
                 result.TotalOutAmount = totalOutAmount == null ? 0 : totalOutAmount;
                 var journalResult = await entities.Include(j => j.User).OrderByDescending(a => a.CreateTime).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
-                result.Journals = journalResult.Select(a => ToDTO(a)).ToArray();
+                result.List = journalResult.Select(a => ToDTO(a)).ToArray();
                 return result;
             }
         }

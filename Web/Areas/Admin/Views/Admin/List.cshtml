@@ -64,11 +64,11 @@
                         <td v-html="item.name"></td>
                         <td v-html="item.mobile"></td>
                         <td v-html="item.createTime"></td>
-                        <td class="td-status"><span class="label label-success radius" v-html="item.isEnabled?'正常':'已冻结'"></span></td>
+                        <td class="td-status"><span class="label label-success radius" v-html="item.isEnabled?'已启用':'已冻结'"></span></td>
                         <td class="td-manage">
                             <a v-bind:title="item.isEnabled?'冻结':'解冻'" v-if="item.name!='admin'" v-on:click="frozen(item.id,item.isEnabled)" class="btn btn-xs btn-success"><i class="icon-ok bigger-120"></i></a>
                             <a title="修改密码" v-on:click="editPwd(item.id,item.name)" class="btn btn-xs btn-info"><i class="icon-edit bigger-120"></i></a>
-                            <a title="权限控制" v-on:click="editPerm(item.id,item.permissionIds)" class="btn btn-xs btn-info"><i class="icon-sitemap bigger-120"></i></a>
+                            <a title="权限控制" v-on:click="editPerm(item.id,item.permissionIds)" class="btn btn-xs btn-info"><i class="icon-screenshot bigger-120"></i></a>
                             <a title="删除" v-if="item.name!='admin'" v-on:click="del(item.id)" class="btn btn-xs btn-warning"><i class="icon-trash  bigger-120"></i></a>
                         </td>
                     </tr>

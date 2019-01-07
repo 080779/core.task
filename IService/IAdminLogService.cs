@@ -14,7 +14,7 @@ namespace IService
     }
     public class AdminLogSearchResult
     {
-        public AdminLogDTO[] AdminLogs { get; set; }
+        public AdminLogDTO[] List { get; set; }
         public long PageCount { get; set; }
     }
 }

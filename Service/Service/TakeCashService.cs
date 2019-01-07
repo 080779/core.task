@@ -140,7 +140,7 @@ namespace Service.Service
                 }
                 result.PageCount = (int)Math.Ceiling((await entities.LongCountAsync()) * 1.0f / pageSize);
                 var takeCashResult = await entities.OrderByDescending(a => a.CreateTime).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
-                result.TakeCashes = takeCashResult.Select(a => ToDTO(a)).ToArray();
+                result.List = takeCashResult.Select(a => ToDTO(a)).ToArray();
                 return result;
             }
         }

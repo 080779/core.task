@@ -153,48 +153,66 @@
                                 ]
                             }
                         }
-                        ,
-                        {
-                            name: '待付款',
-                            type: 'bar',
-                            data: [26, 59, 30, 84, 27, 77, 176, 1182, 487, 188, 60, 23],
-                            markPoint: {
-                                data: [
-                                    { name: '年最高', value: 1182, xAxis: 7, yAxis: 1182, symbolSize: 18 },
-                                    { name: '年最低', value: 23, xAxis: 11, yAxis: 3 }
-                                ]
-                            },
+                        //,
+                        //{
+                        //    name: '待付款',
+                        //    type: 'bar',
+                        //    data: [26, 59, 30, 84, 27, 77, 176, 1182, 487, 188, 60, 23],
+                        //    markPoint: {
+                        //        data: [
+                        //            { name: '年最高', value: 1182, xAxis: 7, yAxis: 1182, symbolSize: 18 },
+                        //            { name: '年最低', value: 23, xAxis: 11, yAxis: 3 }
+                        //        ]
+                        //    },
 
 
-                        }
-                        , {
-                            name: '已付款',
-                            type: 'bar',
-                            data: [26, 59, 60, 264, 287, 77, 176, 122, 247, 148, 60, 23],
-                            markPoint: {
-                                data: [
-                                    { name: '年最高', value: 172, xAxis: 7, yAxis: 172, symbolSize: 18 },
-                                    { name: '年最低', value: 23, xAxis: 11, yAxis: 3 }
-                                ]
-                            },
+                        //}
+                        //, {
+                        //    name: '已付款',
+                        //    type: 'bar',
+                        //    data: [26, 59, 60, 264, 287, 77, 176, 122, 247, 148, 60, 23],
+                        //    markPoint: {
+                        //        data: [
+                        //            { name: '年最高', value: 172, xAxis: 7, yAxis: 172, symbolSize: 18 },
+                        //            { name: '年最低', value: 23, xAxis: 11, yAxis: 3 }
+                        //        ]
+                        //    },
 
-                        }
-                        , {
-                            name: '代发货',
-                            type: 'bar',
-                            data: [26, 59, 80, 24, 87, 70, 175, 1072, 48, 18, 69, 63],
-                            markPoint: {
-                                data: [
-                                    { name: '年最高', value: 1072, xAxis: 7, yAxis: 1072, symbolSize: 18 },
-                                    { name: '年最低', value: 22, xAxis: 11, yAxis: 3 }
-                                ]
-                            },
+                        //}
+                        //, {
+                        //    name: '代发货',
+                        //    type: 'bar',
+                        //    data: [26, 59, 80, 24, 87, 70, 175, 1072, 48, 18, 69, 63],
+                        //    markPoint: {
+                        //        data: [
+                        //            { name: '年最高', value: 1072, xAxis: 7, yAxis: 1072, symbolSize: 18 },
+                        //            { name: '年最低', value: 22, xAxis: 11, yAxis: 3 }
+                        //        ]
+                        //    },
 
-                        }
+                        //}
                     ]
                 };
 
                 myChart.setOption(option);
+
+                //后台获取数据
+                //$.ajax({
+                //    url: "/admin/home/get",
+                //    type: "post",
+                //    success: function (res) {
+                //        myChart.setOption({
+                //            series: [
+                //                {
+                //                    //根据名字对应到相应的系列
+                //                    name: "订单交易金额",
+                //                    data: res.data
+                //                }
+                //            ]
+                //        })
+                //    },
+                //    error: function () { console.log("error"); }
+                //});
             }
         );
     </script>

@@ -62,7 +62,7 @@ namespace Service.Service
                 }
                 result.PageCount = (int)Math.Ceiling((await adminLogs.LongCountAsync()) * 1.0f / pageSize);
                 var adminLogsResult = await adminLogs.OrderByDescending(a => a.CreateTime).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
-                result.AdminLogs = adminLogsResult.Select(a => ToDTO(a)).ToArray();
+                result.List = adminLogsResult.Select(a => ToDTO(a)).ToArray();
                 return result;
             }
         }

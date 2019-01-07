@@ -1,0 +1,116 @@
+﻿using Common;
+using DTO;
+using IService;
+using Microsoft.EntityFrameworkCore;
+using Service.Entity;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Service.Service
+{
+    public class NoticeService : INoticeService
+    {
+        public NoticeDTO ToDTO(NoticeEntity entity)
+        {
+            NoticeDTO dto = new NoticeDTO();
+            dto.CreateTime = entity.CreateTime;
+            dto.IsEnabled = entity.IsEnabled;
+            dto.Content = entity.Content;
+            dto.Creator = entity.Creator;
+            dto.FailureTime = entity.FailureTime;
+            dto.Id = entity.Id;
+            dto.Tip = entity.Tip;
+            dto.Title = entity.Title;
+            dto.Url = entity.Url;
+            return dto;
+        }
+
+        public async Task<long> AddAsync(string title, string content, DateTime failureTime, long adminId)
+        {
+            using (MyDbContext dbc = new MyDbContext())
+            {
+                NoticeEntity entity = new NoticeEntity();
+                entity.Title = title;
+                entity.Content = entity.Content;
+                entity.FailureTime = entity.FailureTime;
+                entity.Creator = await dbc.GetStringPropertyAsync<AdminEntity>(a => a.Id == adminId, a => a.Name);
+                dbc.Notices.Add(entity);
+                await dbc.SaveChangesAsync();
+                return entity.Id;
+            }
+        }
+
+        public async Task<bool> EditAsync(long id, string title, string content, DateTime failureTime)
+        {
+            using (MyDbContext dbc = new MyDbContext())
+            {
+                NoticeEntity entity = await dbc.GetAll<NoticeEntity>().SingleOrDefaultAsync(n=>n.Id==id);
+                if(entity==null)
+                {
+                    return false;
+                }
+                entity.Title = title;
+                entity.Content = entity.Content;
+                entity.FailureTime = entity.FailureTime;
+                await dbc.SaveChangesAsync();
+                return true;
+            }
+        }
+
+        public async Task<bool> DelAsync(long id)
+        {
+            using (MyDbContext dbc = new MyDbContext())
+            {
+                NoticeEntity entity = await dbc.GetAll<NoticeEntity>().SingleOrDefaultAsync(p => p.Id == id);
+                if (entity == null)
+                {
+                    return false;
+                }
+                entity.IsDeleted = 1;
+                await dbc.SaveChangesAsync();
+                return true;
+            }
+        }
+
+        public async Task<NoticeDTO> GetModelAsync(long id)
+        {
+            using (MyDbContext dbc = new MyDbContext())
+            {
+                NoticeEntity entity = await dbc.GetAll<NoticeEntity>().SingleOrDefaultAsync(p => p.Id == id);
+                if (entity == null)
+                {
+                    return null;
+                }
+                return ToDTO(entity);
+            }
+        }
+
+        public async Task<NoticeSearchResult> GetModelListAsync(string keyword, DateTime? startTime, DateTime? endTime, int pageIndex, int pageSize)
+        {
+            using (MyDbContext dbc = new MyDbContext())
+            {
+                NoticeSearchResult result = new NoticeSearchResult();
+                var notices = dbc.GetAll<NoticeEntity>().AsNoTracking();
+                if (!string.IsNullOrEmpty(keyword))
+                {
+                    notices = notices.Where(a => a.Title.Contains(keyword));
+                }
+                if (startTime != null)
+                {
+                    notices = notices.Where(a => a.CreateTime >= startTime);
+                }
+                if (endTime != null)
+                {
+                    notices = notices.Where(a => a.CreateTime.Year <= endTime.Value.Year && a.CreateTime.Month <= endTime.Value.Month && a.CreateTime.Day <= endTime.Value.Day);
+                }
+                result.PageCount = (int)Math.Ceiling((await notices.LongCountAsync()) * 1.0f / pageSize);
+                var noticesResult = await notices.OrderByDescending(a => a.CreateTime).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
+                result.List = noticesResult.Select(a => ToDTO(a)).ToArray();
+                return result;
+            }                
+        }
+    }
+}

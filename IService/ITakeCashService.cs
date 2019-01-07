@@ -15,7 +15,7 @@ namespace IService
     }
     public class TakeCashSearchResult
     {
-        public TakeCashDTO[] TakeCashes { get; set; }
+        public TakeCashDTO[] List { get; set; }
         public long PageCount { get; set; }
     }
 }
