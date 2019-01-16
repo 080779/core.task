@@ -6,10 +6,12 @@ using Common;
 using IService;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Web.Attributes;
 
 namespace Web.Areas.Admin.Controllers
 {
     [Area("admin")]
+    [PermController("公告管理")]
     public class NoticeController : Controller
     {
         #region 构造函数注入
@@ -37,32 +39,38 @@ namespace Web.Areas.Admin.Controllers
 
         #region 添加公告
         [HttpPost]
-        public async Task<IActionResult> Add(string title,string content,DateTime failureTime)
+        [PermAction("添加公告")]
+        public async Task<IActionResult> Add(string title,string content,int enabled)
         {
             if (string.IsNullOrEmpty(title))
             {
                 return Json(new AjaxResult { Status = 0, Msg = "公告标题不能为空" });
             }
+            if (string.IsNullOrEmpty(content))
+            {
+                return Json(new AjaxResult { Status = 0, Msg = "公告内容不能为空" });
+            }
             long adminId = Convert.ToInt64(HttpContext.Session.GetString("Platform_Admin_Id"));
-            long id = await noticeService.AddAsync(title,content,failureTime,adminId);
+            long id = await noticeService.AddAsync(title,content, enabled, adminId);
             if (id <= 0)
             {
-                return Json(new AjaxResult { Status = 0, Msg = "添加图片失败" });
+                return Json(new AjaxResult { Status = 0, Msg = "添加公告失败" });
             }
-            return Json(new AjaxResult { Status = 1, Msg = "添加图片成功", Data = "/admin/link/list" });
+            return Json(new AjaxResult { Status = 1, Msg = "添加公告成功" });
         }
         #endregion
 
         #region 修改公告
         [HttpPost]
-        public async Task<IActionResult> Edit(long id, string title, string content, DateTime failureTime)
+        [PermAction("修改公告")]
+        public async Task<IActionResult> Edit(long id, string title, string content, int enabled)
         {
             if (string.IsNullOrEmpty(title))
             {
                 return Json(new AjaxResult { Status = 0, Msg = "公告标题不能为空" });
             }
 
-            var result = await noticeService.EditAsync(id, title, content, failureTime);
+            var result = await noticeService.EditAsync(id, title, content, enabled);
             if (!result)
             {
                 return Json(new AjaxResult { Status = 0, Msg = "修改图片失败" });
@@ -70,7 +78,7 @@ namespace Web.Areas.Admin.Controllers
             return Json(new AjaxResult { Status = 1, Msg = "修改图片成功" });
         }
         [HttpPost]
-        public async Task<IActionResult> GetLink(long id)
+        public async Task<IActionResult> GetModel(long id)
         {
             var model = await noticeService.GetModelAsync(id);
             return Json(new AjaxResult { Status = 1, Data = model });
@@ -90,8 +98,9 @@ namespace Web.Areas.Admin.Controllers
         //}
         #endregion
 
-        #region 删除图片
+        #region 删除公告
         [HttpPost]
+        [PermAction("删除公告")]
         public async Task<IActionResult> Del(long id)
         {
             bool res = await noticeService.DelAsync(id);

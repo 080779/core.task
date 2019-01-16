@@ -14,6 +14,6 @@ namespace Service.Entity
         public string Param { get; set; }
         public string Remark { get; set; }
         public int? TypeId { get; set; }
-        public int IsEnabled { get; set; } = 1;
+        public int Enabled { get; set; } = 1;
     }
 }

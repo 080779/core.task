@@ -27,7 +27,7 @@ namespace Service.Service
             dto.RemarkEn = entity.RemarkEn;
             dto.UserId = entity.UserId;
             //dto.Name = entity.User.Name;
-            dto.IsEnabled = entity.IsEnabled;
+            dto.Enabled = entity.Enabled;
             dto.TaskId = entity.TaskId;
             dto.ForwardId = entity.ForwardId;
             return dto;
@@ -38,7 +38,7 @@ namespace Service.Service
             using (MyDbContext dbc = new MyDbContext())
             {
                 JournalSearchResult result = new JournalSearchResult();
-                var entities = dbc.GetAll<JournalEntity>().AsNoTracking().Where(j=>j.IsEnabled==1);
+                var entities = dbc.GetAll<JournalEntity>().AsNoTracking().Where(j=>j.Enabled == 1);
                 if (userId != null)
                 {
                     entities = entities.Where(a => a.UserId == userId);
@@ -64,8 +64,8 @@ namespace Service.Service
                 decimal? totalOutAmount= await entities.SumAsync(j => j.OutAmount);
                 result.TotalInAmount = totalInAmount == null ? 0 : totalInAmount;
                 result.TotalOutAmount = totalOutAmount == null ? 0 : totalOutAmount;
-                var journalResult = await entities.Include(j => j.User).OrderByDescending(a => a.CreateTime).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
-                result.List = journalResult.Select(a => ToDTO(a)).ToArray();
+                var res = await entities.Include(j => j.User).OrderByDescending(a => a.CreateTime).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
+                result.List = res.Select(a => ToDTO(a)).ToArray();
                 return result;
             }
         }

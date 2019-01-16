@@ -13,7 +13,7 @@ namespace DTO
         public string Url { get; set; }
         public string TypeName { get; set; }
         public int Sort { get; set; }
-        public int IsEnabled { get; set; }
+        public int Enabled { get; set; }
         public DateTime CreateTime { get; set; }
     }
 }

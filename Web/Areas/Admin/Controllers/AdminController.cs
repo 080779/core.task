@@ -141,7 +141,7 @@ namespace Web.Areas.Admin.Controllers
                 {
                     if(permissionIds.Contains(perm.Id))
                     {
-                        perm.IsChecked = true;
+                        perm.Checked = true;
                     }
                 }
                 typeModel.Permissions = permissions;

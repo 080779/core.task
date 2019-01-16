@@ -16,8 +16,8 @@ namespace Service.Entity
         public string Url { get; set; }
         public string Tip { get; set; }
         public string Creator { get; set; }
-        public DateTime FailureTime { get; set; }
-        public int IsEnabled { get; set; } = 1;
+        public DateTime FailureTime { get; set; } = DateTime.Now;
+        public int Enabled { get; set; } = 1;
         public DateTime CreateTime { get; set; } = DateTime.Now;
     }
 }

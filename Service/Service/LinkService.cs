@@ -23,7 +23,7 @@ namespace Service.Service
             dto.Id = entity.Id;
             dto.Sort = entity.Sort;
             dto.TypeName = "";
-            dto.IsEnabled = entity.IsEnabled;
+            dto.Enabled = entity.Enabled;
             return dto;
         }
 
@@ -70,7 +70,7 @@ namespace Service.Service
                 {
                     return false;
                 }
-                entity.IsEnabled = entity.IsEnabled == 1 ? 0 : 1;
+                entity.Enabled = entity.Enabled == 1 ? 0 : 1;
                 await dbc.SaveChangesAsync();
                 return true;
             }
@@ -85,7 +85,7 @@ namespace Service.Service
                 {
                     return false;
                 }
-                entity.IsDeleted = 1;
+                entity.Deleted = 1;
                 await dbc.SaveChangesAsync();
                 return true;
             }
@@ -108,7 +108,7 @@ namespace Service.Service
         {
             using (MyDbContext dbc = new MyDbContext())
             {
-                var entities = dbc.GetAll<LinkEntity>().AsNoTracking().Where(p => p.IsEnabled == 1);
+                var entities = dbc.GetAll<LinkEntity>().AsNoTracking().Where(p => p.Enabled == 1);
                 var idNames = await entities.OrderBy(p => p.Sort).ToListAsync();
                 return idNames.Select(p => ToDTO(p)).ToArray();
             }
@@ -129,22 +129,22 @@ namespace Service.Service
             using (MyDbContext dbc = new MyDbContext())
             {
                 LinkSearchResult result = new LinkSearchResult();
-                var links = dbc.GetAll<LinkEntity>().AsNoTracking();
+                var entities = dbc.GetAll<LinkEntity>().AsNoTracking();
                 if (!string.IsNullOrEmpty(keyword))
                 {
-                    links = links.Where(a => a.Name.Contains(keyword));
+                    entities = entities.Where(a => a.Name.Contains(keyword));
                 }
                 if (startTime != null)
                 {
-                    links = links.Where(a => a.CreateTime >= startTime);
+                    entities = entities.Where(a => a.CreateTime >= startTime);
                 }
                 if (endTime != null)
                 {
-                    links = links.Where(a => a.CreateTime.Year <= endTime.Value.Year && a.CreateTime.Month <= endTime.Value.Month && a.CreateTime.Day <= endTime.Value.Day);
+                    entities = entities.Where(a => a.CreateTime.Year <= endTime.Value.Year && a.CreateTime.Month <= endTime.Value.Month && a.CreateTime.Day <= endTime.Value.Day);
                 }
-                result.PageCount = (int)Math.Ceiling((await links.LongCountAsync()) * 1.0f / pageSize);
-                var linksResult = await links.OrderBy(a => a.Sort).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
-                result.List = linksResult.Select(a => ToDTO(a)).ToArray();
+                result.PageCount = (int)Math.Ceiling((await entities.LongCountAsync()) * 1.0f / pageSize);
+                var res = await entities.OrderBy(a => a.Sort).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
+                result.List = res.Select(a => ToDTO(a)).ToArray();
                 return result;
             }
         }

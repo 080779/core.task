@@ -17,7 +17,7 @@ namespace Service.Service
         {
             PermissionDTO dto = new PermissionDTO();
             dto.Id = entity.Id;
-            dto.IsEnabled = entity.IsEnabled;
+            dto.Enabled = entity.Enabled;
             dto.LevelId = entity.LevelId;
             dto.Name = entity.Name;
             dto.Remark = entity.Remark;
@@ -33,7 +33,13 @@ namespace Service.Service
         {
             using (MyDbContext dbc = new MyDbContext())
             {
-                await dbc.GetAll<PermissionEntity>().ForEachAsync(p => { p.IsEnabled = 0; p.Icon = null; p.Sort = null; });
+                var dataList = await dbc.GetAll<PermissionEntity>().ToListAsync();
+                foreach (var item in dataList)
+                {
+                    item.Enabled = 0;
+                    item.Icon = null;
+                    item.Sort = null;
+                }
                 await dbc.SaveChangesAsync();
             }
         }
@@ -57,7 +63,7 @@ namespace Service.Service
                         entity.Sort = 1;
                     }
                     entity.LevelId = levelId;
-                    entity.IsEnabled = 1;
+                    entity.Enabled = 1;
                     await dbc.SaveChangesAsync();
                     return entity.Id;
                 }
@@ -86,7 +92,7 @@ namespace Service.Service
         {
             using (MyDbContext dbc=new MyDbContext())
             {
-                var res = await dbc.GetAll<PermissionEntity>().AsNoTracking().Where(p => p.IsEnabled == 1 && p.LevelId==0).OrderBy(p=>p.Sort).ToListAsync();
+                var res = await dbc.GetAll<PermissionEntity>().AsNoTracking().Where(p => p.Enabled == 1 && p.LevelId==0).OrderBy(p=>p.Sort).ToListAsync();
                 return res.Select(p => p.TypeName).ToArray();
             }
         }
@@ -95,7 +101,7 @@ namespace Service.Service
         {
             using (MyDbContext dbc = new MyDbContext())
             {
-                var res = await dbc.GetAll<PermissionEntity>().AsNoTracking().Where(p => p.IsEnabled == 1 && p.TypeName == typeName).ToListAsync();
+                var res = await dbc.GetAll<PermissionEntity>().AsNoTracking().Where(p => p.Enabled == 1 && p.TypeName == typeName).ToListAsync();
                 return res.Select(p => ToDTO(p)).ToArray();
             }
         }
@@ -104,7 +110,7 @@ namespace Service.Service
         {
             using (MyDbContext dbc = new MyDbContext())
             {
-                var res = await dbc.GetAll<PermissionEntity>().AsNoTracking().Where(p => p.IsEnabled == 1 && p.LevelId==0).OrderBy(p=>p.Sort).ToListAsync();
+                var res = await dbc.GetAll<PermissionEntity>().AsNoTracking().Where(p => p.Enabled == 1 && p.LevelId==0).OrderBy(p=>p.Sort).ToListAsync();
                 return res.Select(p => ToDTO(p)).ToArray();
             }
         }

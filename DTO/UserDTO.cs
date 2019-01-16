@@ -26,7 +26,7 @@ namespace DTO
         public string AccountHolder { get; set; }//银行账户持有人
         public string BankName { get; set; }
         public string BankAccount { get; set; }
-        public int IsEnabled { get; set; }
+        public int Enabled { get; set; }
         public DateTime CreateTime { get; set; }
     }
 

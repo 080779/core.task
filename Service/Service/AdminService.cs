@@ -21,7 +21,7 @@ namespace Service.Service
             dto.Id = entity.Id;
             dto.Name = entity.Name;
             dto.Mobile = entity.Mobile;
-            dto.IsEnabled = entity.IsEnabled;
+            dto.Enabled = entity.Enabled;
             dto.Remark = entity.Remark;
             dto.PermissionIds = permissionIds;
             return dto;
@@ -108,7 +108,7 @@ namespace Service.Service
                     return false;
                 }
 
-                entity.IsDeleted = 1;
+                entity.Deleted = 1;
                 await dbc.SaveChangesAsync();
                 return true;
             }
@@ -124,7 +124,7 @@ namespace Service.Service
                     return false;
                 }
 
-                entity.IsEnabled = entity.IsEnabled == 1 ? 0 : 1;
+                entity.Enabled = entity.Enabled == 1 ? 0 : 1;
                 await dbc.SaveChangesAsync();
                 return true;
             }
@@ -164,22 +164,22 @@ namespace Service.Service
             using (MyDbContext dbc = new MyDbContext())
             {
                 AdminSearchResult result = new AdminSearchResult();
-                var admins = dbc.GetAll<AdminEntity>().AsNoTracking();
+                var entities = dbc.GetAll<AdminEntity>().AsNoTracking();
                 if (!string.IsNullOrEmpty(keyword))
                 {
-                    admins = admins.Where(a => a.Name.Contains(keyword));
+                    entities = entities.Where(a => a.Name.Contains(keyword));
                 }
                 if (startTime != null)
                 {
-                    admins = admins.Where(a => a.CreateTime >= startTime);
+                    entities = entities.Where(a => a.CreateTime >= startTime);
                 }
                 if (endTime != null)
                 {
-                    admins = admins.Where(a => a.CreateTime.Year <= endTime.Value.Year && a.CreateTime.Month <= endTime.Value.Month && a.CreateTime.Day <= endTime.Value.Day);
+                    entities = entities.Where(a => a.CreateTime.Year <= endTime.Value.Year && a.CreateTime.Month <= endTime.Value.Month && a.CreateTime.Day <= endTime.Value.Day);
                 }
-                result.PageCount = (int)Math.Ceiling((await admins.LongCountAsync()) * 1.0f / pageSize);
-                var adminsResult = await admins.OrderByDescending(a => a.CreateTime).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
-                result.List = adminsResult.Select(a => ToDTO(a, dbc.GetAll<AdminPermissionEntity>().Where(ap => ap.AdminId == a.Id).Select(ap => ap.PermissionId).ToArray())).ToArray();
+                result.PageCount = (int)Math.Ceiling((await entities.LongCountAsync()) * 1.0f / pageSize);
+                var res = await entities.OrderByDescending(a => a.CreateTime).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
+                result.List = res.Select(a => ToDTO(a, dbc.GetAll<AdminPermissionEntity>().Where(ap => ap.AdminId == a.Id).Select(ap => ap.PermissionId).ToArray())).ToArray();
                 return result;
             }
         }
@@ -217,7 +217,7 @@ namespace Service.Service
                 {
                     return -2;
                 }
-                if (admin.IsEnabled==0)
+                if (admin.Enabled == 0)
                 {
                     return -3;
                 }                

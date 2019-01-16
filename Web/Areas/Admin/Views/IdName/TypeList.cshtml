@@ -61,11 +61,11 @@
                                     <td v-html="type.id"></td>
                                     <td v-html="type.name"></td>
                                     <td v-html="type.description"></td>
-                                    <td class="td-status"><span class="label label-success radius" v-html="type.isEnabled?'正常':'已冻结'"></span></td>
+                                    <td class="td-status"><span class="label label-success radius" v-html="type.enabled?'正常':'已冻结'"></span></td>
                                     <td v-html="type.createTime"></td>
                                     <td class="td-manage">
                                         <a v-on:click="edit(type.id)" href="javascript:;" title="编辑IdName类别" class="btn btn-xs btn-success">编辑IdName类别</a>
-                                        <a title="冻结" href="javascript:;" v-on:click="frozen(type.id,type.isEnabled)" class="btn btn-xs btn-warning" v-html="type.isEnabled?'冻结IdName类别':'解冻IdName类别'"></a>
+                                        <a title="冻结" href="javascript:;" v-on:click="frozen(type.id,type.enabled)" class="btn btn-xs btn-warning" v-html="type.isEnabled?'冻结IdName类别':'解冻IdName类别'"></a>
                                         <a title="删除" href="javascript:;" v-on:click="del(type.id)" class="btn btn-xs btn-warning">删除IdName类别</a>
                                         <a v-on:click="window.location.href='/admin/idname/list?typeId='+type.id" title="查看IdName列表" class="btn btn-xs btn-success">查看IdName列表</a>
                                     </td>
@@ -229,11 +229,11 @@
                     }
                 });
             },
-            frozen: function (id, isenabled) {
+            frozen: function (id, enabled) {
                 var that = this;
                 var msg = '确认冻结IdName类别吗？';
                 var msg1 = '是否冻结IdName类别';
-                if (!isenabled) {
+                if (!enabled) {
                     msg = '确认解冻IdName类别吗？';
                     msg1 = '是否解冻IdName类别';
                 }

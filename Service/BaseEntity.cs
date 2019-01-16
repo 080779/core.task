@@ -7,6 +7,6 @@ namespace Service
     public class BaseEntity
     {
         public long Id { get; set; }
-        public int? IsDeleted { get; set; } = 0;
+        public int? Deleted { get; set; } = 0;
     }
 }

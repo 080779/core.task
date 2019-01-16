@@ -9,8 +9,8 @@ namespace IService
 {
     public interface INoticeService : IServiceSupport
     {
-        Task<long> AddAsync(string title, string content, DateTime failureTime, long adminId);
-        Task<bool> EditAsync(long id, string title, string content, DateTime failureTime);
+        Task<long> AddAsync(string title, string content, int enabled, long adminId);
+        Task<bool> EditAsync(long id, string title, string content, int enabled);
         Task<bool> DelAsync(long id);
         Task<NoticeDTO> GetModelAsync(long id);
         Task<NoticeSearchResult> GetModelListAsync(string keyword,DateTime? startTime,DateTime? endTime,int pageIndex,int pageSize);

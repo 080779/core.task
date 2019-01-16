@@ -70,13 +70,13 @@
                                     <td v-html="link.name"></td>
                                     <td><img v-bind:src="link.imgUrl" style="max-width:120px;max-height:120px" /></td>
                                     <td v-html="link.url"></td>
-                                    <td class="td-status"><span class="label label-success radius" v-html="link.isEnabled?'正常':'已冻结'"></span></td>
+                                    <td class="td-status"><span class="label label-success radius" v-html="link.enabled?'正常':'已冻结'"></span></td>
                                     <td v-html="link.typeName"></td>
                                     <td v-html="link.sort"></td>
                                     <td v-html="link.createTime"></td>
                                     <td class="td-manage">
                                         <a v-on:click="edit(link.id)" href="javascript:;" title="编辑图片" class="btn btn-xs btn-success">编辑图片</a>
-                                        <a title="冻结" href="javascript:;" v-on:click="frozen(link.id)" class="btn btn-xs btn-warning" v-html="link.isEnabled?'冻结图片':'解冻图片'"></a>
+                                        <a title="冻结" href="javascript:;" v-on:click="frozen(link.id)" class="btn btn-xs btn-warning" v-html="link.enabled?'冻结图片':'解冻图片'"></a>
                                         <a title="删除" href="javascript:;" v-on:click="del(link.id)" class="btn btn-xs btn-warning">删除图片</a>
                                     </td>
                                 </tr>
@@ -273,11 +273,11 @@
                     }
                 });
             },
-            frozen: function (id, isenabled) {
+            frozen: function (id, enabled) {
                 var that = this;
                 var msg = '确认冻结图片吗？';
                 var msg1 = '是否冻结图片';
-                if (!isenabled) {
+                if (!enabled) {
                     msg = '确认解冻图片吗？';
                     msg1 = '是否解冻图片';
                 }

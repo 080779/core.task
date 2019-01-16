@@ -139,8 +139,8 @@ namespace Service.Service
                     entities = entities.Where(a => a.CreateTime <= endTime);
                 }
                 result.PageCount = (int)Math.Ceiling((await entities.LongCountAsync()) * 1.0f / pageSize);
-                var takeCashResult = await entities.OrderByDescending(a => a.CreateTime).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
-                result.List = takeCashResult.Select(a => ToDTO(a)).ToArray();
+                var res = await entities.OrderByDescending(a => a.CreateTime).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
+                result.List = res.Select(a => ToDTO(a)).ToArray();
                 return result;
             }
         }

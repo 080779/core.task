@@ -47,22 +47,22 @@ namespace Service.Service
             using (MyDbContext dbc = new MyDbContext())
             {
                 AdminLogSearchResult result = new AdminLogSearchResult();
-                var adminLogs = dbc.GetAll<AdminLogEntity>().AsNoTracking();
+                var entities = dbc.GetAll<AdminLogEntity>().AsNoTracking();
                 if (!string.IsNullOrEmpty(keyword))
                 {
-                    adminLogs = adminLogs.Where(a => a.AdminMobile.Contains(keyword));
+                    entities = entities.Where(a => a.AdminMobile.Contains(keyword));
                 }
                 if (startTime != null)
                 {
-                    adminLogs = adminLogs.Where(a => a.CreateTime >= startTime);
+                    entities = entities.Where(a => a.CreateTime >= startTime);
                 }
                 if (endTime != null)
                 {
-                    adminLogs = adminLogs.Where(a => a.CreateTime <= endTime);
+                    entities = entities.Where(a => a.CreateTime <= endTime);
                 }
-                result.PageCount = (int)Math.Ceiling((await adminLogs.LongCountAsync()) * 1.0f / pageSize);
-                var adminLogsResult = await adminLogs.OrderByDescending(a => a.CreateTime).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
-                result.List = adminLogsResult.Select(a => ToDTO(a)).ToArray();
+                result.PageCount = (int)Math.Ceiling((await entities.LongCountAsync()) * 1.0f / pageSize);
+                var res = await entities.OrderByDescending(a => a.CreateTime).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
+                result.List = res.Select(a => ToDTO(a)).ToArray();
                 return result;
             }
         }

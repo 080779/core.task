@@ -19,7 +19,7 @@ namespace Service.Entity
         public UserEntity User { get; set; }
         public int JournalTypeId { get; set; }
         public int Journal01 { get; set; } = 0;
-        public int IsEnabled { get; set; } = 1;
+        public int Enabled { get; set; } = 1;
         public DateTime CreateTime { get; set; } = DateTime.Now;
     }
 }

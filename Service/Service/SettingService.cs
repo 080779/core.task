@@ -83,7 +83,7 @@ namespace Service.Service
         {
             using (MyDbContext dbc = new MyDbContext())
             {
-                var entities = dbc.GetAll<SettingEntity>().AsNoTracking().Where(s=>s.IsEnabled==1);
+                var entities = dbc.GetAll<SettingEntity>().AsNoTracking().Where(s=>s.Enabled == 1);
                 var res = await entities.ToListAsync();
                 return res.Select(s => ToDTO(s)).ToArray();
             }

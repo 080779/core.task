@@ -17,7 +17,7 @@ namespace Service.Service
         {
             NoticeDTO dto = new NoticeDTO();
             dto.CreateTime = entity.CreateTime;
-            dto.IsEnabled = entity.IsEnabled;
+            dto.Enabled = entity.Enabled;
             dto.Content = entity.Content;
             dto.Creator = entity.Creator;
             dto.FailureTime = entity.FailureTime;
@@ -28,14 +28,14 @@ namespace Service.Service
             return dto;
         }
 
-        public async Task<long> AddAsync(string title, string content, DateTime failureTime, long adminId)
+        public async Task<long> AddAsync(string title, string content, int enabled, long adminId)
         {
             using (MyDbContext dbc = new MyDbContext())
             {
                 NoticeEntity entity = new NoticeEntity();
                 entity.Title = title;
-                entity.Content = entity.Content;
-                entity.FailureTime = entity.FailureTime;
+                entity.Content = content;
+                entity.Enabled = enabled;
                 entity.Creator = await dbc.GetStringPropertyAsync<AdminEntity>(a => a.Id == adminId, a => a.Name);
                 dbc.Notices.Add(entity);
                 await dbc.SaveChangesAsync();
@@ -43,7 +43,7 @@ namespace Service.Service
             }
         }
 
-        public async Task<bool> EditAsync(long id, string title, string content, DateTime failureTime)
+        public async Task<bool> EditAsync(long id, string title, string content, int enabled)
         {
             using (MyDbContext dbc = new MyDbContext())
             {
@@ -53,8 +53,8 @@ namespace Service.Service
                     return false;
                 }
                 entity.Title = title;
-                entity.Content = entity.Content;
-                entity.FailureTime = entity.FailureTime;
+                entity.Content = content;
+                entity.Enabled = enabled;
                 await dbc.SaveChangesAsync();
                 return true;
             }
@@ -69,7 +69,7 @@ namespace Service.Service
                 {
                     return false;
                 }
-                entity.IsDeleted = 1;
+                entity.Deleted = 1;
                 await dbc.SaveChangesAsync();
                 return true;
             }
@@ -93,22 +93,22 @@ namespace Service.Service
             using (MyDbContext dbc = new MyDbContext())
             {
                 NoticeSearchResult result = new NoticeSearchResult();
-                var notices = dbc.GetAll<NoticeEntity>().AsNoTracking();
+                var entities = dbc.GetAll<NoticeEntity>().AsNoTracking();
                 if (!string.IsNullOrEmpty(keyword))
                 {
-                    notices = notices.Where(a => a.Title.Contains(keyword));
+                    entities = entities.Where(a => a.Title.Contains(keyword));
                 }
                 if (startTime != null)
                 {
-                    notices = notices.Where(a => a.CreateTime >= startTime);
+                    entities = entities.Where(a => a.CreateTime >= startTime);
                 }
                 if (endTime != null)
                 {
-                    notices = notices.Where(a => a.CreateTime.Year <= endTime.Value.Year && a.CreateTime.Month <= endTime.Value.Month && a.CreateTime.Day <= endTime.Value.Day);
+                    entities = entities.Where(a => a.CreateTime.Year <= endTime.Value.Year && a.CreateTime.Month <= endTime.Value.Month && a.CreateTime.Day <= endTime.Value.Day);
                 }
-                result.PageCount = (int)Math.Ceiling((await notices.LongCountAsync()) * 1.0f / pageSize);
-                var noticesResult = await notices.OrderByDescending(a => a.CreateTime).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
-                result.List = noticesResult.Select(a => ToDTO(a)).ToArray();
+                result.PageCount = (int)Math.Ceiling((await entities.LongCountAsync()) * 1.0f / pageSize);
+                var res = await entities.OrderByDescending(a => a.CreateTime).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
+                result.List = res.Select(a => ToDTO(a)).ToArray();
                 return result;
             }                
         }

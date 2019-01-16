@@ -17,7 +17,7 @@ namespace Service.Entity
         public string Tip { get; set; }
         public int TypeId { get; set; }
         public int Sort { get; set; } = 1;
-        public int IsEnabled { get; set; } = 1;
+        public int Enabled { get; set; } = 1;
         public DateTime CreateTime { get; set; } = DateTime.Now;
     }
 }

@@ -6,14 +6,12 @@ using System.Threading.Tasks;
 
 namespace DTO
 {
-    public class AdminDTO:BaseDTO
+    public class ProductDTO : BaseDTO
     {
         public string Name { get; set; }
-        public string Mobile { get; set; }
-        public string TrueName { get; set; }
-        public string Remark { get; set; }
+        public decimal Price { get; set; }
+        public int Number { get; set; }
         public int Enabled { get; set; }
-        public long[] PermissionIds { get; set; }
         public DateTime CreateTime { get; set; }
     }
 }

@@ -96,7 +96,7 @@ namespace Web.Filters
         private async Task AutoCreatePermAsync()
         {
             //初始化权限表
-            await permissionService.InitializeAsync();
+            //await permissionService.InitializeAsync();
             Assembly assembly = Assembly.GetExecutingAssembly();
             long count = 0;
             //获得所有包含PermControllerAttribute的控制器

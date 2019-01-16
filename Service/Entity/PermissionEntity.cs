@@ -20,6 +20,6 @@ namespace Service.Entity
         public string Url { get; set; }
         public string Icon { get; set; }
         public int? Sort { get; set; }
-        public int IsEnabled { get; set; } = 1;
+        public int Enabled { get; set; } = 1;
     }
 }

@@ -22,7 +22,7 @@ namespace Service.Service
             dto.Name = entity.Name;
             dto.CreateTime = entity.CreateTime;
             dto.Id = entity.Id;
-            dto.IsEnabled = entity.IsEnabled;
+            dto.Enabled = entity.Enabled;
             dto.LevelId = entity.LevelId; 
             dto.Mobile = entity.Mobile;
             dto.NickName = entity.NickName;
@@ -148,7 +148,7 @@ namespace Service.Service
                 {
                     return -1;
                 }
-                entity.IsDeleted = 1;
+                entity.Deleted = 1;
                 await dbc.SaveChangesAsync();
                 return 1;
             }
@@ -163,7 +163,7 @@ namespace Service.Service
                 {
                     return false;
                 }
-                entity.IsEnabled = entity.IsEnabled == 1 ? 0 : 1;
+                entity.Enabled = entity.Enabled == 1 ? 0 : 1;
                 await dbc.SaveChangesAsync();
                 return true;
             }
@@ -197,7 +197,7 @@ namespace Service.Service
                 {
                     return -2;
                 }
-                if (entity.IsEnabled == 0)
+                if (entity.Enabled == 0)
                 {
                     return -3;
                 }
@@ -239,23 +239,23 @@ namespace Service.Service
             using (MyDbContext dbc = new MyDbContext())
             {
                 UserSearchResult result = new UserSearchResult();
-                var users = dbc.GetAll<UserEntity>().AsNoTracking();
+                var entities = dbc.GetAll<UserEntity>().AsNoTracking();
 
                 if (!string.IsNullOrEmpty(keyword))
                 {
-                    users = users.Where(a => a.Mobile.Contains(keyword) || a.NickName.Contains(keyword));
+                    entities = entities.Where(a => a.Mobile.Contains(keyword) || a.NickName.Contains(keyword));
                 }
                 if (startTime != null)
                 {
-                    users = users.Where(a => a.CreateTime >= startTime);
+                    entities = entities.Where(a => a.CreateTime >= startTime);
                 }
                 if (endTime != null)
                 {
-                    users = users.Where(a => a.CreateTime <= endTime);
+                    entities = entities.Where(a => a.CreateTime <= endTime);
                 }
-                result.PageCount = (int)Math.Ceiling((await users.LongCountAsync()) * 1.0f / pageSize);
-                var userResult = await users.OrderByDescending(a => a.CreateTime).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
-                result.List = userResult.Select(a => ToDTO(a)).ToArray();
+                result.PageCount = (int)Math.Ceiling((await entities.LongCountAsync()) * 1.0f / pageSize);
+                var res = await entities.OrderByDescending(a => a.CreateTime).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
+                result.List = res.Select(a => ToDTO(a)).ToArray();
                 return result;
             }
         }
