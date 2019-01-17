@@ -14,7 +14,7 @@ namespace IService
         Task<bool> FrozenAsync(long id);
         Task<bool> DelAsync(long id);
         Task<LinkDTO> GetModelAsync(long id);
-        Task<LinkDTO[]> GetModelListIsEnableAsync();
+        Task<LinkDTO[]> GetModelListEnableAsync(int? typeId);
         Task<LinkDTO[]> GetModelListAsync();
         Task<LinkSearchResult> GetModelListAsync(string keyword,DateTime? startTime,DateTime? endTime,int pageIndex,int pageSize);
     }

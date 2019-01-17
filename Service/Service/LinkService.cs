@@ -104,11 +104,15 @@ namespace Service.Service
             }
         }
 
-        public async Task<LinkDTO[]> GetModelListIsEnableAsync()
+        public async Task<LinkDTO[]> GetModelListEnableAsync(int? typeId)
         {
             using (MyDbContext dbc = new MyDbContext())
             {
                 var entities = dbc.GetAll<LinkEntity>().AsNoTracking().Where(p => p.Enabled == 1);
+                if(typeId!=null)
+                {
+                    entities = entities.Where(e => e.TypeId == typeId);
+                }
                 var idNames = await entities.OrderBy(p => p.Sort).ToListAsync();
                 return idNames.Select(p => ToDTO(p)).ToArray();
             }
