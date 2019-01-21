@@ -36,6 +36,7 @@
   <ItemGroup>
     <Folder Include="wwwroot\lib\jstree\" />
     <Folder Include="wwwroot\upload\2018\" />
+    <Folder Include="wwwroot\upload\2019\" />
   </ItemGroup>
 
   <ItemGroup>

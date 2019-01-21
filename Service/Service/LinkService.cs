@@ -147,7 +147,7 @@ namespace Service.Service
                     entities = entities.Where(a => a.CreateTime.Year <= endTime.Value.Year && a.CreateTime.Month <= endTime.Value.Month && a.CreateTime.Day <= endTime.Value.Day);
                 }
                 result.PageCount = (int)Math.Ceiling((await entities.LongCountAsync()) * 1.0f / pageSize);
-                var res = await entities.OrderBy(a => a.Sort).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
+                var res = await entities.OrderByDescending(a => a.Sort).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
                 result.List = res.Select(a => ToDTO(a)).ToArray();
                 return result;
             }

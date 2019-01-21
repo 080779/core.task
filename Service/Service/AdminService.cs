@@ -207,21 +207,21 @@ namespace Service.Service
         {
             using (MyDbContext dbc = new MyDbContext())
             {
-                var admin = await dbc.GetAll<AdminEntity>().SingleOrDefaultAsync(a => a.Name == name);
-                if (admin == null)
+                var entity = await dbc.GetAll<AdminEntity>().SingleOrDefaultAsync(a => a.Name == name);
+                if (entity == null)
                 {
                     return -1;
                 }
-                string pwd = CommonHelper.GetMD5(password + admin.Salt);
-                if (admin.Password != pwd)
+                string pwd = CommonHelper.GetMD5(password + entity.Salt);
+                if (entity.Password != pwd)
                 {
                     return -2;
                 }
-                if (admin.Enabled == 0)
+                if (entity.Enabled == 0)
                 {
                     return -3;
                 }                
-                return admin.Id;
+                return entity.Id;
             }
         }
 

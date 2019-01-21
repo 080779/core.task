@@ -75,6 +75,21 @@ namespace Service.Service
             }
         }
 
+        public async Task<bool> FrozenAsync(long id)
+        {
+            using (MyDbContext dbc = new MyDbContext())
+            {
+                NoticeEntity entity = await dbc.GetAll<NoticeEntity>().SingleOrDefaultAsync(p => p.Id == id);
+                if (entity == null)
+                {
+                    return false;
+                }
+                entity.Enabled = 0;
+                await dbc.SaveChangesAsync();
+                return true;
+            }
+        }
+
         public async Task<NoticeDTO> GetModelAsync(long id)
         {
             using (MyDbContext dbc = new MyDbContext())

@@ -29,16 +29,16 @@ namespace Service.Service
         {
             using (MyDbContext dbc = new MyDbContext())
             {
-                AdminLogEntity adminLog = new AdminLogEntity();
-                adminLog.AdminId = adminId;
-                adminLog.AdminMobile = await dbc.GetStringPropertyAsync<AdminEntity>(a => a.Id == adminId,a=>a.Mobile);
-                adminLog.PermTypeName = permTypeName;
-                adminLog.Remark = remark;
-                adminLog.IpAddress = ipAddress;
-                adminLog.Tip = tip;
-                dbc.AdminLogs.Add(adminLog);
+                AdminLogEntity entity = new AdminLogEntity();
+                entity.AdminId = adminId;
+                entity.AdminMobile = await dbc.GetStringPropertyAsync<AdminEntity>(a => a.Id == adminId,a=>a.Mobile);
+                entity.PermTypeName = permTypeName;
+                entity.Remark = remark;
+                entity.IpAddress = ipAddress;
+                entity.Tip = tip;
+                dbc.AdminLogs.Add(entity);
                 await dbc.SaveChangesAsync();
-                return adminLog.Id;
+                return entity.Id;
             }
         }
 

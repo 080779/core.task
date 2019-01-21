@@ -12,6 +12,7 @@ namespace IService
         Task<long> AddAsync(string title, string content, int enabled, long adminId);
         Task<bool> EditAsync(long id, string title, string content, int enabled);
         Task<bool> DelAsync(long id);
+        Task<bool> FrozenAsync(long id);
         Task<NoticeDTO> GetModelAsync(long id);
         Task<NoticeSearchResult> GetModelListAsync(string keyword,DateTime? startTime,DateTime? endTime,int pageIndex,int pageSize);
     }

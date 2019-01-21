@@ -73,29 +73,24 @@ namespace Web.Areas.Admin.Controllers
             var result = await noticeService.EditAsync(id, title, content, enabled);
             if (!result)
             {
-                return Json(new AjaxResult { Status = 0, Msg = "修改图片失败" });
+                return Json(new AjaxResult { Status = 0, Msg = "修改公告失败" });
             }
-            return Json(new AjaxResult { Status = 1, Msg = "修改图片成功" });
-        }
-        [HttpPost]
-        public async Task<IActionResult> GetModel(long id)
-        {
-            var model = await noticeService.GetModelAsync(id);
-            return Json(new AjaxResult { Status = 1, Data = model });
+            return Json(new AjaxResult { Status = 1, Msg = "修改公告成功" });
         }
         #endregion
 
         #region 冻结公告
-        //[HttpPost]
-        //public async Task<IActionResult> Frozen(long id)
-        //{
-        //    bool res = await noticeService.FrozenAsync(id);
-        //    if (!res)
-        //    {
-        //        return Json(new AjaxResult { Status = 0, Msg = "冻结、解冻图片操作失败" });
-        //    }
-        //    return Json(new AjaxResult { Status = 1, Msg = "冻结、解冻图片操作成功" });
-        //}
+        [HttpPost]
+        [PermAction("冻结公告")]
+        public async Task<IActionResult> Frozen(long id)
+        {
+            bool res = await noticeService.FrozenAsync(id);
+            if (!res)
+            {
+                return Json(new AjaxResult { Status = 0, Msg = "冻结、解冻公告操作失败" });
+            }
+            return Json(new AjaxResult { Status = 1, Msg = "冻结、解冻公告操作成功" });
+        }
         #endregion
 
         #region 删除公告

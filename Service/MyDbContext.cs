@@ -39,6 +39,7 @@ namespace Service
         public DbSet<AdminPermissionEntity> AdminPermissions { get; set; }
         public DbSet<LinkEntity> Links { get; set; }
         public DbSet<NoticeEntity> Notices { get; set; }
+        public DbSet<ProductEntity> Products { get; set; }
         #endregion
 
         #region MyDbContext通用方法

@@ -10,8 +10,12 @@ namespace Service.Entity
     {
         public string Name { get; set; }
         public decimal Price { get; set; }
-        public int Number { get; set; }
+        public int Inventory { get; set; }
+        public string Description { get; set; }
+        public int SaleNumber { get; set; }
+        public int Putaway { get; set; }
+        public int HotSale { get; set; }
         public int Enabled { get; set; } = 1;
-        public DateTime CreateTime { get; set; }
+        public DateTime CreateTime { get; set; } = DateTime.Now;
     }
 }
