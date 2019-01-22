@@ -15,6 +15,7 @@ namespace DTO
         public int SaleNumber { get; set; }
         public bool Putaway { get; set; }
         public bool HotSale { get; set; }
+        public string FirstImage { get; set; }
         public int Enabled { get; set; }
         public DateTime CreateTime { get; set; }
     }

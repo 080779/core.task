@@ -14,6 +14,7 @@ namespace Web.Areas.Admin.Controllers
     [PermController("产品管理")]
     public class ProductController : Controller
     {
+        #region 构造函数注入
         private IProductService productService;
         private IProductImageService productImageService;
         private int pageSize = 10;
@@ -22,7 +23,9 @@ namespace Web.Areas.Admin.Controllers
             this.productService = productService;
             this.productImageService = productImageService;
         }
+        #endregion
 
+        #region 列表
         [HttpGet]
         public IActionResult List()
         {
@@ -40,7 +43,11 @@ namespace Web.Areas.Admin.Controllers
         {
             return View();
         }
+        #endregion
+
+        #region 添加
         [PermAction("添加产品")]
+        [HttpPost]
         public async Task<IActionResult> Add(string name, decimal price, int inventory, int saleNumber, bool putaway, bool hotSale, string description)
         {
             var res = await productService.AddAsync(name, price, inventory, saleNumber, putaway, hotSale, description);
@@ -50,42 +57,14 @@ namespace Web.Areas.Admin.Controllers
             }
             return Json(new AjaxResult { Status = 1, Msg = "添加产品成功" });
         }
+        #endregion
 
+        #region 商品图
         [HttpPost]
         public async Task<IActionResult> GetImages(long id)
         {
-            var res = await productImageService.GetModelListAsync(id);
+            var res = await productImageService.GetModelSrcsAsync(id);
             return Json(new AjaxResult { Status = 1, Data = res });
-        }
-
-        [PermAction("修改产品")]
-        public async Task<IActionResult> Edit(long id, string name, decimal price, int inventory, int saleNumber, bool putaway, bool hotSale, string description)
-        {
-            var res = await productService.EditAsync(id, name, price, inventory, saleNumber, putaway, hotSale, description);
-            if (!res)
-            {
-                return Json(new AjaxResult { Status = 0, Msg = "编辑产品失败" });
-            }
-            return Json(new AjaxResult { Status = 1, Msg = "编辑产品成功" });
-        }
-
-        [PermAction("删除产品")]
-        public async Task<IActionResult> Del(long id)
-        {
-            var res = await productService.DelAsync(id);
-            if (!res)
-            {
-                return Json(new AjaxResult { Status = 0, Msg = "删除产品失败" });
-            }
-            return Json(new AjaxResult { Status = 1, Msg = "删除产品成功" });
-        }
-
-        #region 富文本编辑器上传图片
-        //上传到本地服务器
-        [HttpPost]
-        public async Task<IActionResult> UpContentImage(IFormFile imgFile)
-        {
-            return Json(new { errno = "0", data = await ImageHelper.SaveAsync(imgFile)});
         }
 
         [HttpPost]
@@ -119,6 +98,43 @@ namespace Web.Areas.Admin.Controllers
                 return Json(new AjaxResult { Status = 0, Msg = "上传失败" });
             }
             return Json(new AjaxResult { Status = 1, Msg = "上传成功" });
+        }
+        #endregion
+
+        #region 修改
+        [PermAction("修改产品")]
+        [HttpPost]
+        public async Task<IActionResult> Edit(long id, string name, decimal price, int inventory, int saleNumber, bool putaway, bool hotSale, string description)
+        {
+            var res = await productService.EditAsync(id, name, price, inventory, saleNumber, putaway, hotSale, description);
+            if (!res)
+            {
+                return Json(new AjaxResult { Status = 0, Msg = "编辑产品失败" });
+            }
+            return Json(new AjaxResult { Status = 1, Msg = "编辑产品成功" });
+        }
+        #endregion
+
+        #region 删除
+        [PermAction("删除产品")]
+        [HttpPost]
+        public async Task<IActionResult> Del(long id)
+        {
+            var res = await productService.DelAsync(id);
+            if (!res)
+            {
+                return Json(new AjaxResult { Status = 0, Msg = "删除产品失败" });
+            }
+            return Json(new AjaxResult { Status = 1, Msg = "删除产品成功" });
+        }
+        #endregion
+
+        #region 富文本编辑器上传图片
+        //上传到本地服务器
+        [HttpPost]
+        public async Task<IActionResult> UpContentImage(IFormFile imgFile)
+        {
+            return Json(new { errno = "0", data = await ImageHelper.SaveAsync(imgFile)});
         }
 
         //上传到七牛云存储服务器

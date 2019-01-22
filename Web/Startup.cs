@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using Common;
 using IService;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -63,6 +64,8 @@ namespace Web
             {
                 options.SerializerSettings.DateFormatString = "yyyy-MM-dd HH:mm:ss";//json返回时间格式化
             });
+
+            services.Configure<SettingsModel>(Configuration.GetSection("Settings"));
 
             services.AddAntiforgery(o => o.HeaderName = "XSRF-TOKEN"); //razor pages的mvvm模式ajax提交需在header提交XSRF-TOKEN
         }

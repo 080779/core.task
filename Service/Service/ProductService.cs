@@ -2,6 +2,7 @@
 using DTO;
 using IService;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Service.Entity;
 using System;
 using System.Collections.Generic;
@@ -13,11 +14,33 @@ namespace Service.Service
 {
     public class ProductService : IProductService
     {
+        private IOptions<SettingsModel> settings;
+        public ProductService(IOptions<SettingsModel> settings)
+        {
+            this.settings = settings;
+        }
+
         public ProductDTO ToDTO(ProductEntity entity)
         {
             ProductDTO dto = new ProductDTO();
             dto.CreateTime = entity.CreateTime;
             dto.Description = entity.Description;
+            dto.Enabled = entity.Enabled;
+            dto.HotSale = entity.HotSale == 1 ? true : false;
+            dto.Id = entity.Id;
+            dto.Inventory = entity.Inventory;
+            dto.Name = entity.Name;
+            dto.Price = entity.Price;
+            dto.Putaway = entity.Putaway == 1 ? true : false;
+            dto.SaleNumber = entity.SaleNumber;
+            return dto;
+        }
+
+        public ProductDTO ToApiDTO(ProductEntity entity)
+        {
+            ProductDTO dto = new ProductDTO();
+            dto.CreateTime = entity.CreateTime;
+            dto.Description = entity.Description.Replace("/upload/", settings.Value.DoMain + "/upload/");
             dto.Enabled = entity.Enabled;
             dto.HotSale = entity.HotSale == 1 ? true : false;
             dto.Id = entity.Id;
@@ -117,6 +140,27 @@ namespace Service.Service
                 result.PageCount = (int)Math.Ceiling((await entities.LongCountAsync()) * 1.0f / pageSize);
                 var res = await entities.OrderByDescending(a => a.CreateTime).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
                 result.List = res.Select(a => ToDTO(a)).ToArray();
+                return result;
+            }
+        }
+
+        public async Task<ProductSearchResult> GetApiModelListAsync(int? hotSale, string keyword, int pageIndex, int pageSize)
+        {
+            using (MyDbContext dbc = new MyDbContext())
+            {
+                ProductSearchResult result = new ProductSearchResult();
+                var entities = dbc.GetAll<ProductEntity>().AsNoTracking().Where(p => p.Putaway == 1);
+                if (hotSale != null)
+                {
+                    entities = entities.Where(a => a.HotSale == hotSale);
+                }
+                if (!string.IsNullOrEmpty(keyword))
+                {
+                    entities = entities.Where(a => a.Name.Contains(keyword));
+                }
+                result.PageCount = (int)Math.Ceiling((await entities.LongCountAsync()) * 1.0f / pageSize);
+                var res = await entities.OrderByDescending(a => a.CreateTime).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
+                result.List = res.Select(a => ToApiDTO(a)).ToArray();
                 return result;
             }
         }

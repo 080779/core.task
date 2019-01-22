@@ -10,6 +10,7 @@ namespace IService
     public interface IProductImageService : IServiceSupport
     {
         Task<long> AddAsync(long productId, List<string> imageList);
-        Task<string[]> GetModelListAsync(long productId);
+        Task<string[]> GetModelSrcsAsync(long productId);
+        Task<ProductImageDTO[]> GetModelListAsync(long productId);
     }
 }

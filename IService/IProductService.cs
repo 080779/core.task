@@ -14,6 +14,7 @@ namespace IService
         Task<bool> DelAsync(long id);
         Task<ProductDTO> GetModelAsync(long id);
         Task<ProductSearchResult> GetModelListAsync(string keyword,DateTime? startTime,DateTime? endTime,int pageIndex,int pageSize);
+        Task<ProductSearchResult> GetApiModelListAsync(int? hotSale, string keyword, int pageIndex, int pageSize);
     }
     public class ProductSearchResult
     {
