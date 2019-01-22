@@ -7,7 +7,7 @@
     <link href="~/admin/css/page.css" rel="stylesheet" />
     <link rel="stylesheet" href="~/admin/assets/css/ace.min.css" />
     <link rel="stylesheet" href="~/admin/assets/css/font-awesome.min.css" />
-    <link href="~/admin/css/globle.css" rel="stylesheet" />
+    <link href="~/admin/css/vueupload.css" rel="stylesheet" />
     <script src="~/admin/js/jquery-1.9.1.min.js"></script>
     <script src="~/admin/assets/js/bootstrap.min.js"></script>
     <script src="~/admin/assets/js/typeahead-bs2.min.js"></script>
@@ -20,9 +20,6 @@
     <script src="~/admin/js/vue.min2.5.16.js"></script>
     <script src="~/admin/js/vue-resource.min1.5.0.js"></script>
     <script src="~/admin/js/wangEditor.min.js"></script>
-    <script src="~/lib/js/jquery.uploadimg.js"></script>
-    <script src="~/admin/js/webuploader.min.js"></script>
-    <script src="~/admin/js/diyUpload.js"></script>
     <title>产品管理</title>
 </head>
 <body>
@@ -55,7 +52,7 @@
                 <thead>
                     <tr>
                         <th width="25px"><input type="checkbox" class="check_all" value="0" /></th>
-                        <th width="30">编号</th>
+                        <th width="50">编号</th>
                         <th width="220">产品名称</th>
                         <th width="60">价格</th>
                         <th width="60">库存</th>
@@ -126,12 +123,25 @@
         </div>
         <!--添加图层结束-->
 
-        <div id="editImgs" style="display:none;">
-            <ul style="margin:30px;" class="upload-ul clearfix">
-                <li class="upload-pick">
-                    <div class="webuploader-container clearfix" id="goodsUpload"></div>
-                </li>
-            </ul>
+        <div class="add_menber" id="upload" style="display:none">
+            <div class="hello">
+                <div class="upload">
+                    <div class="upload_warp">
+                        <div class="upload_warp_left" v-on:click="fileClick">
+                            <img src="~/admin/images/upload.png" />
+                        </div>
+                    </div>
+                    <input v-on:change="fileChange($event)" type="file" id="upload_file" multiple=multiple style="display: none" />
+                    <div class="upload_warp_img" v-show="imgList.length!=0">
+                        <div class="upload_warp_img_div" v-for="(item,index) of imgList">
+                            <div class="upload_warp_img_div_top">
+                                <img src="~/admin/images/del.png" class="upload_warp_img_div_del" v-on:click="fileDel(index)" />
+                            </div>
+                            <img v-bind:src="item" />
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!--修改图层开始-->
@@ -170,6 +180,7 @@
                     keyword: "", startTime: "", endTime: ""
                 },
                 list: [],
+                imgList: [],
                 adds: {
                     name: "", price: "", inventory: "", saleNumber: "", putaway: 0, hotSale: 0, description: ""
                 },
@@ -178,6 +189,70 @@
                 }
             },
             methods: {
+                fileClick() {
+                    document.getElementById('upload_file').click()
+                },
+                fileChange(el) {
+                    if (!el.target.files[0].size) return;
+                    this.fileList(el.target);
+                    el.target.value = ''
+                },
+                fileList(fileList) {
+                    let files = fileList.files;
+                    for (let i = 0; i < files.length; i++) {
+                        //判断是否为文件夹
+                        if (files[i].type != '') {
+                            this.fileAdd(files[i]);
+                        } else {
+                            //文件夹处理
+                            this.folders(fileList.items[i]);
+                        }
+                    }
+                },
+                //文件夹处理
+                folders(files) {
+                    let _this = this;
+                    //判断是否为原生file
+                    if (files.kind) {
+                        files = files.webkitGetAsEntry();
+                    }
+                    files.createReader().readEntries(function (file) {
+                        for (let i = 0; i < file.length; i++) {
+                            if (file[i].isFile) {
+                                _this.foldersAdd(file[i]);
+                            } else {
+                                _this.folders(file[i]);
+                            }
+                        }
+                    })
+                },
+                foldersAdd(entry) {
+                    let _this = this;
+                    entry.file(function (file) {
+                        _this.fileAdd(file)
+                    })
+                },
+                fileAdd(file) {
+                    //总大小
+                    this.size = this.size + file.size;
+                    //判断是否为图片文件
+                    if (file.type.indexOf('image') == -1) {
+                        file.src = 'wenjian.png';
+                        this.imgList.push('wenjian.png');
+                    } else {
+                        let reader = new FileReader();
+                        reader.vue = this;
+                        reader.readAsDataURL(file);
+                        reader.onload = function () {
+                            file.src = this.result;
+                            this.vue.imgList.push(file.src);
+                        }
+                    }
+                },
+                fileDel(index) {
+                    //this.size = this.size - this.imgList[index].file.size;//总大小
+                    this.imgList.splice(index, 1);
+                },
                 //分页获取后台数据方法
                 getpage: function () {
                     this.$http.post('/admin/product/list', { keyword: this.searchs.keyword, startTime: this.searchs.startTime, endTime: this.searchs.endTime, pageIndex: this.pages.cur }, { emulateJSON: true }).then(function (result) {
@@ -287,18 +362,26 @@
                         }
                     });
                 },
-                editImgs: function () {
+                editImgs: function (id) {
+                    this.imgList = [];
+                    var that = this;
+                    that.$http.post('/admin/product/getImages', { id: id }, { emulateJSON: true }).then(function (result) {
+                        that.imgList = result.data.data;
+                    });
                     layer.open({
                         type: 1,
-                        title: '图片',
+                        title: '上传商品图片',
                         maxmin: true,
                         shadeClose: false, //点击遮罩关闭层
-                        area: ['600px', '400px'],
-                        content: $('#editImgs'),
+                        area: ['750px', '520px'],
+                        content: $('#upload'),
                         btn: ['确认', '取消'],
                         yes: function (index, layero) {
-                            that.adds.description = editor.txt.html();
-                            that.$http.post('/admin/product/add', { name: that.adds.name, price: that.adds.price, inventory: that.adds.inventory, saleNumber: that.adds.saleNumber, putaway: that.adds.putaway, hotSale: that.adds.hotSale, description: that.adds.description }, { emulateJSON: true }).then(function (result) {
+                            if (that.imgList.length <= 0) {
+                                layer.alert('商品图片不能为空', { icon: 0, title: '提示框' });
+                                return;
+                            }
+                            that.$http.post('/admin/product/upImages', { id: id, imgFiles: that.imgList }, { emulateJSON: true }).then(function (result) {
                                 if (result.data.status == 1) {
                                     layer.alert(result.data.msg, { icon: 6, title: '提示框' });
                                     layer.close(index);
@@ -309,9 +392,6 @@
                                 }
                                 else if (result.data.status == 302) {
                                     window.location.href = result.data.data;
-                                }
-                                else if (result.data.status == 401) {
-                                    layer.alert(result.data.msg, { icon: 0, title: '提示框' });
                                 }
                             });
                         }
@@ -403,20 +483,6 @@
             event: 'focus'
         });
 
-        //上传图片
-        //uploadpic("#fileAdd", "#imgAdd");
-        //uploadpic("#fileEdit", "#imgEdit");
-
-        //function uploadpic(fileid, img) {
-        //    var oUpload = new UploadPic();
-        //    oUpload.init({
-        //        input: $(fileid)[0],
-        //        callback: function (base64) {
-        //            $(img).attr('src', base64);
-        //        }
-        //    });
-        //}
-
         //编辑器
         var E = window.wangEditor
         var editor = new E('#adddesc')
@@ -424,7 +490,7 @@
         editor.customConfig.uploadImgMaxLength = 1
         editor.customConfig.uploadImgShowBase64 = true
         editor.customConfig.uploadFileName = 'imgfile'
-        editor.customConfig.uploadImgServer = '/admin/product/upContentImg'
+        editor.customConfig.uploadImgServer = '/admin/product/upContentImage'
         editor.create()
 
         var editor1 = new E('#editdesc')
@@ -432,29 +498,8 @@
         editor1.customConfig.uploadImgMaxLength = 1
         editor1.customConfig.uploadImgShowBase64 = true
         editor1.customConfig.uploadFileName = 'imgfile'
-        editor1.customConfig.uploadImgServer = '/admin/product/upContentImg'
+        editor1.customConfig.uploadImgServer = '/admin/product/upContentImage'
         editor1.create()
-
-        var $tgaUpload = $('#goodsUpload').diyUpload({
-            url: 'uploadFilePath',
-            success: function (data) {
-                console.log(data);
-            },
-            error: function (err) { },
-            buttonText: '',
-            accept: {
-                title: "Images",
-                extensions: 'gif,jpg,jpeg,bmp,png'
-            },
-            thumb: {
-                width: 120,
-                height: 90,
-                quality: 100,
-                allowMagnify: true,
-                crop: true,
-                type: "image/jpeg"
-            }
-        });
     </script>
 </body>
 </html>

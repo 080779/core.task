@@ -40,6 +40,7 @@ namespace Service
         public DbSet<LinkEntity> Links { get; set; }
         public DbSet<NoticeEntity> Notices { get; set; }
         public DbSet<ProductEntity> Products { get; set; }
+        public DbSet<ProductImageEntity> ProductImages { get; set; }
         #endregion
 
         #region MyDbContext通用方法

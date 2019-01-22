@@ -15,10 +15,12 @@ namespace Web.Areas.Admin.Controllers
     public class ProductController : Controller
     {
         private IProductService productService;
+        private IProductImageService productImageService;
         private int pageSize = 10;
-        public ProductController(IProductService productService)
+        public ProductController(IProductService productService, IProductImageService productImageService)
         {
             this.productService = productService;
+            this.productImageService = productImageService;
         }
 
         [HttpGet]
@@ -48,6 +50,14 @@ namespace Web.Areas.Admin.Controllers
             }
             return Json(new AjaxResult { Status = 1, Msg = "添加产品成功" });
         }
+
+        [HttpPost]
+        public async Task<IActionResult> GetImages(long id)
+        {
+            var res = await productImageService.GetModelListAsync(id);
+            return Json(new AjaxResult { Status = 1, Data = res });
+        }
+
         [PermAction("修改产品")]
         public async Task<IActionResult> Edit(long id, string name, decimal price, int inventory, int saleNumber, bool putaway, bool hotSale, string description)
         {
@@ -73,9 +83,42 @@ namespace Web.Areas.Admin.Controllers
         #region 富文本编辑器上传图片
         //上传到本地服务器
         [HttpPost]
-        public async Task<IActionResult> UpContentImg(IFormFile imgFile)
-        {            
-        return Json(new { errno = "0", data = await ImageHelper.SaveAsync(imgFile)});
+        public async Task<IActionResult> UpContentImage(IFormFile imgFile)
+        {
+            return Json(new { errno = "0", data = await ImageHelper.SaveAsync(imgFile)});
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpImages(long id, string[] imgFiles)
+        {
+            if (imgFiles.Count() <= 0)
+            {
+                return Json(new AjaxResult { Status = 0, Msg = "请选择上传的图片" });
+            }
+            List<string> lists = new List<string>();
+            foreach (string imgFile in imgFiles)
+            {
+                if (imgFile.Contains("upload/"))
+                {
+                    lists.Add(imgFile);
+                }
+                else
+                {
+                    var res = await ImageHelper.Base64SaveAsync(imgFile);
+                    if (!res.Key)
+                    {
+                        return Json(new AjaxResult { Status = 0, Msg = res.Value });
+                    }
+                    lists.Add(res.Value);
+                }
+            }
+            List<string> imgUrls = lists.Distinct().ToList();
+            long resid = await productImageService.AddAsync(id, imgUrls);
+            if (resid <= 0)
+            {
+                return Json(new AjaxResult { Status = 0, Msg = "上传失败" });
+            }
+            return Json(new AjaxResult { Status = 1, Msg = "上传成功" });
         }
 
         //上传到七牛云存储服务器
