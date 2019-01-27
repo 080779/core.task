@@ -68,7 +68,7 @@
             }
         });
 
-        $("#login").click(function () {
+        $("#login").click(function () {            
             var name = $("#name").val();
             var password = $("#password").val();
             var code = $("#code").val();
@@ -82,8 +82,10 @@
             }
             if (code == "") {
                 layer.msg("验证码不能为空");
+
                 return;
             }
+            $("#login").attr("disabled", "true").attr("style", "background-color:pink");
             $.ajax({
                 url: "/admin/home/login",
                 type: "post",
@@ -94,6 +96,7 @@
                     }
                     else if (res.status == 0) {
                         layer.msg(res.msg);
+                        $("#login").attr("disabled", "true").attr("style","");
                         $("#imgCode").click();
                     }
                 },
