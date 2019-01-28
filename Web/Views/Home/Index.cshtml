@@ -1,0 +1,87 @@
+﻿
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link href="~/admin/assets/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/admin/css/style.css" />
+    <link href="~/admin/css/page.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/admin/assets/css/ace.min.css" />
+    <link rel="stylesheet" href="~/admin/assets/css/font-awesome.min.css" />
+    <script src="~/admin/js/jquery-1.9.1.min.js"></script>
+    <script src="~/admin/assets/js/bootstrap.min.js"></script>
+    <script src="~/admin/assets/js/typeahead-bs2.min.js"></script>
+    <script src="~/admin/assets/js/jquery.dataTables.min.js"></script>
+    <script src="~/admin/assets/js/jquery.dataTables.bootstrap.js"></script>
+    <script src="~/admin/h-ui/js/H-ui.js"></script>
+    <script src="~/admin/h-ui/js/H-ui.admin.js"></script>
+    <script src="~/admin/assets/layer/layer.js" type="text/javascript"></script>
+    <script src="~/admin/assets/laydate/laydate.js" type="text/javascript"></script>
+    <script src="~/admin/js/vue.min2.5.16.js"></script>
+    <script src="~/admin/js/vue-resource.min1.5.0.js"></script>
+    <script src="~/admin/js/wangEditor.min.js"></script>
+    <title>Index</title>
+</head>
+<body>
+    <div id="app">
+        <div>
+            <select v-model="sheng" v-on:change="shengchange">
+                <option value="">请选择省</option>
+                <option v-for="item in shengSouce" v-bind:value="item.name" v-html="item.name" selected></option>
+            </select>
+            <select v-model="shi" v-on:change="shichange">
+                <option value="">请选择市</option>
+                <option v-for="item in shiSouce" v-bind:value="item.name" v-html="item.name"></option>
+            </select>
+            <select v-model="qu">
+                <option value="">请选择县(区)</option>
+                <option v-for="item in quSouce" v-bind:value="item" v-html="item"></option>
+            </select>
+        </div>
+    </div>
+    <script>
+        var vue = new Vue({
+            el: "#app",
+            data: {
+                shengSouce: [],
+                shiSouce: [],
+                quSouce: [],
+                sheng: "",
+                shi: "",
+                qu: ""
+            },
+            methods: {
+                shengchange: function () {
+                    let page = this;
+                    page.shi = "";
+                    page.qu = "";
+                    page.quSouce = [];
+                    $.each(page.shengSouce, function (k, v) {
+                        if (page.sheng == v.name) {
+                            page.shiSouce = v.child;
+                        }
+                    })
+                },
+                shichange: function () {
+                    let page = this;
+                    page.qu = "";
+                    $.each(page.shiSouce, function (k, v) {
+                        if (page.shi == v.name) {
+                            page.quSouce = v.child;
+                        }
+                    })
+                }
+            },
+            mounted: function () {
+                let page = this;
+                $.getJSON('/admin/js/areas.json', function (data) {
+                    page.shengSouce = data;
+                });
+                //this.$http.post('/api/area/list', {}, { emulateJSON: true }).then(function (result) {
+                //    this.shengSouce = result.data;
+                //})
+            }
+        });
+    </script>
+</body>
+</html>

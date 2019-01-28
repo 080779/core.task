@@ -17,7 +17,7 @@ namespace Web.Controllers
             this.userService = userService;
         }
         [AllowAnonymous]
-        public IActionResult List()
+        public IActionResult Index()
         {
             //return Redirect("/home/index");
             return View();

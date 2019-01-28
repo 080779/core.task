@@ -1,31 +1,26 @@
-﻿using System;
+﻿using DTO;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace Common.Enums
 {
-    public static class EnumHelper
+    public static class MyEnumHelper
     {
         public static string GetEnumName<T>(this int enumTypeId)
         {
             return Enum.GetName(typeof(T), enumTypeId);
         }
 
-        public static EnumModel[] GetEnumList<T>()
+        public static EnumDTO[] GetEnumList<T>()
         {
             var arrays = Enum.GetValues(typeof(T));
-            List<EnumModel> lists = new List<EnumModel>();
+            List<EnumDTO> lists = new List<EnumDTO>();
             foreach (var item in arrays)
             {
-                lists.Add(new EnumModel { Id = (int)item, Name = item.ToString() });
+                lists.Add(new EnumDTO { Id = (int)item, Name = item.ToString() });
             }
             return lists.ToArray();
-        }
-
-        public class EnumModel
-        {
-            public int Id { get; set; }
-            public string Name { get; set; }
         }
     }
 }
