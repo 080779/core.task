@@ -36,11 +36,6 @@ namespace Test
         }
         static void Main(string[] args)
         {
-            var arrays = EnumHelper.GetEnumList<LevelEnum>();
-            foreach (var item in arrays)
-            {
-                Console.WriteLine($"key={item.Id},value={item.Name}");
-            }
             Console.ReadKey();
         }
         public class Task1

@@ -16,6 +16,7 @@ namespace Service.Entity
         public int Putaway { get; set; }
         public int HotSale { get; set; }
         public string FirstImage { get; set; }
+        public string Creator { get; set; }
         public int Enabled { get; set; } = 1;
         public DateTime CreateTime { get; set; } = DateTime.Now;
     }

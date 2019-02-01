@@ -229,7 +229,9 @@ namespace Service.Service
         {
             using (MyDbContext dbc = new MyDbContext())
             {
-                await dbc.Database.ExecuteSqlCommandAsync("exec del_all");
+                //await dbc.Database.ExecuteSqlCommandAsync("exec del_all");
+                var res = dbc.Notices.FromSql("select * from tb_notices");
+                var count = await res.CountAsync();
                 return true;
             }
         }

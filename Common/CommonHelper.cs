@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
@@ -131,6 +132,22 @@ namespace Common
                 Random ran = new Random();
                 return DateTime.Now.ToString("yyyyMMddHHmmssfff") + ran.Next(100, 999).ToString();
             }
+        }
+        #endregion
+
+        #region 获取json文件数据
+        public static object GetFileJson(string path)
+        {
+            string json = string.Empty;
+            string filepath = Directory.GetCurrentDirectory() + path;
+            using (FileStream fs = new FileStream(filepath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            {
+                using (StreamReader sr = new StreamReader(fs, Encoding.UTF8))
+                {
+                    json = sr.ReadToEnd().ToString();
+                }
+            }
+            return JsonConvert.DeserializeObject(json);
         }
         #endregion
 
