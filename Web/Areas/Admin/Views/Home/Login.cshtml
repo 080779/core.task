@@ -85,7 +85,7 @@
 
                 return;
             }
-            $("#login").attr("disabled", "true").attr("style", "background-color:pink");
+            $("#login").attr("disabled", "true").attr("style", "background-color:#ddd");
             $.ajax({
                 url: "/admin/home/login",
                 type: "post",
@@ -100,7 +100,7 @@
                         $("#imgCode").click();
                     }
                 },
-                error: function () { console.log("网络错误"); $("#imgCode").click(); }
+                error: function () { console.log("网络错误"); $("#login").attr("disabled", "true").attr("style", ""); $("#imgCode").click(); }
             });
         });
     </script>
