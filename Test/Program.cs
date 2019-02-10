@@ -36,6 +36,7 @@ namespace Test
         }
         static void Main(string[] args)
         {
+            int[,] values = new int[2, 2];
             Console.ReadKey();
         }
         public class Task1

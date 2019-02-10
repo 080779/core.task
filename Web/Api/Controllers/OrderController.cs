@@ -8,6 +8,7 @@ using IService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Web.Api.Model.Order;
 
 namespace Web.Api.Controllers
 {
@@ -16,13 +17,20 @@ namespace Web.Api.Controllers
     [AllowAnonymous]
     public class OrderController : ControllerBase
     {
-        private INoticeService noticeService;
-        public OrderController(INoticeService noticeService)
+        private IOrderService orderService;
+        public OrderController(IOrderService orderService)
         {
-            this.noticeService = noticeService;
+            this.orderService = orderService;
         }
 
-        //[HttpPost]
+        [HttpPost]
+        public async Task<AjaxResult> List(ListParamModel model)
+        {
+            var res = await orderService.GetModelListAsync(null,null,null,model.PageIndex,model.PageSize);
+            return new AjaxResult { Status = 1, Data = res };
+        }
+
+        [HttpPost]
         public AjaxResult StateTypes()
         {
             return new AjaxResult { Status=1,Data= MyEnumHelper.GetEnumList<OrderStateEnum>() };

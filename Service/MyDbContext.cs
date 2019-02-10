@@ -41,6 +41,9 @@ namespace Service
         public DbSet<NoticeEntity> Notices { get; set; }
         public DbSet<ProductEntity> Products { get; set; }
         public DbSet<ProductImageEntity> ProductImages { get; set; }
+        public DbSet<OrderEntity> Orders { get; set; }
+        public DbSet<OrderProductEntity> OrderProducts { get; set; }
+        public DbSet<ShopCartEntity> ShopCarts { get; set; }
         #endregion
 
         #region MyDbContext通用方法
